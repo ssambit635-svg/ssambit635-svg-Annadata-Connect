@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annadata Connect — अन्नदाता कनेक्ट</title>
+<meta name="description" content="Crop procurement, tokens and live queues for farmers of Khordha district.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root{
+    --paper:#F5F1E6; --paper2:#EDE7D6; --card:#FFFDF7;
+    --ink:#0F2318; --ink-soft:#4A5D51; --line:#E2DCC8; --line-soft:#ECE6D5;
+    --leaf:#17573B; --leaf-deep:#0A3320; --leaf-bright:#2E7D4F; --leaf-soft:#E2F0E7;
+    --amber:#E8970C; --amber-deep:#A86400; --amber-soft:#FBEED3;
+    --red:#C2402E; --red-soft:#F9E3DF; --blue:#2B5EA7; --blue-soft:#E2EBF9;
+    --sh-sm:0 1px 2px rgb(15 35 24/.05),0 6px 18px -8px rgb(15 35 24/.12);
+    --sh-md:0 2px 4px rgb(15 35 24/.06),0 18px 42px -16px rgb(15 35 24/.22);
+    --sh-lg:0 4px 10px rgb(15 35 24/.07),0 34px 72px -24px rgb(15 35 24/.30);
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:'Inter','Noto Sans Devanagari',system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 0,"ss01" 1}
+  .font-display{font-family:'Fraunces','Noto Sans Devanagari',serif;font-optical-sizing:auto}
+  .font-body{font-family:'Inter','Noto Sans Devanagari',system-ui,sans-serif}
+  .hero-title{font-size:clamp(2.3rem,6.4vw,4.25rem);line-height:1.02;letter-spacing:-.022em}
+  .grad-text{background:linear-gradient(120deg,#F6B93B,#E8970C 60%,#D97E06);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .grain::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
+  /* ---------- components ---------- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-weight:600;border-radius:.85rem;padding:.72rem 1.3rem;font-size:.925rem;transition:all .18s cubic-bezier(.2,.7,.3,1);cursor:pointer;border:1px solid transparent;white-space:nowrap;position:relative;user-select:none}
+  .btn:active{transform:scale(.965)}
+  .btn[disabled]{opacity:.55;pointer-events:none}
+  .btn-primary{background:linear-gradient(180deg,var(--leaf-bright),var(--leaf) 55%);color:#fff;box-shadow:inset 0 1px 0 rgb(255 255 255/.16),var(--sh-sm)}
+  .btn-primary:hover{background:linear-gradient(180deg,var(--leaf),var(--leaf-deep));box-shadow:inset 0 1px 0 rgb(255 255 255/.10),var(--sh-md);transform:translateY(-1px)}
+  .btn-amber{background:linear-gradient(180deg,#F5AD2C,var(--amber) 60%);box-shadow:inset 0 1px 0 rgb(255 255 255/.35),var(--sh-sm)}
+  .btn-amber,.btn-amber:visited{color:#2A1A00}
+  .btn-amber:hover{background:linear-gradient(180deg,var(--amber),var(--amber-deep));color:#fff;transform:translateY(-1px);box-shadow:var(--sh-md)}
+  .btn-ghost{background:rgb(255 255 255/.35);border-color:var(--line);color:var(--ink)}
+  .btn-ghost:hover{background:#fff;border-color:var(--ink-soft);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+  .btn-danger{background:var(--red-soft);color:var(--red)}
+  .btn-danger:hover{background:var(--red);color:#fff;transform:translateY(-1px);box-shadow:var(--sh-sm)}
+  .btn-sm{padding:.42rem .8rem;font-size:.8rem;border-radius:.65rem}
+  .btn-lg{padding:.9rem 1.6rem;font-size:1.02rem;border-radius:1rem}
+  .btn-sq{padding:.7rem .85rem}
+  .icbox{display:inline-grid;place-items:center;padding:.65rem;border-radius:.85rem}
+  .icbox-lg{display:inline-grid;place-items:center;padding:.85rem;border-radius:1.1rem}
+  .icbox-sm{display:inline-grid;place-items:center;padding:.5rem;border-radius:.65rem}
+  .input-sm{padding:.55rem .85rem;font-size:.85rem}
+  .chip-sm{font-size:11px;padding:.35rem .65rem}
+  .chip-static{cursor:default}
+  .pick-row{display:grid;grid-template-columns:auto 1fr auto;gap:.75rem;align-items:center;padding:.9rem 1rem;border-radius:1rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:1.15rem;box-shadow:var(--sh-sm);transition:box-shadow .25s ease,transform .25s ease}
+  .card-hover:hover{box-shadow:var(--sh-md);transform:translateY(-3px)}
+  .input{width:100%;background:#fff;border:1.5px solid var(--line);border-radius:.8rem;padding:.78rem 1rem;font-size:.95rem;color:var(--ink);transition:border-color .15s,box-shadow .15s;box-shadow:inset 0 1.5px 3px rgb(15 35 24/.04)}
+  .input:focus{outline:none;border-color:var(--leaf);box-shadow:inset 0 1.5px 3px rgb(15 35 24/.04),0 0 0 3.5px rgb(23 87 59/.13)}
+  .label{display:block;font-size:.74rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:.45rem}
+  .chip{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--line);background:rgb(255 255 255/.55);border-radius:999px;padding:.38rem .85rem;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .15s}
+  .chip:hover{border-color:var(--leaf);color:var(--leaf);background:#fff;box-shadow:var(--sh-sm)}
+  .badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.7rem;font-weight:700;letter-spacing:.055em;padding:.3rem .68rem;border-radius:999px;text-transform:uppercase}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[role="button"]:focus-visible{outline:3px solid rgb(232 151 12/.55);outline-offset:2px;border-radius:.5rem}
+  .b-green{background:#E3F2E9;color:var(--leaf)} .b-amber{background:var(--amber-soft);color:var(--amber-deep)}
+  .b-red{background:var(--red-soft);color:var(--red)} .b-blue{background:var(--blue-soft);color:var(--blue)}
+  .b-gray{background:#ECEAE2;color:#6B7268}
+  .table-row{display:grid;gap:.75rem;align-items:center;padding:.85rem 1rem;border-bottom:1px solid var(--line)}
+  .table-row:last-child{border-bottom:none}
+  /* ---------- motion ---------- */
+  @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes pulseDot{0%,100%{transform:scale(1)}50%{transform:scale(1.55)}}
+  @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+  @keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+  @keyframes orbDrift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-20px) scale(1.06)}}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-9px) rotate(.6deg)}}
+  @keyframes marq{to{transform:translateX(-50%)}}
+  @keyframes countPulse{0%{transform:scale(.92);opacity:.4}100%{transform:scale(1);opacity:1}}
+  .rise{animation:rise .6s cubic-bezier(.16,.8,.24,1) both}
+  .rise-1{animation-delay:.07s}.rise-2{animation-delay:.14s}.rise-3{animation-delay:.21s}.rise-4{animation-delay:.28s}
+  .floaty{animation:floaty 5.5s ease-in-out infinite}
+  .marquee{overflow:hidden}
+  .marquee-track{display:flex;width:max-content;animation:marq 30s linear infinite}
+  .marquee:hover .marquee-track{animation-play-state:paused}
+  .donut{--p:62;background:conic-gradient(var(--leaf) calc(var(--p)*1%),var(--paper2) 0);border-radius:50%;display:grid;place-items:center}
+  .donut>div{background:var(--card);border-radius:50%;display:grid;place-items:center;text-align:center}
+  .glass{background:color-mix(in srgb,#0C2B1B 62%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgb(255 255 255/.16);border-radius:1.15rem;color:#fff;box-shadow:0 18px 44px -14px rgb(3 15 9/.55)}
+  .skeleton{border-radius:.9rem;background:linear-gradient(100deg,var(--paper2) 40%,#faf7ee 50%,var(--paper2) 60%);background-size:200% 100%;animation:shimmer 1.4s infinite linear}
+  .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:orbDrift 14s ease-in-out infinite}
+  /* ---------- assistant ---------- */
+  #asst-panel{transform-origin:bottom right;transition:transform .28s cubic-bezier(.34,1.4,.4,1),opacity .2s}
+  #asst-panel.hidden-panel{transform:scale(.6) translateY(30px);opacity:0;pointer-events:none}
+  .msg{max-width:86%;padding:.6rem .85rem;border-radius:1rem;font-size:.87rem;line-height:1.45;animation:rise .3s both;white-space:pre-wrap;word-break:break-word}
+  .msg-bot{background:#fff;border:1px solid var(--line);border-bottom-left-radius:.25rem;align-self:flex-start}
+  .msg-user{background:var(--leaf);color:#fff;border-bottom-right-radius:.25rem;align-self:flex-end}
+  .tdot{width:6px;height:6px;border-radius:50%;background:var(--ink-soft);display:inline-block;animation:typing 1s infinite}
+  .tdot:nth-child(2){animation-delay:.15s}.tdot:nth-child(3){animation-delay:.3s}
+  /* ---------- toasts ---------- */
+  .toast{animation:rise .3s both;box-shadow:var(--sh-md)}
+  .progress-ring{transition:stroke-dashoffset .5s ease}
+  ::selection{background:var(--amber-soft)}
+  .scroll-thin::-webkit-scrollbar{width:6px}.scroll-thin::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  .hero-mask{-webkit-mask-image:linear-gradient(to bottom,black 78%,transparent);mask-image:linear-gradient(to bottom,black 78%,transparent)}
+  .num{font-variant-numeric:tabular-nums}
+  .svgi{width:1em;height:1em;stroke-width:2.2}
+  .lucide{display:inline-block;vertical-align:-.15em;width:1.1em;height:1.1em}
+  /* ---------- mobile tab bar ---------- */
+  .tabbar{position:fixed;bottom:0;left:0;right:0;z-index:45;display:none;gap:2px;padding:.45rem .5rem calc(.45rem + env(safe-area-inset-bottom,0px));
+    background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border-top:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+  .tabbar::-webkit-scrollbar{display:none}
+  .tabbar a{flex:1 0 auto;min-width:4.4rem;display:flex;flex-direction:column;align-items:center;gap:2px;padding:.42rem .35rem;border-radius:.85rem;
+    font-size:.62rem;font-weight:700;letter-spacing:.02em;color:var(--ink-soft);transition:all .18s}
+  .tabbar a .lucide{width:1.25rem;height:1.25rem}
+  .tabbar a.active{color:#fff;background:linear-gradient(180deg,var(--leaf-bright),var(--leaf));box-shadow:var(--sh-sm)}
+  .tabbar a:active{transform:scale(.94)}
+  body.loggedin .tabbar{display:flex}
+  @media (min-width:768px){ body.loggedin .tabbar{display:none} }
+  @media (max-width:767px){
+    body.loggedin #app{padding-bottom:6.2rem}
+    body.loggedin #asst-fab{bottom:5.6rem}
+    body.loggedin #asst-panel{bottom:10rem;left:.75rem;right:.75rem;width:auto;height:min(62dvh,520px)}
+    #asst-panel{left:.9rem;right:.9rem;width:auto}
+  }
+  /* ---------- assistant polish ---------- */
+  #asst-fab{transition:all .25s cubic-bezier(.2,.7,.3,1)}
+  #asst-fab:hover{box-shadow:var(--sh-lg)}
+  #asst-panel{height:min(540px,calc(100dvh - 8rem))}
+  /* ---------- misc ---------- */
+  .stat-band{background:linear-gradient(135deg,var(--leaf-deep),#0E4A2D 60%,#14603A);color:#fff}
+  .tick-sep{opacity:.35;padding:0 .25rem}
+  @media (prefers-reduced-motion:reduce){
+    .rise,.floaty,.marquee-track,.orb,.tdot{animation:none !important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body class="grain min-h-screen flex flex-col">
+
+<!-- ambient background -->
+<div class="fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+  <div class="orb w-[480px] h-[480px] -top-32 -left-32" style="background:#DdE8C9"></div>
+  <div class="orb w-[420px] h-[420px] top-1/3 -right-40" style="background:#F6E3BC;animation-delay:-6s"></div>
+  <div class="orb w-[380px] h-[380px] -bottom-40 left-1/4" style="background:#D9E7DB;animation-delay:-3s"></div>
+</div>
+
+<!-- header -->
+<header class="sticky top-0 z-40 border-b border-[var(--line)]" style="background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 rgb(15 35 24/.03),0 10px 30px -18px rgb(15 35 24/.25)">
+  <div class="max-w-6xl mx-auto px-4 h-14 md:h-16 flex items-center gap-2.5 md:gap-3">
+    <a href="#/" class="flex items-center gap-2.5 group">
+      <span class="w-9 h-9 rounded-xl bg-[var(--leaf)] text-white grid place-items-center group-hover:rotate-12 transition-transform">
+        <i data-lucide="wheat" class="w-5 h-5"></i>
+      </span>
+      <span class="font-display font-semibold text-base md:text-lg leading-none">Annadata <span class="text-[var(--leaf)]">Connect</span>
+        <span class="hidden min-[400px]:block text-[10px] font-body font-medium tracking-[.18em] uppercase text-[var(--ink-soft)]">Khordha · Odisha</span>
+      </span>
+    </a>
+    <nav id="nav-links" class="hidden md:flex items-center gap-1 ml-6 text-sm font-medium"></nav>
+    <div class="flex-1"></div>
+    <button id="server-pill" data-action="serverInfo" class="chip text-xs" title="Backend status">
+      <span id="server-dot" class="w-2 h-2 rounded-full bg-gray-400"></span><span id="server-txt">Server…</span>
+    </button>
+    <button data-action="toggleLang" class="chip text-xs font-bold" id="lang-btn">हिंदी</button>
+    <div id="nav-auth" class="flex items-center gap-2"></div>
+  </div>
+</header>
+<nav id="tabbar" class="tabbar" aria-label="Primary"></nav>
+
+<main id="app" class="flex-1 w-full max-w-6xl mx-auto px-4 py-5 md:py-10 relative z-10"></main>
+
+<footer class="relative z-10 border-t border-[var(--line)] mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap items-center gap-3 text-xs text-[var(--ink-soft)]">
+    <span class="flex items-center gap-1.5"><i data-lucide="sprout" class="w-3.5 h-3.5"></i> अन्नदाता कनेक्ट — Crop Procurement Platform</div>
+    <span class="flex-1"></span>
+    <span id="foot-api" class="num"></span>
+  </div>
+</footer>
+
+<!-- ============ ASSISTANT (crash-proof, 100% local brain) ============ -->
+<button id="asst-fab" data-action="asstToggle" aria-label="Kisan Sahayak assistant"
+  class="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-2xl bg-[var(--leaf)] text-white shadow-xl grid place-items-center hover:bg-[var(--leaf-deep)] hover:-translate-y-0.5 transition-all">
+  <i data-lucide="message-circle-heart" class="w-6 h-6"></i>
+  <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[var(--amber)] border-2 border-[var(--paper)]"></span>
+</button>
+
+<div id="asst-panel" class="hidden-panel fixed bottom-24 right-4 md:right-5 z-50 w-[min(380px,calc(100vw-2rem))] card overflow-hidden flex flex-col">
+  <div class="bg-[var(--leaf)] text-white px-4 py-3 flex items-center gap-3">
+    <span class="w-9 h-9 rounded-xl bg-white/15 grid place-items-center"><i data-lucide="sparkles" class="w-4.5 h-4.5"></i></span>
+    <div class="flex-1">
+      <div class="font-semibold text-sm" id="asst-title">Kisan Sahayak</div>
+      <div class="text-[11px] opacity-80 flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-300" style="animation:pulseDot 2s infinite"></span>
+        <span id="asst-sub">Instant answers — works offline</span>
+      </div>
+    </div>
+    <button data-action="asstClear" class="opacity-70 hover:opacity-100 p-1" aria-label="Clear chat"><i data-lucide="eraser" class="w-4 h-4"></i></button>
+    <button data-action="asstToggle" class="opacity-70 hover:opacity-100 p-1" aria-label="Close chat"><i data-lucide="x" class="w-4.5 h-4.5"></i></button>
+  </div>
+  <div id="asst-body" class="flex-1 overflow-y-auto scroll-thin p-3 flex flex-col gap-2 bg-[var(--paper2)]/60"></div>
+  <div id="asst-chips" class="px-3 pt-2 pb-1 flex gap-1.5 flex-wrap"></div>
+  <form id="asst-form" class="p-3 pt-1.5 flex gap-2">
+    <input id="asst-input" class="input input-sm" autocomplete="off" maxlength="300">
+    <button class="btn btn-primary btn-sq" aria-label="Send"><i data-lucide="send-horizontal" class="w-4.5 h-4.5"></i></button>
+  </form>
+</div>
+
+<!-- toast root -->
+<div id="toast-root" class="fixed top-20 right-4 z-[60] flex flex-col gap-2 w-[min(360px,calc(100vw-2rem))]"></div>
+
+<script>
+/* =====================================================================
+   ANNADATA CONNECT — single-file client
+   Crash-proofing principles used everywhere:
+   1. Every render is wrapped in safe() — a bad payload shows a retry
+      card, never a white screen.
+   2. Every fetch has a timeout + one retry + visible "waking server"
+      progress (Render free tier sleeps after 15 min idle → 30-60 s
+      cold starts; that is what made the old chat feel "hung").
+   3. The assistant brain is local & synchronous — it can never hang.
+      Live-data intents are optional upgrades guarded by try/catch.
+   4. Polling pauses when the tab is hidden and aborts on navigation.
+   ===================================================================== */
+'use strict';
+
+/* ---------------- config ---------------- */
+const DEFAULT_API = 'https://annadata-connect.onrender.com';
+const S = {
+  apiBase: (localStorage.getItem('anc_api_base') || DEFAULT_API).replace(/\/+$/,''),
+  token: localStorage.getItem('anc_token') || null,
+  user: JSON.parse(localStorage.getItem('anc_user') || 'null'),
+  lang: localStorage.getItem('anc_lang') || 'en',
+  ref: JSON.parse(localStorage.getItem('anc_ref') || 'null'),   // {crops, villages, ts}
+  serverUp: false, serverWaking: false,
+  polls: new Map(),
+};
+const saveSession = () => {
+  if (S.token) localStorage.setItem('anc_token', S.token); else localStorage.removeItem('anc_token');
+  if (S.user) localStorage.setItem('anc_user', JSON.stringify(S.user)); else localStorage.removeItem('anc_user');
+};
+
+/* ---------------- embedded fallback data (mirrors backend seed) ---------------- */
+const FALLBACK = {
+  crops: [
+    {id:'crop-paddy',nameEn:'Paddy (Common)',nameHi:'धान (सामान्य)',mspPerQuintal:2300},
+    {id:'crop-wheat',nameEn:'Wheat',nameHi:'गेहूं',mspPerQuintal:2425},
+    {id:'crop-maize',nameEn:'Maize',nameHi:'मक्का',mspPerQuintal:2225},
+    {id:'crop-moong',nameEn:'Moong (Green Gram)',nameHi:'मूंग',mspPerQuintal:8682},
+    {id:'crop-mustard',nameEn:'Mustard',nameHi:'सरसों',mspPerQuintal:5650},
+    {id:'crop-cotton',nameEn:'Cotton',nameHi:'कपास',mspPerQuintal:7121},
+  ],
+  villages: [
+    {id:'v-baranga',nameEn:'Baranga',nameHi:'बारंगा'},{id:'v-nandankanan',nameEn:'Nandankanan',nameHi:'नंदनकानन'},
+    {id:'v-chandaka',nameEn:'Chandaka',nameHi:'चांदका'},{id:'v-pahala',nameEn:'Pahala',nameHi:'पाहाळा'},
+    {id:'v-balakati',nameEn:'Balakati',nameHi:'बालाकाटी'},{id:'v-daruthenga',nameEn:'Daruthenga',nameHi:'दारुथेंगा'},
+    {id:'v-harirajpur',nameEn:'Harirajpur',nameHi:'हरिराजपुर'},{id:'v-mendhasala',nameEn:'Mendhasala',nameHi:'मेंढसाला'},
+    {id:'v-shankarpur',nameEn:'Shankarpur',nameHi:'शंकरपुर'},{id:'v-godi',nameEn:'Godibandha',nameHi:'गोदीबंधा'},
+    {id:'v-uttara',nameEn:'Uttara',nameHi:'उत्तरा'},{id:'v-pipili',nameEn:'Pipili (Rural)',nameHi:'पिपली (ग्रामीण)'},
+  ]
+};
+const crops = () => (S.ref?.crops?.length ? S.ref.crops : FALLBACK.crops);
+const villages = () => (S.ref?.villages?.length ? S.ref.villages : FALLBACK.villages);
+const byId = (arr,id) => (arr||[]).find(x => x && x.id === id) || null;
+const cropName = id => { const c = byId(crops(),id); return c ? (S.lang==='hi' ? c.nameHi : c.nameEn) : (id||'—'); };
+const villageName = id => { const v = byId(villages(),id); return v ? (S.lang==='hi' ? v.nameHi : v.nameEn) : (id||'—'); };
+
+/* ---------------- i18n ---------------- */
+const I18N = {
+en:{
+  dash:'Dashboard', newReq:'New Request', statusNav:'My Token', history:'History', centres:'Centres', idcard:'ID Card',
+  queue:'Queue', requests:'Requests', assisted:'Assisted Entry', overview:'District Overview',
+  login:'Log in', register:'Register', logout:'Log out', phone:'Phone number', password:'Password', name:'Full name',
+  village:'Village', signIn:'Sign in to your account', createAccount:'Create farmer account',
+  welcomeBack:'Welcome back', noAccount:'New farmer?', haveAccount:'Already registered?',
+  crop:'Crop', quantity:'Quantity (quintals)', findCentre:'Find best centre', confirm:'Confirm & book token',
+  loading:'Loading', retry:'Retry', cancel:'Cancel', close:'Close', save:'Save', submit:'Submit',
+  serverLive:'Server live', serverWaking:'Waking up the server…', serverDown:'Server unreachable',
+  serverWakingHint:'Render free tier sleeps when idle — first request can take ±60 s. Hang on, we keep retrying for you.',
+  activeToken:'Active token', queuePos:'Queue position', estWait:'Est. wait', minutes:'min', ahead:'farmers ahead',
+  notifications:'Notifications', markAllRead:'Mark all read', noNotifs:'No notifications yet',
+  quickFarmer:'Farmer demo', quickOfficer:'Officer demo', quickAuthority:'Authority demo',
+  msp:'MSP', perQ:'/quintal', capacity:'Capacity', wait:'Wait', distance:'Distance', scoreBasis:'Transparent scoring: 45% wait · 30% distance · 25% capacity',
+  asstTitle:'Kisan Sahayak', asstSub:'Instant answers — works offline', asstPlaceholder:'Ask about tokens, queue, MSP…',
+  serverErr:'Could not reach the server', timeout:'Server is taking too long — it may be waking up. Try again in a few seconds.',
+  offline_ok:'Working on cached data',
+},
+hi:{
+  dash:'डैशबोर्ड', newReq:'नया अनुरोध', statusNav:'मेरा टोकन', history:'इतिहास', centres:'केंद्र', idcard:'पहचान पत्र',
+  queue:'कतार', requests:'अनुरोध', assisted:'सहायता प्रविष्टि', overview:'जिला अवलोकन',
+  login:'लॉग इन', register:'पंजीकरण', logout:'लॉग आउट', phone:'फ़ोन नंबर', password:'पासवर्ड', name:'पूरा नाम',
+  village:'गाँव', signIn:'अपने खाते में साइन इन करें', createAccount:'किसान खाता बनाएं',
+  welcomeBack:'फिर से स्वागत है', noAccount:'नए किसान?', haveAccount:'पहले से पंजीकृत?',
+  crop:'फसल', quantity:'मात्रा (क्विंटल)', findCentre:'सबसे अच्छा केंद्र खोजें', confirm:'पुष्टि करें और टोकन बुक करें',
+  loading:'लोड हो रहा है', retry:'पुनः प्रयास', cancel:'रद्द करें', close:'बंद करें', save:'सहेजें', submit:'जमा करें',
+  serverLive:'सर्वर चालू है', serverWaking:'सर्वर जाग रहा है…', serverDown:'सर्वर unavailable',
+  serverWakingHint:'Render का free plan idle होने पर सो जाता है — पहला request में ±60 सेकंड लग सकते हैं। हम अपने-आप retry कर रहे हैं।',
+  activeToken:'सक्रिय टोकन', queuePos:'कतार में स्थान', estWait:'अनुमानित प्रतीक्षा', minutes:'मिनट', ahead:'किसान आगे',
+  notifications:'सूचनाएं', markAllRead:'सब पढ़ा हुआ करें', noNotifs:'अभी कोई सूचना नहीं',
+  quickFarmer:'किसान डेमो', quickOfficer:'अधिकारी डेमो', quickAuthority:'प्राधिकरण डेमो',
+  msp:'MSP', perQ:'/क्विंटल', capacity:'क्षमता', wait:'प्रतीक्षा', distance:'दूरी', scoreBasis:'पारदर्शी स्कोरिंग: 45% प्रतीक्षा · 30% दूरी · 25% क्षमता',
+  asstTitle:'किसान सहायक', asstSub:'तुरंत जवाब — ऑफ़लाइन भी चलता है', asstPlaceholder:'टोकन, कतार, MSP के बारे में पूछें…',
+  serverErr:'सर्वर से संपर्क नहीं हो पाया', timeout:'सर्वर समय ले रहा है — शायद जाग रहा है। कुछ सेकंड में फिर कोशिश करें।',
+  offline_ok:'कैश डेटा पर चल रहा है',
+}};
+const t = k => I18N[S.lang][k] ?? I18N.en[k] ?? k;
+
+/* ---------------- utils ---------------- */
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const inr = n => '₹' + Number(n||0).toLocaleString('en-IN');
+const dt = iso => { try { return new Date(iso).toLocaleString(S.lang==='hi'?'hi-IN':'en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}); } catch { return '—'; } };
+const renderIcons = () => { try { window.lucide && lucide.createIcons(); } catch {} };
+const safe = (fn, fallback) => { try { return fn(); } catch (e) { console.warn('[ui-safe]', e); return fallback ?? errCard(e); } };
+function errCard(e, retryAction){
+  return `<div class="card p-8 text-center max-w-md mx-auto rise">
+    <div class="w-12 h-12 mx-auto b-red badge icbox mb-3"><i data-lucide="cloud-off" class="w-5 h-5"></i></div>
+    <div class="font-display font-semibold text-lg mb-1">${esc(t('serverErr'))}</div>
+    <p class="text-sm text-[var(--ink-soft)] mb-4">${esc(e?.message || t('timeout'))}</p>
+    ${retryAction ? `<button class="btn btn-primary btn-sm" data-action="${retryAction}"><i data-lucide="refresh-cw" class="w-4 h-4"></i>${t('retry')}</button>` : ''}
+  </div>`;
+}
+function toast(msg, kind='ok'){
+  const root = $('#toast-root'); const el = document.createElement('div');
+  const colors = {ok:'border-[var(--leaf)]', err:'border-[var(--red)]', info:'border-[var(--amber)]'};
+  const icons = {ok:'check-circle-2', err:'alert-triangle', info:'info'};
+  el.className = `toast card border-l-4 ${colors[kind]||colors.ok} px-4 py-3 flex items-start gap-3 text-sm`;
+  el.innerHTML = `<i data-lucide="${icons[kind]||icons.ok}" class="w-4.5 h-4.5 mt-0.5 shrink-0"></i><span class="flex-1">${esc(msg)}</span>`;
+  root.appendChild(el); renderIcons();
+  setTimeout(() => { el.style.transition='opacity .4s'; el.style.opacity='0'; setTimeout(()=>el.remove(), 400); }, 4200);
+}
+function skeletonPage(rows=4){
+  return `<div class="space-y-4 pt-2">${Array.from({length:rows},(_,i)=>`<div class="skeleton h-${i===0?'40':'24'}"></div>`).join('')}</div>`;
+}
+function statusBadge(st){
+  const map = {WAITING:'b-amber',CALLED:'b-blue',PROCESSING:'b-blue',COMPLETED:'b-green',CANCELLED:'b-gray',REJECTED:'b-red',PENDING:'b-amber',OPEN:'b-green',PAUSED:'b-amber',CLOSED:'b-red',PAID:'b-green'};
+  const hi = {WAITING:'प्रतीक्षारत',CALLED:'बुलाया गया',PROCESSING:'प्रोसेसिंग',COMPLETED:'पूर्ण',CANCELLED:'रद्द',REJECTED:'अस्वीकृत',PENDING:'लंबित',OPEN:'खुला',PAUSED:'रुका',CLOSED:'बंद',PAID:'भुगतान हुआ'};
+  return `<span class="badge ${map[st]||'b-gray'}">${esc(S.lang==='hi' ? (hi[st]||st) : st)}</span>`;
+}
+/* polling manager — pauses on hidden tab, cleared on navigation */
+function startPoll(key, fn, ms){
+  stopPoll(key);
+  const tick = () => { if (document.hidden) return; Promise.resolve(fn()).catch(()=>{}); };
+  tick();
+  S.polls.set(key, setInterval(tick, ms));
+}
+function stopPoll(key){ const id = S.polls.get(key); if (id) clearInterval(id); S.polls.delete(key); }
+function stopAllPolls(){ [...S.polls.keys()].forEach(stopPoll); }
+document.addEventListener('visibilitychange', () => { if (!document.hidden) renderHeader(); });
+
+/* ---------------- API layer (timeout + retry + wake progress) ---------------- */
+class ApiError extends Error { constructor(code, message, status){ super(message); this.code = code; this.status = status; } }
+async function apiFetch(path, {method='GET', body, auth=true, timeoutMs=90000, quiet=false} = {}, attempt=1){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(new ApiError('TIMEOUT', t('timeout'))), timeoutMs);
+  let slowTimer = null;
+  if (!quiet) slowTimer = setTimeout(() => setServerState('waking'), 9000);
+  try {
+    const res = await fetch(S.apiBase + path, {
+      method, signal: ctrl.signal,
+      headers: {
+        ...(body ? {'Content-Type':'application/json'} : {}),
+        ...(auth && S.token ? {'Authorization':'Bearer ' + S.token} : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    let data = null;
+    try { data = await res.json(); } catch { data = null; }
+    if (!res.ok) {
+      const err = (data && data.error) || {};
+      if (res.status === 401 && (err.code === 'AUTH_TOKEN_INVALID') && S.token) {
+        S.token = null; S.user = null; saveSession(); location.hash = '#/login';
+      }
+      throw new ApiError(err.code || ('HTTP_' + res.status), err.message || ('Request failed (' + res.status + ')'), res.status);
+    }
+    setServerState('up');
+    return data;
+  } catch (e) {
+    const retriable = e.name === 'AbortError' || e instanceof TypeError || e.code === 'TIMEOUT';
+    if (retriable && attempt < 2) {
+      await new Promise(r => setTimeout(r, 2500));
+      return apiFetch(path, {method, body, auth, timeoutMs, quiet}, attempt + 1);
+    }
+    if (e.name === 'AbortError') throw new ApiError('TIMEOUT', t('timeout'));
+    if (e instanceof TypeError) { setServerState('down'); throw new ApiError('NETWORK_ERROR', t('serverErr')); }
+    throw e;
+  } finally {
+    clearTimeout(timer); if (slowTimer) clearTimeout(slowTimer);
+  }
+}
+/* server status pill */
+let wakeStart = 0, wakeTicker = null;
+function setServerState(st){
+  const dot = $('#server-dot'), txt = $('#server-txt'); if (!dot || !txt) return;
+  clearInterval(wakeTicker); wakeTicker = null;
+  if (st === 'up') { S.serverUp = true; S.serverWaking = false; wakeStart = 0;
+    dot.style.animation = ''; dot.className = 'w-2 h-2 rounded-full bg-emerald-500'; txt.textContent = t('serverLive'); }
+  else if (st === 'waking') { S.serverWaking = true;
+    dot.className = 'w-2 h-2 rounded-full bg-[var(--amber)]'; dot.style.animation = 'pulseDot 1.2s infinite';
+    if (!wakeStart) wakeStart = Date.now();
+    const tick = () => { txt.textContent = `${t('serverWaking')} ${Math.round((Date.now()-wakeStart)/1000)}s`; };
+    tick(); wakeTicker = setInterval(tick, 1000);
+  }
+  else if (st === 'down') { S.serverUp = false; S.serverWaking = false; wakeStart = 0;
+    dot.style.animation = ''; dot.className = 'w-2 h-2 rounded-full bg-[var(--red)]'; txt.textContent = t('serverDown'); }
+}
+/* Base resolution: 1) user override in localStorage  2) same-origin backend
+   (when this file is served BY the backend itself)  3) default Render URL */
+async function detectBase(){
+  if (localStorage.getItem('anc_api_base')) return;
+  try {
+    const ctrl = new AbortController();
+    const to = setTimeout(() => ctrl.abort(), 6000);
+    const r = await fetch(location.origin + '/api/health', {signal: ctrl.signal});
+    clearTimeout(to);
+    if (r.ok) {
+      const d = await r.json().catch(() => null);
+      if (d && d.status === 'ok') S.apiBase = '';   // same-origin — no prefix needed
+    }
+  } catch { /* static host — keep DEFAULT_API */ }
+}
+async function warmUp(){
+  wakeStart = Date.now(); setServerState('waking');
+  try { await apiFetch('/api/health', {auth:false, quiet:true, timeoutMs:90000}); }
+  catch { /* state already handled */ }
+}
+/* ---------------- session / nav ---------------- */
+const role = () => S.user?.role || null;
+async function loadReference(force=false){
+  const stale = !S.ref?.ts || (Date.now() - S.ref.ts > 6*3600e3);
+  if (!force && !stale) return;
+  try {
+    const [c, v] = await Promise.all([
+      apiFetch('/api/reference/crops', {auth:false, quiet:true}),
+      apiFetch('/api/reference/villages', {auth:false, quiet:true}),
+    ]);
+    S.ref = { crops: c.crops || [], villages: v.villages || [], ts: Date.now() };
+    localStorage.setItem('anc_ref', JSON.stringify(S.ref));
+  } catch { /* fallback data keeps UI alive */ }
+}
+const NAV_BY_ROLE = {
+  farmer: [['dash','/farmer','layout-dashboard'],['newReq','/new-request','file-plus-2'],['statusNav','/status','ticket'],['centres','/centres','warehouse'],['history','/history','history'],['idcard','/id-card','id-card']],
+  officer: [['dash','/officer','layout-dashboard'],['queue','/officer/queue','list-ordered'],['assisted','/officer/assisted','user-plus'],['slog','/officer/sms','message-square-text']],
+  authority: [['overview','/authority','bar-chart-3']],
+};
+function renderHeader(){
+  const r = role();
+  const nav = NAV_BY_ROLE[r] || [];
+  const cur = location.hash.replace('#','') || '/';
+  const isActive = href => href.split('/').filter(Boolean).length <= 1 ? cur === href : cur.startsWith(href);
+  const link = ([k,href,ic]) => `<a href="#${href}" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${isActive(href) ? 'text-white shadow-sm' : 'hover:bg-[var(--paper2)]'}" ${isActive(href) ? 'style="background:linear-gradient(180deg,var(--leaf-bright),var(--leaf))"' : ''}><i data-lucide="${ic}" class="w-4 h-4"></i>${t(k)}</a>`;
+  const tab = ([k,href,ic]) => `<a href="#${href}" class="${isActive(href) ? 'active' : ''}"><i data-lucide="${ic}"></i><span>${t(k)}</span></a>`;
+  $('#nav-links').innerHTML = nav.map(link).join('');
+  const tb = $('#tabbar'); if (tb) tb.innerHTML = nav.map(tab).join('');
+  document.body.classList.toggle('loggedin', !!S.user);
+  $('#lang-btn').textContent = S.lang === 'en' ? 'हिंदी' : 'English';
+  document.documentElement.lang = S.lang === 'hi' ? 'hi' : 'en';
+  const auth = $('#nav-auth');
+  if (S.user) {
+    auth.innerHTML = `
+      <button data-action="notifs" class="relative chip chip-sm" aria-label="${t('notifications')}">
+        <i data-lucide="bell" class="w-4 h-4"></i>
+        <span id="notif-count" class="hidden absolute -top-1.5 -right-1.5 min-w-4 h-4 px-0.5 rounded-full bg-[var(--red)] text-white text-[10px] font-bold grid place-items-center"></span>
+      </button>
+      <span class="hidden sm:flex chip chip-static"><i data-lucide="user-round" class="w-3.5 h-3.5"></i>${esc(S.user.name)}</span>
+      <button data-action="logout" class="btn btn-ghost btn-sm"><i data-lucide="log-out" class="w-4 h-4"></i><span class="hidden sm:inline">${t('logout')}</span></button>`;
+  } else {
+    auth.innerHTML = `
+      <a href="#/login" class="btn btn-ghost btn-sm">${t('login')}</a>
+      <a href="#/register" class="btn btn-primary btn-sm">${t('register')}</a>`;
+  }
+  $('#foot-api').textContent = 'API: ' + (S.apiBase ? S.apiBase.replace('https://','') : location.host + ' (same origin)');
+  renderIcons();
+  if (S.user) refreshNotifBadge();
+}
+async function refreshNotifBadge(){
+  try {
+    const d = await apiFetch('/api/notifications', {quiet:true, timeoutMs:20000});
+    const b = $('#notif-count'); if (!b) return;
+    const n = d.unreadCount || 0;
+    b.classList.toggle('hidden', !n); b.textContent = n > 9 ? '9+' : n;
+  } catch {}
+}
+
+/* ================= ASSISTANT — local rule-based brain =================
+   Ported from the repo's assistant/brain.js, extended with optional
+   LIVE intents. The static path is synchronous and cannot hang; live
+   paths are wrapped in short timeouts and always degrade gracefully. */
+const ASST_TXT = {
+en:{
+  greeting:"Namaste! I'm Kisan Sahayak. Ask me about booking a token, your queue position, MSP rates, or how the app works. I answer instantly and never hang.",
+  what_is:"Annadata Connect is Khordha district's crop-procurement platform. You book a selling slot online, get a token (ANC-…), watch your queue position live, and receive payment at MSP — no middlemen, no waiting in the sun all day.",
+  register:"Tap Register at the top, enter your name, phone number, a password, and pick your village. That's it — you can immediately book your first token.",
+  generate_token:"To book a token: 1) Log in → 2) New Request → 3) pick your crop and quantity → 4) tap 'Find best centre' — we score every OPEN centre by wait time, distance and free capacity → 5) confirm. Your token ANC-xxx appears instantly.",
+  where_token:"Your active token lives under 'My Token' in the menu. It shows the token number, the centre, your queue position and the estimated wait — it refreshes automatically.",
+  check_status:"Open 'My Token' to see the live status: WAITING → CALLED → PROCESSING → COMPLETED. You also get a notification at every step, so there's no need to stand in line early.",
+  queue_position:"Your exact queue position and estimated wait are shown on the 'My Token' page. Wait = farmers ahead × the centre's average minutes per farmer.",
+  centre_choice:"Tap 'Find best centre' while creating a request. Scoring is transparent: 45% expected wait + 30% distance from your village + 25% how full the centre is. Only OPEN centres with enough free capacity for your quantity are eligible.",
+  msp:"MSP paid here (₹/quintal): Paddy 2300 · Wheat 2425 · Maize 2225 · Moong 8682 · Mustard 5650 · Cotton 7121. Payment amount = your quantity × MSP.",
+  payment_info:"When the officer completes your procurement, a payment record opens automatically (quantity × MSP). You can track it in History — it shows PENDING until the centre marks it PAID with a reference number.",
+  change_language:"Use the हिंदी / English button at the top-right — the whole app, including me, switches instantly and remembers your choice.",
+  assisted:"No smartphone? No problem. Walk into any procurement centre — the officer's 'Assisted Entry' desk creates your token at the counter. Your account password for next time is Kisan@123.",
+  hours:"Centres generally run 08:00–18:00. Check the Centres page — a PAUSED or CLOSED centre stops taking tokens, and the app only recommends OPEN ones.",
+  thanks:"Anytime! Good luck with the harvest.",
+  fallback:"I'm a rule-based assistant, so I answer questions about Annadata Connect — tokens, queue, centres, MSP, payments, registration. Try one of the quick questions below.",
+},
+hi:{
+  greeting:"नमस्ते! मैं किसान सहायक हूं। टोकन बुकिंग, कतार में आपका नंबर, MSP रेट या ऐप के इस्तेमाल के बारे में पूछिए। मैं तुरंत जवाब देता हूं और कभी अटकता नहीं।",
+  what_is:"अन्नदाता कनेक्ट खोर्धा जिले का फसल-खरीद मंच है। ऑनलाइन स्लॉट बुक करें, टोकन (ANC-…) पाएं, कतार में अपना नंबर लाइव देखें और MSP पर भुगतान पाएं — बिना बिचौलिये, बिना घंटों लाइन में खड़े रहे।",
+  register:"ऊपर 'पंजीकरण' दबाएं, अपना नाम, फ़ोन नंबर, पासवर्ड और गाँव चुनें। बस — तुरंत पहला टोकन बुक कर सकते हैं।",
+  generate_token:"टोकन बुक करने के लिए: 1) लॉग इन → 2) 'नया अनुरोध' → 3) फसल और मात्रा चुनें → 4) 'सबसे अच्छा केंद्र खोजें' दबाएं — हर खुले केंद्र का स्कोर प्रतीक्षा, दूरी और खाली क्षमता से निकलता है → 5) पुष्टि करें। टोकन ANC-xxx तुरंत मिल जाता है।",
+  where_token:"आपका सक्रिय टोकन मेनू में 'मेरा टोकन' में मिलेगा — टोकन नंबर, केंद्र, कतार में स्थान और अनुमानित प्रतीक्षा, सब अपने-आप ताज़ा होता रहता है।",
+  check_status:"'मेरा टोकन' खोलें और लाइव स्थिति देखें: प्रतीक्षारत → बुलाया गया → प्रोसेसिंग → पूर्ण। हर कदम पर सूचना भी मिलती है — जल्दी लाइन में खड़े होने की ज़रूरत नहीं।",
+  queue_position:"कतार में आपका सटीक नंबर और अनुमानित प्रतीक्षा 'मेरा टोकन' पेज पर दिखता है। प्रतीक्षा = आगे के किसान × केंद्र का औसत समय प्रति किसान।",
+  centre_choice:"अनुरोध बनाते समय 'सबसे अच्छा केंद्र खोजें' दबाएं। स्कोरिंग पारदर्शी है: 45% अनुमानित प्रतीक्षा + 30% गाँव से दूरी + 25% केंद्र कितना भरा है। सिर्फ वही केंद्र eligible हैं जो खुले हों और आपकी मात्रा के लिए जगह हो।",
+  msp:"यहाँ MSP (₹/क्विंटल): धान 2300 · गेहूं 2425 · मक्का 2225 · मूंग 8682 · सरसों 5650 · कपास 7121। भुगतान = आपकी मात्रा × MSP।",
+  payment_info:"अधिकारी के खरीद पूरी करते ही भुगतान रिकॉर्ड अपने-आप बन जाता है (मात्रा × MSP)। 'इतिहास' में ट्रैक करें — जब तक केंद्र रेफरेंस नंबर के साथ PAID न करे, तब तक PENDING दिखेगा।",
+  change_language:"ऊपर दाईं ओर हिंदी / English बटन दबाएं — पूरा ऐप, मैं भी, तुरंत बदल जाता है और पसंद याद रहती है।",
+  assisted:"स्मार्टफोन नहीं है? कोई बात नहीं। किसी भी खरीद केंद्र जाएं — अधिकारी की 'सहायता प्रविष्टि' डेस्क काउंटर पर टोकन बना देगी। अगली बार के लिए आपका पासवर्ड Kisan@123 होगा।",
+  hours:"केंद्र आमतौर पर 08:00–18:00 चलते हैं। 'केंद्र' पेज देखें — रुका या बंद केंद्र टोकन नहीं लेता, और ऐप सिर्फ खुले केंद्र recommend करता है।",
+  thanks:"कभी भी! फसल के लिए शुभकामनाएं।",
+  fallback:"मैं नियम-आधारित सहायक हूं — टोकन, कतार, केंद्र, MSP, भुगतान, पंजीकरण जैसे विषयों पर जवाब देता हूं। नीचे दिए quick questions आज़माएं।",
+}};
+const ASST_INTENTS = [
+  {key:'queue_position', live:'queue', patterns:[/(queue|katar|line|कतार|लाइन).*(mera|meri|mer|my|position|number|क्या|बता|hai|है)/i,/(mera|meri|मेरा|मेरी).*(number|queue|position|नंबर|कतार)/i,/(kab|कब).*(bari|turn|बारी)/i]},
+  {key:'check_status', live:'status', patterns:[/(status|स्थिति|स्टेटस).*(check|kya|kaise|क्या|कैसे|बता|देख|hai|है)/i,/(procurement|khareed|kharid|खरीद).*(status|स्थिति)/i,/(token|टोकन).*(status|स्थिति)/i]},
+  {key:'payment_info', live:'pay', patterns:[/(payment|paisa|paise|paise|पैस|भुगतान).*(kab|kya|kaise|कब|कैसे|कितन|मिले|आए|hai|status)/i,/(paid|payment|भुगतान)/i]},
+  {key:'msp', patterns:[/(msp|rate|bhav|daam|भाव|दाम|रेट)/i,/minimum support/i]},
+  {key:'generate_token', patterns:[/token.*(generate|bana|kaise|ban|लेना|बना|कैसे|le)/i,/(token|टोकन).*(बन|कैसे|लेना|ले)/i,/(request|फसल).*(kaise|kare|बेच|bech|submit|कर|भेज)/i]},
+  {key:'where_token', patterns:[/(token|टोकन).*(kaha|where|dikhe|कहां|कहाँ|देख)/i,/(कहां|कहाँ|where).*(token|टोकन)/i]},
+  {key:'centre_choice', patterns:[/(centre|center|kendra|केंद्र|केन्द्र).*(kaunsa|which|choose|best|badal|चुन|कौन|बदल)/i,/(kaunsa|कौन).*(centre|केंद्र)/i]},
+  {key:'register', patterns:[/(register|registration|पंजीकरण|account|खाता).*(kaise|कैसे|karo|kare|बना|how)/i,/पंजीकरण/i]},
+  {key:'assisted', patterns:[/(smartphone|phone|फोन).*(nahi|नहीं|without)/i,/(assist|असिस्ट|counter|काउंटर)/i]},
+  {key:'hours', patterns:[/(time|timing|hours|samay|समय|खुल|कब खुल)/i]},
+  {key:'change_language', patterns:[/(language|bhasha|भाषा).*(change|badal|बदल|कैसे)/i,/(hindi|हिंदी|हिन्दी).*(me|में).*(bol|baat|बोल)/i]},
+  {key:'what_is', patterns:[/(annadata|anna\s?data|अन्नदाता).*(kya|what|hai|क्या|है)/i,/(what|क्या).*(is|है).*(this|यह).*(app|platform)/i]},
+  {key:'thanks', patterns:[/^(thanks|thank you|dhanyavad|shukriya|धन्यवाद|शुक्रिया)[.!\s]*$/i]},
+];
+const ASST_CHIPS = {
+  en:['How do I book a token?','What is my queue number?','What MSP do I get?','When will I get paid?'],
+  hi:['टोकन कैसे बनाएं?','कतार में मेरा नंबर क्या है?','MSP कितना मिलेगा?','पैसा कब मिलेगा?'],
+};
+/* Live answers — each has a hard guard and static fallback */
+async function asstLive(kind){
+  if (role() !== 'farmer') return null;
+  const me = await apiFetch('/api/farmers/me', {quiet:true, timeoutMs:15000});
+  const req = me?.activeRequest;
+  if (!req) return S.lang==='hi'
+    ? 'अभी आपका कोई सक्रिय अनुरोध नहीं है। नया टोकन बुक करने के लिए "नया अनुरोध" से शुरू करें।'
+    : "You don't have an active request right now. Head to 'New Request' to book a token.";
+  if (kind === 'pay') {
+    const list = await apiFetch('/api/requests/mine', {quiet:true, timeoutMs:15000}).catch(()=>null);
+    const done = (list?.requests || []).find(r => r?.payment);
+    if (!done) return S.lang==='hi' ? 'अभी तक कोई भुगतान रिकॉर्ड नहीं बना — खरीद पूरी होते ही अपने-आप बन जाएगा।' : 'No payment record yet — it opens automatically the moment a procurement is completed.';
+    const p = done.payment;
+    return S.lang==='hi'
+      ? `भुगतान ${p.status==='PAID'?'PAID ✓':'PENDING'}: ${inr(p.amountInr)} (${done.token||''})। ${p.status==='PAID' ? 'रेफरेंस: '+(p.reference||'—') : 'केंद्र PAID मार्क करते ही यहाँ दिख जाएगा।'}`
+      : `Payment ${p.status}: ${inr(p.amountInr)} for token ${done.token||''}. ${p.status==='PAID' ? 'Reference: '+(p.reference||'—') : 'The centre will mark it PAID with a UTR reference.'}`;
+  }
+  const det = await apiFetch('/api/requests/' + encodeURIComponent(req.id), {quiet:true, timeoutMs:15000}).catch(()=>null);
+  const q = det?.queue || {};
+  if (kind === 'status') {
+    return S.lang==='hi'
+      ? `आपका टोकन ${req.token||''} अभी ${req.status} है${q.position ? ` — कतार में नंबर ${q.position}, अनुमानित प्रतीक्षा ~${q.estimatedWaitMinutes} मिनट।` : '।'}`
+      : `Your token ${req.token||''} is currently ${req.status}${q.position ? ` — position ${q.position}, ~${q.estimatedWaitMinutes} min estimated wait.` : '.'}`;
+  }
+  if (kind === 'queue') {
+    if (!q.position) return S.lang==='hi' ? 'कतार की जानकारी अभी उपलब्ध नहीं — एक मिनट में फिर पूछें।' : 'Queue info is not available this second — ask again in a minute.';
+    return S.lang==='hi'
+      ? `कतार में आपका नंबर ${q.position} है — ${q.aheadCount} किसान आगे, अनुमानित प्रतीक्षा ~${q.estimatedWaitMinutes} मिनट।`
+      : `You are #${q.position} in the queue — ${q.aheadCount} farmer(s) ahead, ~${q.estimatedWaitMinutes} min estimated wait.`;
+  }
+  return null;
+}
+async function asstAnswer(q){
+  const norm = String(q||'').toLowerCase().replace(/[??]/g,' ').replace(/\s+/g,' ').trim();
+  if (!norm) return null;
+  for (const it of ASST_INTENTS) {
+    if (!it.patterns.some(p => p.test(norm))) continue;
+    if (it.live) {
+      try { const live = await asstLive(it.live); if (live) return live; } catch {}
+    }
+    return ASST_TXT[S.lang][it.key] || ASST_TXT.en[it.key];
+  }
+  return ASST_TXT[S.lang].fallback;
+}
+/* widget controller — every path wrapped, message history capped */
+const Asst = {
+  open:false, busy:false, msgs:[],
+  init(){
+    $('#asst-form').addEventListener('submit', e => { e.preventDefault(); this.send(); });
+    $('#asst-input').placeholder = t('asstPlaceholder');
+    $('#asst-title').textContent = t('asstTitle');
+    $('#asst-sub').textContent = t('asstSub');
+    this.renderChips();
+  },
+  toggle(force){
+    this.open = force !== undefined ? force : !this.open;
+    $('#asst-panel').classList.toggle('hidden-panel', !this.open);
+    if (this.open && !this.msgs.length) this.push('bot', ASST_TXT[S.lang].greeting);
+    if (this.open) setTimeout(() => $('#asst-input').focus(), 250);
+  },
+  renderChips(){
+    $('#asst-chips').innerHTML = (ASST_CHIPS[S.lang]||ASST_CHIPS.en).map(c =>
+      `<button class="chip chip-sm" data-action="asstChip" data-q="${esc(c)}">${esc(c)}</button>`).join('');
+  },
+  push(from, text){
+    this.msgs.push({from, text: String(text ?? '')});
+    if (this.msgs.length > 80) this.msgs = this.msgs.slice(-80);
+    const body = $('#asst-body');
+    body.querySelector('.typing-row')?.remove();
+    body.insertAdjacentHTML('beforeend', `<div class="msg ${from==='bot'?'msg-bot':'msg-user'}">${esc(text)}</div>`);
+    body.scrollTo({top: body.scrollHeight, behavior:'smooth'});
+  },
+  typing(on){
+    const body = $('#asst-body');
+    body.querySelector('.typing-row')?.remove();
+    if (on) {
+      body.insertAdjacentHTML('beforeend', `<div class="msg msg-bot typing-row flex gap-1 items-center"><span class="tdot"></span><span class="tdot"></span><span class="tdot"></span></div>`);
+      body.scrollTo({top: body.scrollHeight});
+    }
+  },
+  async send(raw){
+    try {
+      const inp = $('#asst-input');
+      const q = String(raw ?? inp.value || '').trim().slice(0, 300);
+      if (!q || this.busy) return;
+      this.busy = true; inp.value = '';
+      this.push('user', q);
+      this.typing(true);
+      const started = Date.now();
+      const reply = await asstAnswer(q).catch(() => ASST_TXT[S.lang].fallback);
+      /* keep the typing beat natural but capped — never feels hung */
+      const wait = Math.max(0, Math.min(900 - (Date.now()-started), 900));
+      setTimeout(() => { this.typing(false); this.push('bot', reply || ASST_TXT[S.lang].fallback); this.busy = false; }, wait);
+    } catch (e) { /* absolute last-resort net */
+      this.typing(false); this.push('bot', ASST_TXT[S.lang].fallback); this.busy = false;
+    }
+  },
+};
+
+/* ---------------- shared view atoms ---------------- */
+const Views = {};
+function setView(name, ctx={}){
+  stopAllPolls();
+  const v = Views[name]; const appEl = $('#app');
+  if (!v) { appEl.innerHTML = errCard(new Error('Unknown view'), 'goHome'); renderIcons(); return; }
+  appEl.innerHTML = safe(() => v.html(ctx) || '');
+  renderIcons();
+  try { v.mount?.(ctx); } catch (e) { console.warn('[mount]', e); }
+  window.scrollTo({top:0});
+}
+const statCard = (ic, label, val, sub='', tint='b-green') => `
+  <div class="card p-4 flex items-start gap-3">
+    <span class="badge ${tint} icbox"><i data-lucide="${ic}" class="w-4.5 h-4.5"></i></span>
+    <div><div class="text-[11px] font-semibold uppercase tracking-wider text-[var(--ink-soft)]">${label}</div>
+    <div class="font-display font-semibold text-2xl num leading-tight">${val}</div>
+    ${sub ? `<div class="text-xs text-[var(--ink-soft)]">${sub}</div>` : ''}</div>
+  </div>`;
+const emptyState = (ic, title, msg, cta='') => `
+  <div class="card p-10 text-center rise">
+    <span class="badge b-amber icbox-lg mb-3"><i data-lucide="${ic}" class="w-6 h-6"></i></span>
+    <div class="font-display font-semibold text-xl mb-1">${title}</div>
+    <p class="text-sm text-[var(--ink-soft)] max-w-sm mx-auto mb-4">${msg}</p>${cta}
+  </div>`;
+const pageHead = (title, sub, extra='') => `
+  <div class="flex flex-wrap items-end gap-3 mb-6 rise">
+    <div class="flex-1 min-w-52"><h1 class="font-display font-semibold text-3xl md:text-4xl">${title}</h1>
+    ${sub ? `<p class="text-sm text-[var(--ink-soft)] mt-1">${sub}</p>` : ''}</div>${extra}
+  </div>`;
+
+/* ============================ LANDING ============================ */
+Views.landing = {
+  html(){
+    const hi = S.lang === 'hi';
+    const tickItem = c => `<span class="inline-flex items-center gap-2 px-6"><b class="font-semibold">${esc(hi?c.nameHi:c.nameEn)}</b><span class="num text-[var(--amber-deep)] font-bold">₹${c.mspPerQuintal}</span><span class="text-[11px] opacity-55">${t('perQ')}</span></span>`;
+    const tickItems = crops().map(tickItem).join('<span class="tick-sep">◆</span>');
+    return `
+    <section class="relative -mx-4 px-4">
+      <div class="relative rounded-[1.6rem] md:rounded-[2.4rem] overflow-hidden" style="box-shadow:var(--sh-lg)">
+        <div class="hero-parallax absolute inset-x-0 -top-14" style="height:calc(100% + 3.5rem)">
+          <img src="https://images.pexels.com/photos/20445169/pexels-photo-20445169.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="Indian farmer in a wheat field" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#06170E] via-[#06170E73] to-[#06170E14]"></div>
+        <div class="relative px-5 sm:px-8 md:px-12 pt-44 sm:pt-52 md:pt-64 pb-10 md:pb-16 text-white max-w-3xl">
+          <div class="badge mb-4 rise" style="background:var(--amber);color:#2A1A00"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i>KHORDHA DISTRICT · ODISHA</div>
+          <h1 class="font-display font-semibold hero-title rise rise-1">${hi ? 'अपनी फसल बेचें,' : 'Sell your harvest,'}<br><span class="italic grad-text">${hi ? 'बिना लाइन में खड़े हुए।' : 'skip the line.'}</span></h1>
+          <p class="mt-4 text-white/85 max-w-xl text-sm md:text-lg rise rise-2 leading-relaxed">${hi
+            ? 'ऑनलाइन टोकन बुक करें, कतार में अपना नंबर लाइव देखें, और MSP पर सीधे भुगतान पाएं। पारदर्शी केंद्र-चयन — कोई बिचौलिया नहीं।'
+            : 'Book a procurement token online, track your live queue position, and get paid at MSP — with fully transparent centre recommendations. No middlemen.'}</p>
+          <div class="mt-7 flex flex-wrap gap-3 rise rise-3">
+            <a href="#/register" class="btn btn-amber btn-lg"><i data-lucide="sprout" class="w-5 h-5"></i>${hi?'किसान पंजीकरण':'Register as farmer'}</a>
+            <a href="#/login" class="btn btn-lg bg-white/10 text-white border-white/30 hover:bg-white/20" style="backdrop-filter:blur(10px)"><i data-lucide="log-in" class="w-5 h-5"></i>${t('login')}</a>
+          </div>
+        </div>
+        <div class="hidden sm:block absolute right-6 md:right-12 bottom-10 floaty rise rise-3">
+          <div class="glass p-4 w-56">
+            <div class="flex items-center justify-between text-[9px] font-bold tracking-[.25em] uppercase opacity-70">
+              <span>${hi?'सक्रिय टोकन':'Active token'}</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400" style="animation:pulseDot 1.6s infinite"></span>
+            </div>
+            <div class="font-display font-semibold text-[1.65rem] tracking-[.14em] mt-1 num">ANC-248</div>
+            <div class="mt-2.5 flex items-center justify-between text-xs"><span class="opacity-75">${hi?'कतार · प्रतीक्षा':'Queue · wait'}</span><b class="num" style="color:#F5C15C">#3 · 24 ${t('minutes')}</b></div>
+            <div class="mt-2 h-1.5 rounded-full bg-white/15 overflow-hidden"><div class="h-full w-2/3 rounded-full" style="background:linear-gradient(90deg,#F5AD2C,var(--amber))"></div></div>
+            <div class="mt-2 text-[10px] opacity-70 num">${hi?'धान':'Paddy'} · 45 q · BBSR Central</div>
+          </div>
+        </div>
+      </div>
+      <div class="card relative z-10 -mt-7 mx-1 md:mx-10 py-2.5 overflow-hidden rise rise-4">
+        <div class="flex items-center gap-2 px-4 pb-1.5 text-[10px] font-bold uppercase tracking-[.22em] text-[var(--ink-soft)]"><i data-lucide="trending-up" class="w-3.5 h-3.5 text-[var(--leaf)]"></i>${t('msp')} · 2025-26</div>
+        <div class="marquee text-sm">
+          <div class="marquee-track">
+            <div class="flex shrink-0 items-center">${tickItems}</div>
+            <div class="flex shrink-0 items-center" aria-hidden="true">${tickItems}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stat-band rounded-[1.6rem] md:rounded-[1.9rem] mt-6 px-6 md:px-12 py-8 md:py-9 grid grid-cols-2 md:grid-cols-4 gap-6 rise">
+      ${[
+        [6, hi?'खरीद केंद्र':'procurement centres', 'warehouse'],
+        [12, hi?'गाँव कवर':'villages covered', 'map-pin'],
+        [6, hi?'फसलें MSP पर':'crops at MSP', 'wheat'],
+        [100, hi?'% पारदर्शी स्कोरिंग':'% transparent scoring', 'scale'],
+      ].map(([n,l,ic],i)=>`
+      <div class="flex md:justify-center items-center gap-3.5 rise rise-${i+1}">
+        <span class="w-10 h-10 rounded-xl bg-white/10 grid place-items-center shrink-0"><i data-lucide="${ic}" class="w-5 h-5"></i></span>
+        <div><div class="font-display font-semibold text-3xl md:text-4xl num leading-none"><span data-count="${n}">0</span></div>
+        <div class="text-[11px] md:text-xs opacity-70 mt-1 font-medium tracking-wide">${l}</div></div>
+      </div>`).join('')}
+    </section>
+
+    <section class="mt-14 md:mt-20">
+      <div class="text-center max-w-xl mx-auto mb-8 rise">
+        <div class="badge b-green mb-3"><i data-lucide="route" class="w-3.5 h-3.5"></i>${hi?'तीन आसान स्टेप':'THREE SIMPLE STEPS'}</div>
+        <h2 class="font-display font-semibold text-3xl md:text-[2.6rem] leading-tight">${hi?'खेत से भुगतान तक':'From field to payment'}</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+      ${[
+        ['ticket-check', '01', hi?'टोकन बुक करें':'Book a token', hi?'फसल और मात्रा चुनें — सिस्टम हर खुले केंद्र को प्रतीक्षा, दूरी और क्षमता पर स्कोर करता है और सबसे अच्छा suggest करता है।':'Pick crop and quantity — the system scores every open centre on wait, distance and free capacity, then suggests the best one.'],
+        ['timer', '02', hi?'घर से कतार देखें':'Queue from home', hi?'अपना नंबर और अनुमानित प्रतीक्षा लाइव देखें। हर स्टेप पर सूचना — बुलाए जाने पर ही केंद्र जाएं।':'Watch your position and estimated wait update live. Notified at every step — go only when called.'],
+        ['indian-rupee', '03', hi?'MSP पर भुगतान':'Paid at MSP', hi?'खरीद पूरी होते ही भुगतान रिकॉर्ड खुलता है — मात्रा × MSP, पूरा ऑडिट-ट्रेल के साथ।':'Payment opens the moment procurement completes — quantity × MSP, with a full audit trail.'],
+      ].map(([ic,num,tt,dd],i)=>`
+      <div class="card card-hover p-6 relative overflow-hidden rise rise-${i+1}">
+        <span class="absolute -top-4 right-2 font-display font-bold text-[5.4rem] leading-none select-none" style="color:var(--paper2)">${num}</span>
+        <span class="badge b-green icbox-lg mb-4 relative"><i data-lucide="${ic}" class="w-6 h-6"></i></span>
+        <h3 class="font-display font-semibold text-xl mb-2 relative">${tt}</h3>
+        <p class="text-sm text-[var(--ink-soft)] leading-relaxed relative">${dd}</p>
+      </div>`).join('')}
+      </div>
+    </section>
+
+    <section class="card card-hover mt-4 p-6 md:p-8 grid md:grid-cols-[1fr_auto] gap-6 items-center rise">
+      <div>
+        <div class="badge b-blue mb-3"><i data-lucide="scale" class="w-3.5 h-3.5"></i>${hi?'पारदर्शी नियम — कोई ML काला-बक्सा नहीं':'TRANSPARENT RULES — NO BLACK-BOX ML'}</div>
+        <p class="font-body text-sm md:text-base text-[var(--ink-soft)] leading-relaxed">${t('scoreBasis')}.</p>
+        <div class="flex gap-2 mt-4 flex-wrap">
+          ${[['45%', hi?'प्रतीक्षा':'wait'],['30%', hi?'दूरी':'distance'],['25%', hi?'क्षमता':'capacity']].map(([w,l])=>`
+          <div class="rounded-xl border border-[var(--line)] bg-[var(--paper2)]/60 px-3.5 py-2 text-center">
+            <div class="font-display font-bold text-lg num text-[var(--leaf)]">${w}</div>
+            <div class="text-[10px] uppercase tracking-wider font-semibold text-[var(--ink-soft)]">${l}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <img src="https://images.pexels.com/photos/10221635/pexels-photo-10221635.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="Farmer examining crop" class="w-full md:w-72 h-44 md:h-52 object-cover rounded-2xl">
+    </section>
+
+    <section class="mt-14 md:mt-20">
+      <div class="text-center max-w-xl mx-auto mb-8 rise">
+        <div class="badge b-amber mb-3"><i data-lucide="users" class="w-3.5 h-3.5"></i>${hi?'एक ही डेटा, सबके लिए':'ONE SOURCE OF TRUTH'}</div>
+        <h2 class="font-display font-semibold text-3xl md:text-[2.6rem] leading-tight">${hi?'तीन भूमिकाएं, एक मंच':'Three roles, one platform'}</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        ${[
+          ['tractor', hi?'किसान':'Farmers', hi?'टोकन, लाइव कतार, इतिहास, डिजिटल पहचान पत्र':'Tokens, live queue, history, digital ID card','#/register','btn-primary'],
+          ['clipboard-check', hi?'खरीद अधिकारी':'Procurement officers', hi?'कतार प्रबंधन, counter entry, भुगतान मार्किंग':'Queue ops, counter entry, payment marking','#/login','btn-ghost'],
+          ['landmark', hi?'जिला प्राधिकरण':'District authority', hi?'भीड़, क्षमता और अलर्ट पर read-only नज़र':'Read-only oversight on congestion, capacity and alerts','#/login','btn-ghost'],
+        ].map(([ic,tt,dd,href,btn],i)=>`
+        <div class="card card-hover p-6 flex flex-col rise rise-${i+1}">
+          <span class="badge b-amber icbox-lg self-start mb-4"><i data-lucide="${ic}" class="w-6 h-6"></i></span>
+          <h3 class="font-display font-semibold text-xl">${tt}</h3>
+          <p class="text-sm text-[var(--ink-soft)] mt-1 mb-5 flex-1 leading-relaxed">${dd}</p>
+          <a href="${href}" class="btn ${btn} self-start">${hi?'शुरू करें':'Get started'}<i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        </div>`).join('')}
+      </div>
+    </section>
+
+    <section class="stat-band rounded-[1.6rem] md:rounded-[2rem] mt-12 mb-2 px-6 md:px-12 py-10 md:py-14 text-center relative overflow-hidden rise">
+      <div class="orb w-72 h-72 -top-24 -right-16" style="background:#2E7D4F;opacity:.35"></div>
+      <h2 class="font-display font-semibold text-3xl md:text-[2.6rem] leading-tight relative">${hi?'फसल तैयार है?':'Harvest ready?'}</h2>
+      <p class="text-white/75 text-sm md:text-base mt-2 mb-7 relative">${hi?'दो मिनट में टोकन बुक करें — मंडी लाइन नहीं, आपका समय आपका।':'Book a token in two minutes — your time belongs to your field, not a queue.'}</p>
+      <div class="flex flex-wrap justify-center gap-3 relative">
+        <a href="#/register" class="btn btn-amber btn-lg"><i data-lucide="sprout" class="w-5 h-5"></i>${hi?'अभी शुरू करें':'Start now'}</a>
+        <button class="btn btn-lg bg-white/10 text-white border-white/25 hover:bg-white/20" data-action="asstToggle"><i data-lucide="message-circle-heart" class="w-5 h-5"></i>${hi?'सहायक से पूछें':'Ask the assistant'}</button>
+      </div>
+    </section>`;
+  },
+  mount(){
+    /* count-up numbers when visible */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        const el = en.target, to = Number(el.dataset.count) || 0, t0 = performance.now();
+        io.unobserve(el);
+        const step = now => {
+          const p = Math.min(1, (now - t0) / 1100);
+          el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, {threshold:.4});
+    document.querySelectorAll('[data-count]').forEach(el => io.observe(el));
+  }
+};
+
+/* ============================ AUTH ============================ */
+function authShell(inner){
+  const hi = S.lang === 'hi';
+  return `<div class="max-w-4xl mx-auto mt-1 md:mt-8">
+    <div class="card overflow-hidden rise grid md:grid-cols-[1.02fr_1fr]" style="box-shadow:var(--sh-md)">
+      <div class="relative hidden md:block min-h-[560px]">
+        <img src="https://images.pexels.com/photos/34479827/pexels-photo-34479827.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="Farmer in green field" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0" style="background:linear-gradient(to top,#06170EEE,#06170E70 55%,#06170E14)"></div>
+        <div class="absolute bottom-0 p-8 text-white">
+          <div class="badge mb-3" style="background:var(--amber);color:#2A1A00">ANNADATA CONNECT</div>
+          <p class="font-display text-2xl font-semibold leading-snug">${hi
+            ? '"अब सुबह 4 बजे लाइन में खड़ा होना नहीं पड़ता। बारी आने पर फोन बता देता है।"'
+            : '"No more standing in line since 4 AM. The phone tells me when my turn comes."'}</p>
+          <p class="text-[11px] tracking-[.18em] uppercase opacity-70 mt-3">${hi?'— खोर्धा पायलट जिला':'— Khordha pilot district'}</p>
+        </div>
+      </div>
+      <div>
+        <div class="md:hidden relative h-28 overflow-hidden">
+          <img src="https://images.pexels.com/photos/34479827/pexels-photo-34479827.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="" class="w-full h-full object-cover">
+          <div class="absolute inset-0" style="background:linear-gradient(to top,var(--card),transparent)"></div>
+        </div>
+        <div class="p-6 md:p-9">
+          ${inner}
+          <details class="mt-6 text-xs text-[var(--ink-soft)]">
+            <summary class="cursor-pointer font-semibold flex items-center gap-1"><i data-lucide="server-cog" class="w-3.5 h-3.5"></i>Server settings</summary>
+            <div class="mt-3 flex gap-2">
+              <input id="api-base" class="input input-sm num" value="${esc(S.apiBase)}" placeholder="https://your-service.onrender.com">
+              <button class="btn btn-ghost btn-sm shrink-0" data-action="saveApi">${t('save')}</button>
+            </div>
+            <p class="mt-2 leading-relaxed">Currently calling: <b class="num">${esc(S.apiBase || location.host + ' (same origin)')}</b>. Paste your Render URL (…onrender.com) only if hosting this page separately. Saved in this browser.</p>
+          </details>
+        </div>
+      </div>
+    </div></div>`;
+}
+Views.login = {
+  html(){
+    return authShell(`
+      <h1 class="font-display font-semibold text-3xl mb-1">${t('welcomeBack')}</h1>
+      <p class="text-sm text-[var(--ink-soft)] mb-6">${t('signIn')}</p>
+      <div id="login-err" class="hidden mb-4 text-sm bg-[var(--red-soft)] text-[var(--red)] rounded-xl px-4 py-3"></div>
+      <form data-form="login" class="space-y-4">
+        <div><label class="label">${t('phone')}</label><input name="phone" class="input num" inputmode="numeric" required placeholder="9999999001"></div>
+        <div><label class="label">${t('password')}</label><input name="password" type="password" class="input" required placeholder="••••••••"></div>
+        <button class="btn btn-primary btn-lg w-full" id="login-btn"><i data-lucide="log-in" class="w-4.5 h-4.5"></i>${t('login')}</button>
+      </form>
+      <div class="mt-5">
+        <div class="text-[10px] font-bold uppercase tracking-[.2em] text-[var(--ink-soft)] mb-2">Demo accounts</div>
+        <div class="flex flex-wrap gap-2">
+          <button class="chip" data-action="fillDemo" data-phone="9999999001" data-pass="Farmer@123"><i data-lucide="tractor" class="w-3.5 h-3.5"></i>${t('quickFarmer')}</button>
+          <button class="chip" data-action="fillDemo" data-phone="9999999101" data-pass="Officer@123"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>${t('quickOfficer')}</button>
+          <button class="chip" data-action="fillDemo" data-phone="9999999201" data-pass="Authority@123"><i data-lucide="landmark" class="w-3.5 h-3.5"></i>${t('quickAuthority')}</button>
+        </div>
+      </div>
+      <p class="text-sm text-center mt-6 text-[var(--ink-soft)]">${t('noAccount')} <a class="text-[var(--leaf)] font-semibold" href="#/register">${t('register')}</a></p>`);
+  },
+  mount(){}
+};
+Views.register = {
+  html(){
+    return authShell(`
+      <h1 class="font-display font-semibold text-3xl mb-1">${t('createAccount')}</h1>
+      <p class="text-sm text-[var(--ink-soft)] mb-6">${S.lang==='hi'?'दो मिनट में अपना पहला टोकन बुक करें':'Book your first token in two minutes'}</p>
+      <div id="reg-err" class="hidden mb-4 text-sm bg-[var(--red-soft)] text-[var(--red)] rounded-xl px-4 py-3"></div>
+      <form data-form="register" class="space-y-4">
+        <div><label class="label">${t('name')}</label><input name="name" class="input" required minlength="2" placeholder="Bijay Pradhan"></div>
+        <div><label class="label">${t('phone')}</label><input name="phone" class="input num" inputmode="numeric" required minlength="10" maxlength="10" placeholder="10 digit mobile"></div>
+        <div><label class="label">${t('village')}</label><select name="villageId" class="input" required>${villages().map(v=>`<option value="${v.id}">${esc(S.lang==='hi'?v.nameHi:v.nameEn)}</option>`).join('')}</select></div>
+        <div><label class="label">${t('password')}</label><input name="password" type="password" class="input" required minlength="8" placeholder="min 8 characters"></div>
+        <button class="btn btn-primary btn-lg w-full"><i data-lucide="sprout" class="w-4.5 h-4.5"></i>${t('register')}</button>
+      </form>
+      <p class="text-sm text-center mt-6 text-[var(--ink-soft)]">${t('haveAccount')} <a class="text-[var(--leaf)] font-semibold" href="#/login">${t('login')}</a></p>`);
+  },
+  mount(){}
+};
+
+/* ============================ FARMER ============================ */
+Views.farmer = {
+  html(){ return pageHead(
+      `${S.lang==='hi'?'नमस्ते':'Namaste'}, ${esc(S.user?.name?.split(' ')[0]||'')}`,
+      S.lang==='hi'?'आपकी खरीद की स्थिति एक नज़र में':'Your procurement at a glance',
+      `<a href="#/new-request" class="btn btn-amber"><i data-lucide="file-plus-2" class="w-4.5 h-4.5"></i>${t('newReq')}</a>`)
+    + `<div id="farmer-body">${skeletonPage(3)}</div>`; },
+  mount(){ this.load(); startPoll('farmer', () => this.load(true), 20000); },
+  async load(quiet=false){
+    const el = $('#farmer-body'); if (!el) return stopPoll('farmer');
+    try {
+      const [me, mine] = await Promise.all([
+        apiFetch('/api/farmers/me', {timeoutMs:60000}),
+        apiFetch('/api/requests/mine', {timeoutMs:60000}),
+      ]);
+      const req = me?.activeRequest, qdata = me?.activeQueue;
+      const list = Array.isArray(mine?.requests) ? mine.requests : [];
+      const done = list.filter(r => r?.status === 'COMPLETED');
+      const earned = done.reduce((s,r) => s + (Number(r?.payment?.amountInr)||0), 0);
+      const hi = S.lang==='hi';
+      el.innerHTML = safe(() => `
+        ${req ? `
+        <div class="card overflow-hidden rise" style="box-shadow:var(--sh-md)">
+          <div class="text-white px-5 md:px-7 py-6 flex flex-wrap items-center gap-x-6 gap-y-4" style="background:radial-gradient(circle at 1px 1px, rgb(255 255 255/.12) 1px, transparent 1.7px) 0 0/22px 22px, linear-gradient(135deg,var(--leaf-deep),#14603A 70%,var(--leaf))">
+            <div class="flex-1 min-w-40">
+              <div class="text-[10px] font-bold uppercase tracking-[.2em] opacity-70">${t('activeToken')}</div>
+              <div class="font-display font-semibold text-3xl md:text-4xl num tracking-wide">${esc(req.token || req.id)}</div>
+              <div class="text-sm opacity-85 mt-0.5">${esc(cropName(req.cropId))} · ${esc(req.quantityQuintals)} q</div>
+            </div>
+            <div class="text-center px-5">
+              <div class="text-[10px] font-bold uppercase tracking-[.2em] opacity-70">${t('queuePos')}</div>
+              <div class="font-display font-semibold text-5xl num" style="animation:countPulse .7s ease both">${qdata?.position ?? '—'}</div>
+              <div class="text-xs opacity-80">${qdata?.aheadCount ?? 0} ${t('ahead')}</div>
+            </div>
+            <div class="text-center px-5 border-l border-white/20">
+              <div class="text-[10px] font-bold uppercase tracking-[.2em] opacity-70">${t('estWait')}</div>
+              <div class="font-display font-semibold text-5xl num" style="animation:countPulse .7s ease both;color:#F5C15C">${qdata?.estimatedWaitMinutes ?? '—'}</div>
+              <div class="text-xs opacity-80">${t('minutes')}</div>
+            </div>
+            ${statusBadge(req.status)}
+          </div>
+          <div class="px-5 md:px-7 py-4 flex flex-wrap gap-3 items-center">
+            <a href="#/status" class="btn btn-primary btn-sm"><i data-lucide="radar" class="w-4 h-4"></i>${hi?'लाइव ट्रैक करें':'Track live'}</a>
+            <span class="text-sm text-[var(--ink-soft)] flex items-center gap-1.5"><i data-lucide="warehouse" class="w-4 h-4"></i>${esc(req.centre?.nameEn || req.centreId || '')}</span>
+          </div>
+        </div>` : emptyState('wheat', hi?'कोई सक्रिय टोकन नहीं':'No active token',
+            hi?'अपनी फसल के लिए अभी टोकन बुक करें — दो मिनट लगेंगे।':'Book a token for your harvest — it takes two minutes.',
+            `<a href="#/new-request" class="btn btn-amber"><i data-lucide="file-plus-2" class="w-4.5 h-4.5"></i>${t('newReq')}</a>`)}
+        <div class="grid sm:grid-cols-3 gap-4 mt-4">
+          ${statCard('file-stack', hi?'कुल अनुरोध':'Total requests', list.length)}
+          ${statCard('check-circle-2', hi?'पूर्ण खरीद':'Completed', done.length, '', 'b-blue')}
+          ${statCard('indian-rupee', hi?'कुल भुगतान':'Total paid out', inr(earned), '', 'b-amber')}
+        </div>
+        ${list.length ? `<div class="card mt-4 divide-y divide-[var(--line)]">
+          <div class="px-5 py-3 flex items-center justify-between"><span class="font-semibold text-sm">${hi?'हालिया गतिविधि':'Recent activity'}</span><a href="#/history" class="text-xs font-semibold text-[var(--leaf)]">${t('history')} →</a></div>
+          ${list.slice(0,3).map(r => `
+            <div class="px-5 py-3.5 flex flex-wrap items-center gap-3 text-sm">
+              <span class="font-display font-semibold num">${esc(r.token || r.id)}</span>
+              <span class="text-[var(--ink-soft)]">${esc(cropName(r.cropId))} · ${esc(r.quantityQuintals)} q</span>
+              <span class="flex-1"></span>${statusBadge(r.status)}
+              <span class="text-xs text-[var(--ink-soft)] num">${dt(r.createdAt)}</span>
+            </div>`).join('')}
+        </div>` : ''}`);
+      renderIcons();
+    } catch (e) {
+      if (!quiet) { el.innerHTML = errCard(e, 'reload'); renderIcons(); }
+    }
+  }
+};
+
+/* ---- New Request: 3 steps, recommendation with transparent basis ---- */
+const NR = { step:1, cropId:'crop-paddy', qty:20, rec:null, chosen:null };
+Views.newRequest = {
+  html(){
+    const hi = S.lang==='hi';
+    return pageHead(t('newReq'), hi?'फसल चुनें → केंद्र खोजें → टोकन पाएं':'Pick crop → find centre → get token')
+    + `<div id="nr-body" class="max-w-2xl mx-auto">${this.stepHtml()}</div>`;
+  },
+  stepHtml(){
+    const hi = S.lang==='hi';
+    if (NR.step === 1) return `
+      <div class="card p-6 md:p-8 rise">
+        <div class="flex items-center gap-2 mb-6 text-xs font-bold uppercase tracking-widest text-[var(--ink-soft)]">
+          <span class="badge b-green">1</span>${hi?'फसल और मात्रा':'Crop & quantity'}<span class="flex-1 h-px bg-[var(--line)]"></span>
+          <span class="badge b-gray">2</span>${hi?'केंद्र':'Centre'}
+        </div>
+        <form data-form="nrFind" class="space-y-5">
+          <div>
+            <label class="label">${t('crop')}</label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              ${crops().map(c => `
+                <label class="cursor-pointer">
+                  <input type="radio" name="cropId" value="${c.id}" class="peer sr-only" ${NR.cropId===c.id?'checked':''}>
+                  <span class="block border-2 border-[var(--line)] peer-checked:border-[var(--leaf)] peer-checked:bg-[#E3F2E9] rounded-xl p-3 transition-all hover:border-[var(--leaf)]/50">
+                    <span class="font-semibold text-sm block">${esc(S.lang==='hi'?c.nameHi:c.nameEn)}</span>
+                    <span class="text-xs text-[var(--amber-deep)] font-semibold num">₹${c.mspPerQuintal} ${t('perQ')}</span>
+                  </span>
+                </label>`).join('')}
+            </div>
+          </div>
+          <div>
+            <label class="label">${t('quantity')}</label>
+            <div class="flex items-center gap-3">
+              <input type="range" name="qtyR" min="1" max="200" value="${NR.qty}" class="flex-1 accent-[var(--leaf)]" oninput="this.nextElementSibling.value=this.value">
+              <input name="quantityQuintals" type="number" min="1" max="2000" value="${NR.qty}" class="input num text-center" style="width:7rem" required>
+            </div>
+            <p class="text-xs text-[var(--ink-soft)] mt-2 num" id="nr-est"></p>
+          </div>
+          <div id="nr-err" class="hidden text-sm bg-[var(--red-soft)] text-[var(--red)] rounded-xl px-4 py-3"></div>
+          <button class="btn btn-primary btn-lg w-full"><i data-lucide="compass" class="w-5 h-5"></i>${t('findCentre')}</button>
+        </form>
+      </div>`;
+    const r = NR.rec; if (!r) return '';
+    const row = (c, main) => `
+      <div class="pick-row ${main ? 'bg-[#E3F2E9] border border-[var(--leaf)]' : ''} mb-2">
+        <label class="cursor-pointer flex items-center"><input type="radio" name="centrePick" value="${esc(c.id||c.centreId)}" ${main?'checked':''} class="accent-[var(--leaf)] w-4.5 h-4.5"></label>
+        <div class="cursor-default">
+          <div class="font-semibold text-sm flex items-center gap-2 flex-wrap">${esc(S.lang==='hi'?(c.nameHi||c.nameEn):(c.nameEn||c.name))} ${main ? `<span class="badge b-green">${hi?'सुझाया गया':'RECOMMENDED'}</span>` : ''}</div>
+          <div class="text-xs text-[var(--ink-soft)] mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
+            ${c.distanceKm!=null?`<span class="flex items-center gap-1"><i data-lucide="route" class="w-3 h-3"></i>${c.distanceKm} km</span>`:''}
+            ${c.expectedWaitMinutes!=null?`<span class="flex items-center gap-1"><i data-lucide="timer" class="w-3 h-3"></i>~${c.expectedWaitMinutes} ${t('minutes')}</span>`:''}
+            ${c.capacityUtilizationPct!=null?`<span class="flex items-center gap-1"><i data-lucide="database" class="w-3 h-3"></i>${c.capacityUtilizationPct}% ${t('capacity')}</span>`:''}
+          </div>
+        </div>
+        ${c.score!=null?`<span class="font-display font-semibold text-lg num text-[var(--leaf)]">${Number(c.score).toFixed(2)}</span>`:''}
+      </div>`;
+    return `
+      <div class="card p-6 md:p-8 rise">
+        <div class="flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-widest text-[var(--ink-soft)]">
+          <span class="badge b-gray">1</span>${esc(cropName(NR.cropId))} · ${NR.qty} q<span class="flex-1 h-px bg-[var(--line)]"></span>
+          <span class="badge b-green">2</span>${hi?'केंद्र चुनें':'Choose centre'}
+        </div>
+        <div class="text-xs bg-[var(--blue-soft)] text-[var(--blue)] rounded-xl px-3.5 py-2.5 mb-4 flex items-start gap-2">
+          <i data-lucide="scale" class="w-4 h-4 shrink-0 mt-px"></i><span>${t('scoreBasis')}.</span>
+        </div>
+        <form data-form="nrConfirm">
+          ${r.recommended ? row(r.recommended, true) : ''}
+          ${(r.alternatives||[]).map(c => row(c, false)).join('')}
+          ${(r.ineligible||[]).length ? `<details class="mt-3 text-xs text-[var(--ink-soft)]"><summary class="cursor-pointer font-semibold">${hi?'अयोग्य केंद्र':'Ineligible centres'} (${r.ineligible.length})</summary>
+            <div class="mt-2 space-y-1.5">${r.ineligible.map(c => `<div class="flex gap-2 items-center"><i data-lucide="ban" class="w-3.5 h-3.5 text-[var(--red)]"></i>${esc(c.nameEn||c.name||c.id)} — ${esc(c.reason||'')}</div>`).join('')}</div></details>` : ''}
+          <div id="nr-err" class="hidden mt-4 text-sm bg-[var(--red-soft)] text-[var(--red)] rounded-xl px-4 py-3"></div>
+          <div class="flex gap-3 mt-6">
+            <button type="button" class="btn btn-ghost" data-action="nrBack"><i data-lucide="arrow-left" class="w-4 h-4"></i>${hi?'वापस':'Back'}</button>
+            <button class="btn btn-amber btn-lg flex-1"><i data-lucide="ticket-check" class="w-5 h-5"></i>${t('confirm')}</button>
+          </div>
+        </form>
+      </div>`;
+  },
+  mount(){
+    const upd = () => {
+      const f = document.querySelector('form[data-form="nrFind"]'); if (!f) return;
+      const cid = f.cropId?.value, q = Number(f.quantityQuintals?.value)||0;
+      const c = byId(crops(), cid); const est = $('#nr-est');
+      if (c && est) est.textContent = `${S.lang==='hi'?'अनुमानित राशि':'Estimated value'}: ${inr((c.mspPerQuintal||0)*q)} (${q} q × ₹${c.mspPerQuintal})`;
+    };
+    document.querySelector('form[data-form="nrFind"]')?.addEventListener('input', upd); upd();
+  }
+};
+
+/* ---- Status / live token ---- */
+const JOURNEY = ['WAITING','CALLED','PROCESSING','COMPLETED'];
+Views.status = {
+  html(){ return pageHead(t('statusNav'), t('serverWakingHint')) + `<div id="status-body">${skeletonPage(2)}</div>`; },
+  mount(){ this.load(); startPoll('status', () => this.load(true), 12000); },
+  async load(quiet=false){
+    const el = $('#status-body'); if (!el) return stopPoll('status');
+    try {
+      const me = await apiFetch('/api/farmers/me', {timeoutMs:60000});
+      const req = me?.activeRequest;
+      if (!req) { el.innerHTML = emptyState('ticket-x', S.lang==='hi'?'कोई सक्रिय टोकन नहीं':'No active token',
+        S.lang==='hi'?'आपकी पिछली खरीद पूरी हो चुकी है या कोई अनुरोध नहीं बनाया गया।':'Your last procurement completed, or no request was created yet.',
+        `<a href="#/new-request" class="btn btn-amber">${t('newReq')}</a>`); renderIcons(); return; }
+      const det = await apiFetch('/api/requests/' + encodeURIComponent(req.id), {timeoutMs:60000}).catch(() => null);
+      const q = det?.queue || me?.activeQueue || {};
+      const timeline = Array.isArray(det?.request?.timeline) ? det.request.timeline : [];
+      const idx = JOURNEY.indexOf(req.status);
+      el.innerHTML = safe(() => `
+        <div class="grid lg:grid-cols-[1.1fr_1fr] gap-4">
+          <div class="card overflow-hidden rise">
+            <div class="bg-[var(--leaf)] text-white p-6">
+              <div class="text-[10px] font-bold uppercase tracking-[.25em] opacity-70">TOKEN</div>
+              <div class="font-display font-semibold text-4xl md:text-5xl num tracking-wider">${esc(req.token||req.id)}</div>
+              <div class="mt-2 text-sm opacity-85 flex flex-wrap gap-x-4 gap-y-1">
+                <span class="flex items-center gap-1.5"><i data-lucide="wheat" class="w-4 h-4"></i>${esc(cropName(req.cropId))}</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="weight" class="w-4 h-4"></i>${esc(req.quantityQuintals)} q</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="warehouse" class="w-4 h-4"></i>${esc(req.centre?.nameEn||'')}</span>
+              </div>
+            </div>
+            <div class="p-5 md:p-6 flex flex-wrap items-center gap-5">
+              <div class="donut shrink-0 mx-auto sm:mx-0" style="--p:${idx<0?8:Math.round((idx+1)/4*100)};width:8.4rem;height:8.4rem">
+                <div style="width:6.1rem;height:6.1rem">
+                  <div>
+                    <div class="font-display font-bold text-3xl num leading-none">${q.position ?? '—'}</div>
+                    <div class="text-[9px] uppercase tracking-[.15em] font-bold text-[var(--ink-soft)] mt-1.5">${t('queuePos')}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1 min-w-44 grid grid-cols-2 gap-3">
+                <div class="rounded-2xl p-3.5 text-center" style="background:var(--paper2)">
+                  <div class="font-display font-semibold text-2xl num">${q.aheadCount ?? '—'}</div>
+                  <div class="text-[10px] uppercase tracking-wider font-bold text-[var(--ink-soft)] mt-1 flex items-center justify-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i>${t('ahead')}</div>
+                </div>
+                <div class="rounded-2xl p-3.5 text-center" style="background:var(--paper2)">
+                  <div class="font-display font-semibold text-2xl num">${q.estimatedWaitMinutes ?? '—'}<span class="text-sm"> ${t('minutes')}</span></div>
+                  <div class="text-[10px] uppercase tracking-wider font-bold text-[var(--ink-soft)] mt-1 flex items-center justify-center gap-1"><i data-lucide="timer" class="w-3.5 h-3.5"></i>${t('estWait')}</div>
+                </div>
+                <div class="col-span-2 rounded-2xl px-3 py-2.5 text-xs font-bold flex items-center justify-center gap-2" style="background:var(--leaf-soft);color:var(--leaf)">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" style="animation:pulseDot 1.5s infinite"></span>
+                  ${S.lang==='hi'?'लाइव — हर 12 सेकंड में अपडेट होता है':'LIVE — updates every 12 seconds'}
+                </div>
+              </div>
+            </div>
+            <div class="px-5 md:px-6 pb-6 flex gap-3 items-center flex-wrap">
+              ${statusBadge(req.status)}
+              <span class="flex-1"></span>
+              ${['WAITING','PENDING'].includes(req.status) ? `<button class="btn btn-danger btn-sm" data-action="cancelReq" data-id="${esc(req.id)}"><i data-lucide="x-circle" class="w-4 h-4"></i>${t('cancel')}</button>` : ''}
+            </div>
+          </div>
+          <div class="card p-6 rise rise-1">
+            <h3 class="font-display font-semibold text-lg mb-5">${S.lang==='hi'?'यात्रा':'Journey'}</h3>
+            <div class="space-y-0">
+              ${JOURNEY.map((st,i)=>{
+                const done = idx >= i && idx !== -1, cur = idx === i;
+                const ev = timeline.find?.(x => String(x?.status||x?.to||'') === st);
+                return `<div class="flex gap-3.5">
+                  <div class="flex flex-col items-center">
+                    <span class="w-8 h-8 rounded-full grid place-items-center border-2 ${done?'bg-[var(--leaf)] border-[var(--leaf)] text-white':'border-[var(--line)] text-[var(--ink-soft)]'} ${cur?'ring-4 ring-[var(--leaf)]/15':''}">
+                      <i data-lucide="${done?'check':'circle-dot'}" class="w-4 h-4"></i></span>
+                    ${i<3?`<span class="w-0.5 flex-1 min-h-8 ${done&&idx>i?'bg-[var(--leaf)]':'bg-[var(--line)]'}"></span>`:''}
+                  </div>
+                  <div class="pb-6">
+                    <div class="font-semibold text-sm ${done?'':'text-[var(--ink-soft)]'}">${st}</div>
+                    ${ev?.at||ev?.timestamp ? `<div class="text-xs num text-[var(--ink-soft)]">${dt(ev.at||ev.timestamp)}</div>` : ''}
+                  </div>
+                </div>`;}).join('')}
+            </div>
+          </div>
+        </div>`);
+      renderIcons();
+    } catch (e) { if (!quiet) { el.innerHTML = errCard(e, 'reload'); renderIcons(); } }
+  }
+};
+
+/* ---- Centres / History / ID card ---- */
+Views.centres = {
+  html(){ return pageHead(t('centres'), S.lang==='hi'?'खोर्धा जिले के खरीद केंद्र':'Procurement centres in Khordha district') + `<div id="centres-body">${skeletonPage(3)}</div>`; },
+  mount(){ this.load(); },
+  async load(){
+    const el = $('#centres-body'); if (!el) return;
+    try {
+      const d = await apiFetch('/api/centres', {timeoutMs:60000});
+      const list = Array.isArray(d?.centres) ? d.centres : [];
+      if (!list.length) throw new ApiError('EMPTY', 'No centres returned');
+      el.innerHTML = `<div class="grid md:grid-cols-2 gap-4">${list.map((c,i) => {
+        const cap = Number(c.capacityQuintals)||0, stock = Number(c.currentStockQuintals)||0;
+        const pct = cap ? Math.min(100, Math.round(stock/cap*100)) : 0;
+        const bar = pct >= 90 ? 'var(--red)' : pct >= 75 ? 'var(--amber)' : 'var(--leaf)';
+        return `<div class="card p-5 rise rise-${(i%4)+1}">
+          <div class="flex items-start gap-3 mb-3">
+            <span class="badge ${c.status==='OPEN'?'b-green':c.status==='PAUSED'?'b-amber':'b-red'} icbox"><i data-lucide="warehouse" class="w-5 h-5"></i></span>
+            <div class="flex-1 min-w-0">
+              <div class="font-display font-semibold text-lg leading-tight">${esc(S.lang==='hi'?(c.nameHi||c.nameEn):c.nameEn)}</div>
+              <div class="text-xs text-[var(--ink-soft)] flex items-center gap-1 mt-0.5"><i data-lucide="map-pin" class="w-3 h-3"></i>${esc(c.address||'')}</div>
+            </div>${statusBadge(c.status)}
+          </div>
+          <div class="mb-1.5 flex justify-between text-xs font-semibold"><span>${t('capacity')}</span><span class="num">${stock.toLocaleString('en-IN')} / ${cap.toLocaleString('en-IN')} q · ${pct}%</span></div>
+          <div class="h-2.5 rounded-full bg-[var(--paper2)] overflow-hidden"><div class="h-full rounded-full transition-all" style="width:${pct}%;background:${bar}"></div></div>
+          <div class="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-xs text-[var(--ink-soft)]">
+            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i>${esc(c.operatingHours||'—')}</span>
+            ${c.queue?.waiting!=null?`<span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i>${c.queue.waiting} ${S.lang==='hi'?'प्रतीक्षारत':'waiting'}</span>`:''}
+            ${c.avgProcessingMinutesPerFarmer?`<span class="flex items-center gap-1"><i data-lucide="timer" class="w-3.5 h-3.5"></i>~${c.avgProcessingMinutesPerFarmer} ${t('minutes')}/farmer</span>`:''}
+          </div>
+        </div>`;}).join('')}</div>`;
+      renderIcons();
+    } catch (e) { el.innerHTML = errCard(e, 'reload'); renderIcons(); }
+  }
+};
+Views.history = {
+  html(){ return pageHead(t('history'), S.lang==='hi'?'आपके सभी अनुरोध और भुगतान':'All your requests and payments') + `<div id="history-body">${skeletonPage(3)}</div>`; },
+  mount(){ this.load(); },
+  async load(){
+    const el = $('#history-body'); if (!el) return;
+    try {
+      const d = await apiFetch('/api/requests/mine', {timeoutMs:60000});
+      const list = Array.isArray(d?.requests) ? d.requests : [];
+      if (!list.length) { el.innerHTML = emptyState('history', S.lang==='hi'?'अभी कोई इतिहास नहीं':'No history yet', S.lang==='hi'?'पहला टोकन बुक करें और यहाँ सब देखें।':'Book your first token and everything shows up here.', `<a href="#/new-request" class="btn btn-amber">${t('newReq')}</a>`); renderIcons(); return; }
+      el.innerHTML = `<div class="card divide-y divide-[var(--line)] rise">${list.map(r => `
+        <div class="p-4 md:p-5 flex flex-wrap items-center gap-3">
+          <div class="min-w-36"><div class="font-display font-semibold num text-lg">${esc(r.token||r.id)}</div>
+            <div class="text-xs num text-[var(--ink-soft)]">${dt(r.createdAt)}</div></div>
+          <div class="text-sm"><div class="font-semibold">${esc(cropName(r.cropId))}</div>
+            <div class="text-xs text-[var(--ink-soft)] num">${esc(r.quantityQuintals)} q · ${esc(r.centre?.nameEn||'')}</div></div>
+          <span class="flex-1"></span>
+          ${r.payment ? `<span class="badge ${r.payment.status==='PAID'?'b-green':'b-amber'}"><i data-lucide="indian-rupee" class="w-3 h-3"></i>${inr(r.payment.amountInr)} · ${r.payment.status}</span>` : ''}
+          ${statusBadge(r.status)}
+          ${['WAITING','PENDING'].includes(r.status) ? `<button class="btn btn-danger btn-sm" data-action="cancelReq" data-id="${esc(r.id)}">${t('cancel')}</button>` : ''}
+        </div>`).join('')}</div>`;
+      renderIcons();
+    } catch (e) { el.innerHTML = errCard(e, 'reload'); renderIcons(); }
+  }
+};
+Views.idCard = {
+  html(){ return pageHead(t('idcard'), S.lang==='hi'?'मंडी में अपना डिजिटल पहचान पत्र दिखाएं':'Show your digital ID at the mandi') + `<div id="idcard-body" class="max-w-md mx-auto">${skeletonPage(1)}</div>`; },
+  mount(){ this.load(); },
+  async load(){
+    const el = $('#idcard-body'); if (!el) return;
+    try {
+      const d = await apiFetch('/api/farmers/id-card', {timeoutMs:60000});
+      const p = d?.profile || d || {};
+      el.innerHTML = safe(() => `
+        <div class="rounded-3xl overflow-hidden shadow-xl rise">
+          <div class="bg-gradient-to-br from-[var(--leaf-deep)] to-[var(--leaf)] text-white p-6">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.25em] opacity-75 mb-4"><i data-lucide="wheat" class="w-4 h-4"></i>Annadata Connect · ${S.lang==='hi'?'किसान पहचान पत्र':'Farmer ID'}</div>
+            <div class="font-display font-semibold text-2xl">${esc(p.name||S.user?.name)}</div>
+            <div class="num text-sm opacity-85 mt-0.5">${esc(d.farmerId||p.farmerId||'')} · ${esc(p.phone||S.user?.phone)}</div>
+            <div class="text-sm opacity-85 mt-1 flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4"></i>${esc(villageName(p.villageId||d.village?.id))}, ${esc(p.district||'Khordha')}</div>
+          </div>
+          <div class="bg-white p-6 flex items-center gap-5">
+            ${d.qr || d.qrDataUri ? `<img src="${esc(d.qr||d.qrDataUri)}" alt="QR" class="w-32 h-32 rounded-xl border border-[var(--line)]">` : `<div class="w-32 h-32 rounded-xl bg-[var(--paper2)] grid place-items-center"><i data-lucide="qr-code" class="w-10 h-10 text-[var(--ink-soft)]"></i></div>`}
+            <div class="text-xs text-[var(--ink-soft)] leading-relaxed">
+              <div class="font-bold text-sm text-[var(--ink)] mb-1.5">${S.lang==='hi'?'पंजीकृत फसलें':'Registered crops'}</div>
+              ${(d.crops || d.registeredCrops || []).map(cid => `<span class="badge b-green mr-1 mb-1">${esc(cropName(cid.id||cid))}</span>`).join('') || (S.lang==='hi'?'सभी फसलें':'All crops')}
+              <p class="mt-2">${S.lang==='hi'?'काउंटर पर यह QR स्कैन कराएं':'Get this QR scanned at the counter'}</p>
+            </div>
+          </div>
+        </div>`);
+      renderIcons();
+    } catch (e) { el.innerHTML = errCard(e, 'reload'); renderIcons(); }
+  }
+};
+
+/* ============================ OFFICER ============================ */
+Object.assign(I18N.en, {slog:'SMS log'}); Object.assign(I18N.hi, {slog:'SMS लॉग'});
+Views.officer = {
+  html(){ return pageHead(t('dash'), S.lang==='hi'?'आपके केंद्र की आज की तस्वीर':'Your centre today') + `<div id="od-body">${skeletonPage(3)}</div>`; },
+  mount(){ this.load(); startPoll('officer', () => this.load(true), 25000); },
+  async load(quiet=false){
+    const el = $('#od-body'); if (!el) return stopPoll('officer');
+    try {
+      const d = await apiFetch('/api/officer/dashboard', {timeoutMs:60000});
+      const st = d?.stats || {}, pay = d?.payments || {};
+      const centre = d?.centre || {};
+      const completed = await apiFetch('/api/officer/requests?status=COMPLETED', {quiet:true, timeoutMs:30000}).catch(() => null);
+      const pendingPay = (completed?.requests || []).filter(r => r?.payment?.status === 'PENDING');
+      el.innerHTML = safe(() => `
+        <div class="card p-5 mb-4 flex flex-wrap items-center gap-4 rise">
+          <span class="badge ${centre.status==='OPEN'?'b-green':'b-amber'} icbox"><i data-lucide="warehouse" class="w-5 h-5"></i></span>
+          <div class="flex-1 min-w-48"><div class="font-display font-semibold text-xl leading-tight">${esc(centre.nameEn||S.user?.name)}</div>
+          <div class="text-xs text-[var(--ink-soft)]">${esc(centre.address||'')}</div></div>
+          ${statusBadge(centre.status||'OPEN')}
+          <button class="btn ${centre.status==='OPEN'?'btn-danger':'btn-primary'} btn-sm" data-action="centreToggle" data-status="${centre.status==='OPEN'?'PAUSED':'OPEN'}">
+            <i data-lucide="${centre.status==='OPEN'?'pause-circle':'play-circle'}" class="w-4 h-4"></i>${centre.status==='OPEN' ? (S.lang==='hi'?'इनटेक रोकें':'Pause intake') : (S.lang==='hi'?'इनटेक शुरू':'Resume intake')}</button>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          ${statCard('users', S.lang==='hi'?'प्रतीक्षारत':'Waiting', st.waiting ?? '—', '', 'b-amber')}
+          ${statCard('loader', S.lang==='hi'?'प्रोसेसिंग':'Processing', st.processing ?? (st.processingCount ?? '—'), '', 'b-blue')}
+          ${statCard('check-circle-2', S.lang==='hi'?'आज पूर्ण':'Completed', st.completed ?? (st.completedToday ?? '—'))}
+          ${statCard('database', S.lang==='hi'?'स्टॉक':'Stock', (st.stockQuintals!=null ? Number(st.stockQuintals).toLocaleString('en-IN')+' q' : '—'), '', 'b-amber')}
+        </div>
+        ${(d.alerts||[]).length ? `<div class="card mt-4 p-5 rise">
+          <h3 class="font-display font-semibold text-lg mb-3 flex items-center gap-2"><i data-lucide="siren" class="w-5 h-5 text-[var(--red)]"></i>${S.lang==='hi'?'अलर्ट':'Alerts'}</h3>
+          <div class="space-y-2">${d.alerts.map(a => `<div class="text-sm flex items-start gap-2 bg-[var(--red-soft)] text-[var(--red)] rounded-xl px-3.5 py-2.5"><i data-lucide="alert-triangle" class="w-4 h-4 mt-0.5 shrink-0"></i>${esc(a.message||a.type||a)}</div>`).join('')}</div></div>` : ''}
+        <div class="grid md:grid-cols-2 gap-4 mt-4">
+          <div class="card p-5 rise">
+            <h3 class="font-display font-semibold text-lg mb-3">${S.lang==='hi'?'अभी सर्विस में':'Serving now'}</h3>
+            ${(d.serving||[]).length ? d.serving.map(s => `<div class="flex items-center gap-3 py-2 border-b border-[var(--line)] last:border-0 text-sm">
+              <span class="font-display font-semibold num">${esc(s.token||'')}</span><span>${esc(s.farmer?.name||s.farmerName||'')}</span>
+              <span class="flex-1"></span>${statusBadge(s.status||'PROCESSING')}
+              <button class="btn btn-primary btn-sm" data-action="officerAction" data-id="${esc(s.id)}" data-act="COMPLETE">${S.lang==='hi'?'पूर्ण':'Complete'}</button></div>`).join('')
+            : `<p class="text-sm text-[var(--ink-soft)]">${S.lang==='hi'?'कोई नहीं':'Nobody at the counter'}</p>`}
+          </div>
+          <div class="card p-5 rise rise-1">
+            <h3 class="font-display font-semibold text-lg mb-3">${S.lang==='hi'?'लंबित भुगतान':'Pending payments'} <span class="badge b-amber ml-1">${inr(pay.pendingAmountInr||0)}</span></h3>
+            ${pendingPay.length ? pendingPay.slice(0,5).map(r => `<div class="flex items-center gap-3 py-2 border-b border-[var(--line)] last:border-0 text-sm">
+              <span class="font-display font-semibold num">${esc(r.token||'')}</span><span class="num">${inr(r.payment.amountInr)}</span>
+              <span class="flex-1"></span>
+              <button class="btn btn-primary btn-sm" data-action="markPaid" data-id="${esc(r.id)}"><i data-lucide="badge-check" class="w-4 h-4"></i>${S.lang==='hi'?'PAID करें':'Mark paid'}</button></div>`).join('')
+            : `<p class="text-sm text-[var(--ink-soft)]">${S.lang==='hi'?'सब clear':'All clear'}</p>`}
+          </div>
+        </div>`);
+      renderIcons();
+    } catch (e) { if (!quiet) { el.innerHTML = errCard(e, 'reload'); renderIcons(); } }
+  }
+};
+Views.officerQueue = {
+  html(){ return pageHead(t('queue'), S.lang==='hi'?'कॉल करें → शुरू करें → पूर्ण करें':'Call → start → complete') + `<div id="oq-body">${skeletonPage(3)}</div>`; },
+  mount(){ this.load(); startPoll('oq', () => this.load(true), 15000); },
+  async load(quiet=false){
+    const el = $('#oq-body'); if (!el) return stopPoll('oq');
+    try {
+      const d = await apiFetch('/api/officer/queue', {timeoutMs:60000});
+      const q = Array.isArray(d?.queue) ? d.queue : [];
+      if (!q.length) { el.innerHTML = emptyState('coffee', S.lang==='hi'?'कतार खाली':'Queue is empty', S.lang==='hi'?'नए टोकन आते ही यहाँ दिखेंगे।':'New tokens appear here automatically.'); renderIcons(); return; }
+      const hi = S.lang==='hi';
+      el.innerHTML = `<div class="card divide-y divide-[var(--line)] rise">${q.map(item => {
+        const r = item.request || item, f = item.farmer || r.farmer || {};
+        const acts = {
+          WAITING: [['CALL','btn-primary','megaphone',hi?'बुलाएं':'Call'],['REJECT','btn-danger','x-circle',hi?'अस्वीकार':'Reject']],
+          CALLED: [['START','btn-primary','play',hi?'शुरू':'Start'],['COMPLETE','btn-amber','check',hi?'पूर्ण':'Complete']],
+          PROCESSING: [['COMPLETE','btn-primary','check-circle',hi?'पूर्ण करें':'Complete']],
+        }[r.status] || [];
+        return `<div class="p-4 md:p-5 flex flex-wrap items-center gap-3">
+          <span class="w-10 h-10 rounded-xl bg-[var(--paper2)] grid place-items-center font-display font-semibold text-lg num">${esc(item.position ?? '·')}</span>
+          <div class="min-w-40"><div class="font-display font-semibold num text-lg">${esc(r.token||'')}</div>
+            <div class="text-xs text-[var(--ink-soft)]">${esc(f.name||'')} · ${esc(villageName(f.villageId))}</div></div>
+          <div class="text-sm"><span class="font-semibold">${esc(cropName(r.cropId))}</span> <span class="text-[var(--ink-soft)] num">· ${esc(r.quantityQuintals)} q</span></div>
+          <span class="flex-1"></span>${statusBadge(r.status)}
+          <div class="flex gap-2">${acts.map(([a,cls,ic,label]) => `<button class="btn ${cls} btn-sm" data-action="officerAction" data-id="${esc(r.id)}" data-act="${a}"><i data-lucide="${ic}" class="w-4 h-4"></i>${label}</button>`).join('')}</div>
+        </div>`;}).join('')}</div>`;
+      renderIcons();
+    } catch (e) { if (!quiet) { el.innerHTML = errCard(e, 'reload'); renderIcons(); } }
+  }
+};
+Views.assisted = {
+  html(){
+    const hi = S.lang==='hi';
+    return pageHead(t('assisted'), hi?'काउंटर पर walk-in किसान के लिए टोकन बनाएं':'Counter token for walk-in farmers')
+    + `<div class="max-w-lg mx-auto"><div id="as-result"></div>
+      <div class="card p-6 md:p-8 rise">
+      <form data-form="assisted" class="space-y-4">
+        <div><label class="label">${t('phone')}</label><input name="farmerPhone" class="input num" inputmode="numeric" required minlength="10" maxlength="10" placeholder="10 digit mobile"></div>
+        <div><label class="label">${t('name')}</label><input name="farmerName" class="input" required placeholder="${hi?'किसान का नाम':'Farmer name'}"></div>
+        <div><label class="label">${t('crop')}</label><select name="cropId" class="input">${crops().map(c => `<option value="${c.id}">${esc(S.lang==='hi'?c.nameHi:c.nameEn)} — ₹${c.mspPerQuintal}</option>`).join('')}</select></div>
+        <div><label class="label">${t('quantity')}</label><input name="quantityQuintals" type="number" min="1" class="input num" required placeholder="20"></div>
+        <div id="as-err" class="hidden text-sm bg-[var(--red-soft)] text-[var(--red)] rounded-xl px-4 py-3"></div>
+        <button class="btn btn-primary btn-lg w-full"><i data-lucide="ticket-check" class="w-4.5 h-4.5"></i>${hi?'टोकन बनाएं':'Create token'}</button>
+        <p class="text-xs text-[var(--ink-soft)] text-center">${hi?'नए नंबर पर खाता अपने-आप बनता है (पासवर्ड Kisan@123)':'New numbers get an account automatically (password Kisan@123)'}</p>
+      </form></div></div>`;
+  },
+  mount(){}
+};
+Views.smsLog = {
+  html(){ return pageHead(t('slog'), S.lang==='hi'?'किसानों को गई SMS सूचनाएं':'SMS notifications sent to farmers') + `<div id="sms-body">${skeletonPage(3)}</div>`; },
+  mount(){ this.load(); },
+  async load(){
+    const el = $('#sms-body'); if (!el) return;
+    try {
+      const d = await apiFetch('/api/officer/sms-log', {timeoutMs:60000});
+      const log = Array.isArray(d?.smsLog) ? d.smsLog : [];
+      el.innerHTML = log.length ? `<div class="card divide-y divide-[var(--line)] rise">
+        <div class="px-5 py-3 text-xs font-semibold text-[var(--ink-soft)]">Provider: ${esc(d.provider||'log')}</div>
+        ${log.slice(0,30).map(m => `<div class="px-5 py-3.5 text-sm">
+          <div class="flex items-center gap-2 text-xs text-[var(--ink-soft)] mb-1"><i data-lucide="smartphone" class="w-3.5 h-3.5"></i><span class="num">${esc(m.to||m.phone||'')}</span><span class="flex-1"></span><span class="num">${dt(m.at||m.createdAt)}</span></div>
+          <div>${esc(m.message||m.text||m.body||'')}</div></div>`).join('')}</div>`
+        : emptyState('message-square-off', S.lang==='hi'?'कोई SMS नहीं':'No SMS yet', S.lang==='hi'?'स्टेटस बदलते ही SMS यहाँ log होगा।':'Status changes will log SMS here.');
+      renderIcons();
+    } catch (e) { el.innerHTML = errCard(e, 'reload'); renderIcons(); }
+  }
+};
+
+/* ============================ AUTHORITY ============================ */
+Views.authority = {
+  html(){ return pageHead(t('overview'), S.lang==='hi'?'जिले भर की खरीद — read-only निगरानी':'District-wide procurement — read-only oversight') + `<div id="auth-body">${skeletonPage(3)}</div>`; },
+  mount(){ this.load(); startPoll('authority', () => this.load(true), 30000); },
+  async load(quiet=false){
+    const el = $('#auth-body'); if (!el) return stopPoll('authority');
+    try {
+      const d = await apiFetch('/api/authority/overview', {timeoutMs:60000});
+      const tot = d?.totals || {}, list = Array.isArray(d?.centres) ? d.centres : [];
+      el.innerHTML = safe(() => `
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          ${statCard('warehouse', S.lang==='hi'?'केंद्र':'Centres', list.length, d.district||'Khordha')}
+          ${statCard('users', S.lang==='hi'?'कुल प्रतीक्षारत':'Total waiting', tot.waiting ?? tot.waitingFarmers ?? '—', '', 'b-amber')}
+          ${statCard('database', S.lang==='hi'?'कुल खरीद':'Procured', tot.procuredQuintals!=null ? Number(tot.procuredQuintals).toLocaleString('en-IN')+' q' : '—')}
+          ${statCard('siren', S.lang==='hi'?'सक्रिय अलर्ट':'Active alerts', list.reduce((s,c)=>s+((c.alerts||[]).length),0), '', 'b-red')}
+        </div>
+        <div class="space-y-4">${list.map((c,i) => {
+          const st = c.stats || {}; const cap = Number(c.capacityQuintals)||0, stock = Number(c.currentStockQuintals)||0;
+          const pct = cap ? Math.min(100, Math.round(stock/cap*100)) : 0;
+          return `<div class="card p-5 rise rise-${(i%4)+1}">
+            <div class="flex flex-wrap items-center gap-3 mb-3">
+              <div class="flex-1 min-w-52"><div class="font-display font-semibold text-lg leading-tight">${esc(S.lang==='hi'?(c.nameHi||c.nameEn):c.nameEn)}</div>
+                <div class="text-xs text-[var(--ink-soft)]">${esc(c.address||'')}</div></div>
+              ${statusBadge(c.status||'OPEN')}
+              <div class="flex gap-4 text-center text-sm">
+                <div><div class="font-display font-semibold text-xl num">${st.waiting ?? '—'}</div><div class="text-[10px] uppercase font-semibold text-[var(--ink-soft)]">${S.lang==='hi'?'कतार':'Queue'}</div></div>
+                <div><div class="font-display font-semibold text-xl num">${(c.procuredQuintals ?? stock).toLocaleString('en-IN')}</div><div class="text-[10px] uppercase font-semibold text-[var(--ink-soft)]">q</div></div>
+                <div><div class="font-display font-semibold text-xl num">${pct}%</div><div class="text-[10px] uppercase font-semibold text-[var(--ink-soft)]">${t('capacity')}</div></div>
+              </div>
+            </div>
+            <div class="h-2 rounded-full bg-[var(--paper2)] overflow-hidden mb-2"><div class="h-full rounded-full" style="width:${pct}%;background:${pct>=90?'var(--red)':pct>=75?'var(--amber)':'var(--leaf)'}"></div></div>
+            ${(c.alerts||[]).length ? `<div class="flex flex-wrap gap-2 mt-2">${c.alerts.map(a => `<span class="badge b-red"><i data-lucide="alert-triangle" class="w-3 h-3"></i>${esc(a.type||a.message||a)}</span>`).join('')}</div>` : ''}
+          </div>`;}).join('')}</div>`);
+      renderIcons();
+    } catch (e) { if (!quiet) { el.innerHTML = errCard(e, 'reload'); renderIcons(); } }
+  }
+};
+
+/* ============================ NOTIFICATIONS overlay ============================ */
+function openNotifs(){
+  closeNotifs();
+  const el = document.createElement('div');
+  el.id = 'notif-overlay';
+  el.className = 'fixed inset-0 z-50 bg-black/30 backdrop-blur-[2px]';
+  el.style.animation = 'fadeIn .2s both';
+  el.innerHTML = `<div class="absolute right-0 top-0 h-full w-[min(400px,100vw)] bg-[var(--paper)] shadow-2xl flex flex-col" style="animation:rise .3s both">
+    <div class="p-4 flex items-center gap-3 border-b border-[var(--line)]">
+      <i data-lucide="bell-ring" class="w-5 h-5"></i><span class="font-display font-semibold text-lg flex-1">${t('notifications')}</span>
+      <button class="chip chip-sm" data-action="notifReadAll">${t('markAllRead')}</button>
+      <button data-action="notifClose" class="p-1.5 hover:bg-[var(--paper2)] rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div id="notif-list" class="flex-1 overflow-y-auto scroll-thin p-3 space-y-2"><div class="skeleton h-20"></div><div class="skeleton h-20"></div></div>
+  </div>`;
+  el.addEventListener('click', e => { if (e.target === el) closeNotifs(); });
+  document.body.appendChild(el); renderIcons();
+  apiFetch('/api/notifications', {timeoutMs:40000}).then(d => {
+    const list = $('#notif-list'); if (!list) return;
+    const items = Array.isArray(d?.notifications) ? d.notifications : [];
+    list.innerHTML = items.length ? items.map(n => `
+      <div class="card p-3.5 text-sm ${n.read ? 'opacity-60' : ''}" style="border-radius:.9rem;cursor:pointer" data-action="notifRead" data-id="${esc(n.id)}" role="button">
+        <div class="flex items-start gap-2.5">${n.read ? '' : '<span class="w-2 h-2 rounded-full bg-[var(--amber)] mt-1.5 shrink-0"></span>'}
+        <div><div>${esc(n.message||n.text||n.title||'')}</div><div class="text-xs num text-[var(--ink-soft)] mt-1">${dt(n.createdAt||n.at)}</div></div></div>
+      </div>`).join('') : `<p class="text-sm text-center text-[var(--ink-soft)] py-10">${t('noNotifs')}</p>`;
+    renderIcons();
+  }).catch(e => { const l = $('#notif-list'); if (l) l.innerHTML = errCard(e); renderIcons(); });
+}
+function closeNotifs(){ $('#notif-overlay')?.remove(); }
+
+/* ============================ ACTIONS & FORMS ============================ */
+const ACTIONS = {
+  toggleLang(){ S.lang = S.lang === 'en' ? 'hi' : 'en'; localStorage.setItem('anc_lang', S.lang);
+    $('#asst-input').placeholder = t('asstPlaceholder'); $('#asst-title').textContent = t('asstTitle'); $('#asst-sub').textContent = t('asstSub');
+    Asst.msgs = []; if (Asst.open) { $('#asst-body').innerHTML=''; Asst.push('bot', ASST_TXT[S.lang].greeting); }
+    Asst.renderChips(); route(); },
+  serverInfo(){ toast((S.serverUp ? t('serverLive') : t('serverWakingHint')) + ' — ' + (S.apiBase || location.host + ' (same origin)'), 'info'); },
+  saveApi(){ const v = $('#api-base').value.trim().replace(/\/+$/,''); if (!/^https?:\/\//.test(v)) return toast('Enter a full https:// URL', 'err');
+    S.apiBase = v; localStorage.setItem('anc_api_base', v); renderHeader(); toast('API base saved'); warmUp(); },
+  fillDemo(d){ const f = document.querySelector('form[data-form="login"]'); if (!f) return;
+    f.phone.value = d.phone; f.password.value = d.pass; toast('Demo credentials filled', 'info'); },
+  logout(){ stopAllPolls(); S.token = null; S.user = null; saveSession(); location.hash = '#/'; route(); },
+  goHome(){ location.hash = '#/'; },
+  reload(){ route(); },
+  nrBack(){ NR.step = 1; $('#nr-body').innerHTML = Views.newRequest.stepHtml(); renderIcons(); Views.newRequest.mount(); },
+  notifs(){ openNotifs(); }, notifClose(){ closeNotifs(); },
+  async notifReadAll(){ try { await apiFetch('/api/notifications/read-all', {method:'POST'}); closeNotifs(); refreshNotifBadge(); } catch (e) { toast(e.message, 'err'); } },
+  async notifRead(d){ if (!d.id) return; try { await apiFetch('/api/notifications/' + encodeURIComponent(d.id) + '/read', {method:'PATCH'}); refreshNotifBadge(); } catch {} },
+  async cancelReq(d, el, ev){
+    if (!confirm(S.lang==='hi'?'क्या आप यह अनुरोध रद्द करना चाहते हैं?':'Cancel this request?')) return;
+    ev.preventDefault();
+    try { await apiFetch('/api/requests/' + encodeURIComponent(d.id) + '/cancel', {method:'POST'}); toast('Request cancelled'); route(); }
+    catch (e) { toast(e.message, 'err'); }
+  },
+  async officerAction(d){
+    try { await apiFetch('/api/officer/requests/' + encodeURIComponent(d.id) + '/status', {method:'PATCH', body:{action:d.act}});
+      toast((d.act) + ' ✓'); route(); } catch (e) { toast(e.message, 'err'); }
+  },
+  async markPaid(d){
+    const ref = prompt(S.lang==='hi'?'भुगतान रेफरेंस (UTR) — वैकल्पिक':'Payment reference / UTR (optional)', '');
+    if (ref === null) return;
+    try { await apiFetch('/api/officer/requests/' + encodeURIComponent(d.id) + '/payment', {method:'PATCH', body:{action:'MARK_PAID', reference:ref}});
+      toast('Marked PAID ✓'); route(); } catch (e) { toast(e.message, 'err'); }
+  },
+  async centreToggle(d){
+    try { await apiFetch('/api/officer/centre', {method:'PATCH', body:{status:d.status}}); toast('Centre ' + d.status + ' ✓'); route(); }
+    catch (e) { toast(e.message, 'err'); }
+  },
+  asstToggle(){ Asst.toggle(); }, asstClear(){ Asst.msgs = []; $('#asst-body').innerHTML = ''; Asst.push('bot', ASST_TXT[S.lang].greeting); },
+  asstChip(d){ Asst.send(d.q); },
+};
+const FORMS = {
+  async login(f, btn){
+    btn.disabled = true;
+    const err = $('#login-err'); err.classList.add('hidden');
+    try {
+      const d = await apiFetch('/api/auth/login', {method:'POST', auth:false, body:{phone:f.phone.value.trim(), password:f.password.value}});
+      S.token = d.token; S.user = d.user; saveSession(); await loadReference(true);
+      toast(t('welcomeBack') + ', ' + (d.user?.name || ''));
+      location.hash = {farmer:'#/farmer', officer:'#/officer', authority:'#/authority'}[d.user?.role] || '#/';
+      route();
+    } catch (e) { err.textContent = e.message + (e.code==='NETWORK_ERROR'||e.code==='TIMEOUT' ? ' — ' + t('serverWakingHint') : ''); err.classList.remove('hidden'); }
+    finally { btn.disabled = false; }
+  },
+  async register(f, btn){
+    btn.disabled = true;
+    const err = $('#reg-err'); err.classList.add('hidden');
+    try {
+      const d = await apiFetch('/api/auth/register', {method:'POST', auth:false, body:{
+        name:f.name.value.trim(), phone:f.phone.value.trim(), password:f.password.value,
+        villageId:f.villageId.value, preferredLanguage:S.lang }});
+      S.token = d.token; S.user = d.user; saveSession();
+      toast(t('createAccount') + ' ✓'); location.hash = '#/farmer'; route();
+    } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
+    finally { btn.disabled = false; }
+  },
+  async nrFind(f, btn){
+    btn.disabled = true;
+    const err = $('#nr-err'); err.classList.add('hidden');
+    NR.cropId = f.cropId.value; NR.qty = Number(f.quantityQuintals.value) || 0;
+    try {
+      NR.rec = await apiFetch('/api/requests/recommend', {method:'POST', body:{cropId:NR.cropId, quantityQuintals:NR.qty}});
+      if (!NR.rec?.recommended && !(NR.rec?.alternatives||[]).length) throw new ApiError('NONE', 'No eligible centre right now — all centres are full or closed. Try a smaller quantity or later.');
+      NR.step = 2; $('#nr-body').innerHTML = Views.newRequest.stepHtml(); renderIcons();
+    } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
+    finally { btn.disabled = false; }
+  },
+  async nrConfirm(f, btn){
+    btn.disabled = true;
+    const err = $('#nr-err'); if (err) err.classList.add('hidden');
+    const centreId = f.centrePick?.value;
+    try {
+      const d = await apiFetch('/api/requests', {method:'POST', body:{cropId:NR.cropId, quantityQuintals:NR.qty, centreId}});
+      const req = d?.request || {};
+      NR.step = 1; NR.rec = null;
+      $('#nr-body').innerHTML = `<div class="card p-8 text-center rise">
+        <span class="badge b-green icbox-lg mb-4"><i data-lucide="check" class="w-8 h-8"></i></span>
+        <div class="text-[10px] font-bold uppercase tracking-[.25em] text-[var(--ink-soft)]">${S.lang==='hi'?'आपका टोकन':'Your token'}</div>
+        <div class="font-display font-semibold text-5xl num tracking-wider text-[var(--leaf)] my-2">${esc(req.token||'')}</div>
+        <p class="text-sm text-[var(--ink-soft)] mb-6">${esc(cropName(req.cropId))} · ${esc(req.quantityQuintals)} q · ${S.lang==='hi'?'कतार में स्थान':'queue position'} ${d?.queue?.position ?? '—'}</p>
+        <div class="flex gap-3 justify-center flex-wrap">
+          <a href="#/status" class="btn btn-primary"><i data-lucide="radar" class="w-4.5 h-4.5"></i>${t('statusNav')}</a>
+          <a href="#/farmer" class="btn btn-ghost">${t('dash')}</a>
+        </div></div>`;
+      renderIcons(); toast((S.lang==='hi'?'टोकन बन गया ':'Token created ') + (req.token || ''));
+    } catch (e) { if (err) { err.textContent = e.message; err.classList.remove('hidden'); } else toast(e.message, 'err'); }
+    finally { btn.disabled = false; }
+  },
+  async assisted(f, btn){
+    btn.disabled = true;
+    const err = $('#as-err'); err.classList.add('hidden');
+    try {
+      const d = await apiFetch('/api/officer/assisted-request', {method:'POST', body:{
+        farmerPhone:f.farmerPhone.value.trim(), farmerName:f.farmerName.value.trim(),
+        cropId:f.cropId.value, quantityQuintals:Number(f.quantityQuintals.value)||0 }});
+      const req = d?.request || {};
+      $('#as-result').innerHTML = `<div class="card p-5 mb-4 border-l-4 flex items-center gap-4 rise" style="border-left-color:var(--leaf)">
+        <span class="badge b-green icbox"><i data-lucide="ticket-check" class="w-5 h-5"></i></span>
+        <div><div class="font-display font-semibold text-2xl num">${esc(req.token||'')}</div>
+        <div class="text-xs text-[var(--ink-soft)]">${esc(d?.farmer?.name || f.farmerName.value)} · ${S.lang==='hi'?'कतार में स्थान':'queue'} ${d?.queue?.position ?? '—'}</div></div></div>`;
+      f.reset(); renderIcons(); toast('Token ' + (req.token||'') + ' ✓');
+    } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
+    finally { btn.disabled = false; }
+  },
+};
+
+/* ============================ ROUTER & BOOT ============================ */
+const ROUTES = {
+  '/':{v:'landing'}, '/login':{v:'login'}, '/register':{v:'register'},
+  '/farmer':{v:'farmer', role:'farmer'}, '/new-request':{v:'newRequest', role:'farmer'},
+  '/status':{v:'status', role:'farmer'}, '/centres':{v:'centres', role:'farmer'},
+  '/history':{v:'history', role:'farmer'}, '/id-card':{v:'idCard', role:'farmer'},
+  '/officer':{v:'officer', role:'officer'}, '/officer/queue':{v:'officerQueue', role:'officer'},
+  '/officer/assisted':{v:'assisted', role:'officer'}, '/officer/sms':{v:'smsLog', role:'officer'},
+  '/authority':{v:'authority', role:'authority'},
+};
+const homeFor = r => ({farmer:'#/farmer', officer:'#/officer', authority:'#/authority'}[r] || '#/');
+function route(){
+  closeNotifs();
+  const path = (location.hash.replace(/^#/, '') || '/').split('?')[0];
+  const r = ROUTES[path] || ROUTES['/'];
+  if (r.role) {
+    if (!S.user) { location.hash = '#/login'; return route(); }
+    if (role() !== r.role) { location.hash = homeFor(role()); return route(); }
+  }
+  if ((path === '/login' || path === '/register') && S.user) { location.hash = homeFor(role()); return route(); }
+  renderHeader();
+  setView(r.v);
+}
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]'); if (!el) return;
+  const fn = ACTIONS[el.dataset.action];
+  if (fn) { try { fn(el.dataset, el, e); } catch (err) { console.warn('[action]', err); } }
+});
+document.addEventListener('submit', e => {
+  const f = e.target.closest('[data-form]'); if (!f) return;
+  e.preventDefault();
+  const fn = FORMS[f.dataset.form];
+  const btn = f.querySelector('button:not([type="button"])');
+  if (fn) { try { fn(f, btn); } catch (err) { console.warn('[form]', err); } }
+});
+/* last-resort crash nets — the UI must never go silently blank */
+window.addEventListener('error', e => console.warn('[window-error]', e.message));
+window.addEventListener('unhandledrejection', e => { console.warn('[unhandled]', e.reason); e.preventDefault(); });
+
+Asst.init();
+Asst.toggle(false);
+route();
+detectBase().then(warmUp);
+loadReference();
+window.addEventListener('hashchange', route);
+/* hero parallax — rAF-throttled scroll handler */
+let pxTick = false;
+window.addEventListener('scroll', () => {
+  if (pxTick) return; pxTick = true;
+  requestAnimationFrame(() => {
+    pxTick = false;
+    const px = document.querySelector('.hero-parallax');
+    if (px) px.style.transform = 'translateY(' + Math.min(64, window.scrollY * 0.22) + 'px)';
+  });
+}, {passive:true});
+
+
+
+</script>
+</body>
+</html>
