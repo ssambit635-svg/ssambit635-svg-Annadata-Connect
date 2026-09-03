@@ -19,7 +19,6 @@ COPY backend/package.json backend/package-lock.json ./
 RUN npm ci --omit=dev --no-audit --no-fund
 COPY backend/ ./
 COPY --from=fe-build /app/frontend/dist /app/frontend/dist
-COPY web/ /app/web/
 # Persist the JSON data store outside the image layer when a volume is mounted.
 VOLUME /app/backend/data
 EXPOSE 5000
