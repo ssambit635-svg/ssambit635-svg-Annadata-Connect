@@ -128,6 +128,7 @@ export default function LandingPage() {
         <section className="home-hero" id="top">
           <div className="home-hero-glow home-hero-glow-one" aria-hidden="true" />
           <div className="home-hero-glow home-hero-glow-two" aria-hidden="true" />
+          <div className="home-hero-spotlight" aria-hidden="true" />
           <div className="home-container home-hero-grid">
             <div className="home-hero-copy">
               <div className="home-eyebrow"><span className="home-eyebrow-line" /> {t('landing.heroKicker')}</div>
@@ -384,9 +385,12 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      <a className="home-floating-help" href="tel:155266" aria-label={t('landing.helpline')}>
-        <Icon name="phone" size={18} />
-        <span>{t('landing.helpFloat')}</span>
+      <a className="home-floating-help" href="tel:155266" aria-label={`${t('landing.helplineNote')}: 155266`}>
+        <span className="home-floating-help-icon" aria-hidden="true"><Icon name="phone" size={22} /></span>
+        <span className="home-floating-help-copy">
+          <small>{t('landing.helplineNote')}</small>
+          <strong>155266</strong>
+        </span>
       </a>
     </div>
   );

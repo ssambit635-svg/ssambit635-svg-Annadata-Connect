@@ -37,19 +37,20 @@ export default function useHomeAnimations(root) {
         y: -18, opacity: 0, duration: 0.6, stagger: 0.07, ease, delay: 0.2,
       });
       gsap.from(q('.home-announcement-inner'), {
-        opacity: 0, duration: 0.7, ease, delay: 0.45,
+        opacity: 0, clipPath: 'inset(0 100% 0 0)', duration: 0.9, ease, delay: 0.45,
       });
 
       /* ---------------- Hero ---------------- */
       const heroTl = gsap.timeline({ defaults: { ease, duration: 0.9 }, delay: 0.25 });
       heroTl
         .from(q('.home-eyebrow'), { y: 18, opacity: 0, duration: 0.6 })
-        .from(q('.home-hero h1'), { y: 46, opacity: 0, duration: 1 }, '-=0.32')
+        .from(q('.home-eyebrow-line'), { scaleX: 0, transformOrigin: 'left center', duration: 0.55 }, '-=0.45')
+        .from(q('.home-hero h1'), { y: 46, opacity: 0, filter: 'blur(8px)', clipPath: 'inset(0 0 100% 0)', duration: 1.05 }, '-=0.32')
         .from(q('.home-hero-sub'), { y: 26, opacity: 0 }, '-=0.68')
         .from(q('.home-hero-actions .home-button'), { y: 22, opacity: 0, stagger: 0.09, duration: 0.65 }, '-=0.6')
         .from(q('.home-hero-trust span'), { y: 14, opacity: 0, stagger: 0.09, duration: 0.55 }, '-=0.45')
         .from(q('.home-visual-backdrop'), { scale: 0.9, rotate: 8, opacity: 0, duration: 1.1 }, '-=1.25')
-        .from(q('.home-image-frame'), { y: 54, opacity: 0, scale: 0.97, duration: 1.1 }, '-=0.95')
+        .from(q('.home-image-frame'), { y: 54, opacity: 0, scale: 0.97, clipPath: 'inset(10% 8% 10% 8% round 34px)', duration: 1.15 }, '-=0.95')
         .from(q('.home-image-frame img'), { scale: 1.16, duration: 1.6, ease: 'power2.out' }, '-=1.1')
         .from(q('.home-image-caption'), { y: 22, opacity: 0, duration: 0.6 }, '-=0.7')
         .from(q('.home-token-float'), { x: 40, y: -18, opacity: 0, duration: 0.7 }, '-=0.55')
@@ -195,20 +196,33 @@ export default function useHomeAnimations(root) {
       /* ---------------- Pointer-reactive tilt on hero frame ---------------- */
       const frame = scope.querySelector('.home-image-frame');
       const heroSection = scope.querySelector('.home-hero');
+      const spotlight = scope.querySelector('.home-hero-spotlight');
       let onMove;
       let onLeave;
       if (frame && heroSection && window.matchMedia('(min-width: 1051px)').matches) {
         const rotX = gsap.quickTo(frame, 'rotationX', { duration: 0.6, ease: 'power3.out' });
         const rotY = gsap.quickTo(frame, 'rotationY', { duration: 0.6, ease: 'power3.out' });
+        const spotX = spotlight && gsap.quickTo(spotlight, 'x', { duration: 0.9, ease: 'power3.out' });
+        const spotY = spotlight && gsap.quickTo(spotlight, 'y', { duration: 0.9, ease: 'power3.out' });
         gsap.set(frame, { transformPerspective: 1000, transformOrigin: 'center' });
+        if (spotlight) gsap.set(spotlight, { x: heroSection.clientWidth * 0.7, y: heroSection.clientHeight * 0.35 });
         onMove = (e) => {
           const r = heroSection.getBoundingClientRect();
           const px = (e.clientX - r.left) / r.width - 0.5;
           const py = (e.clientY - r.top) / r.height - 0.5;
           rotY(px * 7);
           rotX(-py * 5);
+          if (spotX && spotY) {
+            spotX(e.clientX - r.left);
+            spotY(e.clientY - r.top);
+            spotlight.style.opacity = '1';
+          }
         };
-        onLeave = () => { rotX(0); rotY(0); };
+        onLeave = () => {
+          rotX(0);
+          rotY(0);
+          if (spotlight) spotlight.style.opacity = '';
+        };
         heroSection.addEventListener('mousemove', onMove);
         heroSection.addEventListener('mouseleave', onLeave);
       }
