@@ -1,0 +1,23 @@
+{
+  "name": "annadata-connect-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Annadata Connect backend API - procurement queue and token management",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "seed": "node src/db/seed-cli.js"
+  },
+  "dependencies": {
+    "annadata-connect": "file:..",
+    "bcryptjs": "2.4.3",
+    "cors": "2.8.5",
+    "dotenv": "16.4.5",
+    "express": "4.21.0",
+    "jsonwebtoken": "9.0.2",
+    "morgan": "1.10.0",
+    "qrcode": "^1.5.4"
+  }
+}

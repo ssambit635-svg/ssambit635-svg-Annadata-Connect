@@ -1,0 +1,21 @@
+# One-click Render.com blueprint (Docker web service).
+# Push this repo to GitHub → Render → "New +" → "Blueprint" → pick the repo.
+services:
+  - type: web
+    name: annadata-connect
+    runtime: docker
+    plan: free          # free plan works, but has no persistent disk (data resets on deploy)
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true   # Render generates a strong secret automatically
+      - key: SEED_ON_BOOT
+        value: "true"
+      # CORS_ORIGIN is not needed: API + UI are same-origin in this image.
+    # Paid plans: uncomment for a persistent disk so the JSON store survives deploys.
+    # disk:
+    #   name: annadata-connect-data
+    #   mountPath: /app/backend/data
+    #   sizeGB: 1

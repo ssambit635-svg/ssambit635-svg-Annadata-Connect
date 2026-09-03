@@ -1,0 +1,117 @@
+# Annadata Connect — API Integration Map
+
+This document is the **source of truth** for the frontend ↔ backend contract. The frontend service
+layer (`frontend/src/services/api/*`) implements exactly these endpoints — nothing invented.
+
+- Base URL (dev single-port): `http://localhost:5000`
+- All endpoints are prefixed with `/api`
+- Auth: `Authorization: Bearer <JWT>` (obtained from `login`/`register`)
+- Error shape: `{ "error": { "code": "STRING_CODE", "message": "human readable", "details?": {...} } }`
+
+## Roles
+
+`farmer`, `officer`, `authority`
+
+## Error codes
+
+| Code                      | HTTP | Meaning                                          |
+| ------------------------- | ---- | ------------------------------------------------ |
+| `VALIDATION_ERROR`        | 400  | Missing/invalid fields (`details.fields` when applicable) |
+| `AUTH_TOKEN_MISSING`      | 401  | No Bearer token                                  |
+| `AUTH_TOKEN_INVALID`      | 401  | Expired/invalid token → frontend logs out        |
+| `AUTH_INVALID_CREDENTIALS`| 401  | Wrong phone/password                             |
+| `FORBIDDEN`               | 403  | Authenticated but wrong role                     |
+| `NOT_FOUND`               | 404  | Unknown resource/route                           |
+| `PHONE_ALREADY_REGISTERED`| 409  | Register with an existing phone                  |
+| `ACTIVE_REQUEST_EXISTS`   | 409  | Farmer already has an active request             |
+| `CENTRE_NOT_OPEN`         | 409  | Centre is PAUSED/CLOSED                          |
+| `CENTRE_CAPACITY_EXCEEDED`| 409  | Not enough remaining storage                     |
+| `INVALID_STATE`           | 409  | Illegal lifecycle transition                     |
+| `NETWORK_ERROR`           | –    | Frontend-generated (fetch failed)                |
+
+## Auth & reference (public)
+
+| Method | Endpoint                 | Body                                                        | Response                                   |
+| ------ | ------------------------ | ----------------------------------------------------------- | ------------------------------------------ |
+| POST   | `/api/auth/register`     | `{name, phone, password, villageId, preferredLanguage?}`    | `201 {token, user}` — always role=farmer   |
+| POST   | `/api/auth/login`        | `{phone, password}`                                         | `200 {token, user}`                        |
+| GET    | `/api/reference/crops`   | –                                                           | `{crops:[{id,nameEn,nameHi,mspPerQuintal}]}` |
+| GET    | `/api/reference/villages`| –                                                           | `{villages:[{id,nameEn,nameHi}]}`          |
+
+## Authenticated — any role
+
+| Method | Endpoint                  | Notes                                                     |
+| ------ | ------------------------- | --------------------------------------------------------- |
+| GET    | `/api/auth/me`            | `{user}`                                                  |
+| GET    | `/api/centres`            | `{centres:[…presentCentre + queue summary]}`              |
+| GET    | `/api/centres/:id`        | `{centre}`                                                |
+| GET    | `/api/notifications`      | `{notifications:[…], unreadCount}` (own, newest first)    |
+| PATCH  | `/api/notifications/:id/read` | `{notification}`                                      |
+| POST   | `/api/notifications/read-all` | `{updated}`                                           |
+
+## Farmer
+
+| Method | Endpoint                    | Body                                  | Response / effect                                        |
+| ------ | --------------------------- | ------------------------------------- | -------------------------------------------------------- |
+| GET    | `/api/farmers/me`           | –                                     | `{profile(+village), activeRequest, activeQueue}`        |
+| GET    | `/api/farmers/id-card`              | – | Farmer ID card payload: farmerId, profile, village, registered crops, QR data-URI |
+| POST   | `/api/requests/recommend`   | `{cropId, quantityQuintals}`          | `{recommended, alternatives[], ineligible[], basis}` — transparent rule-based scoring, writes nothing |
+| POST   | `/api/requests`             | `{cropId, quantityQuintals, centreId}`| `201 {request, queue}` — creates token `ANC-xxx`, status `WAITING` |
+| GET    | `/api/requests/mine`        | –                                     | `{requests:[…]}` newest first                            |
+| GET    | `/api/requests/:id`         | –                                     | `{request(+timeline), queue:{position, aheadCount, estimatedWaitMinutes, centreSummary}}` |
+| POST   | `/api/requests/:id/cancel`  | –                                     | Only from `WAITING`/`PENDING` → `CANCELLED`              |
+
+## Officer (bound to their `centreId`)
+
+| Method | Endpoint                            | Body                              | Effect                                                        |
+| ------ | ----------------------------------- | --------------------------------- | ------------------------------------------------------------- |
+| GET    | `/api/officer/dashboard`            | –                                 | `{centre, stats, alerts[], payments{pendingCount,pendingAmountInr,paidCount,paidAmountInr}, serving[], nextWaiting[]}` |
+| GET    | `/api/officer/queue`                | –                                 | `{centre, queue:[{position, …request, farmer}]}`              |
+| GET    | `/api/officer/requests?status=`     | –                                 | `{requests:[…]}` optional status filter                       |
+| PATCH  | `/api/officer/requests/:id/status`  | `{action, note?}`                 | `CALL: WAITING→CALLED` · `START: CALLED→PROCESSING` · `COMPLETE: PROCESSING\|CALLED→COMPLETED` (adds stock + opens a `payment` record, status `PENDING`) · `REJECT: WAITING\|CALLED→REJECTED`; farmer notified each time |
+| PATCH  | `/api/officer/requests/:id/payment` | `{action: "MARK_PAID", reference?}` | Marks the payment `PAID` (timestamp + reference) and notifies the farmer |
+| GET    | `/api/officer/sms-log`              | –                                 | `{provider, smsLog[]}` — SMS outbox; officer sees only own centre's farmers, authority sees all |
+| GET    | `/api/officer/centre`               | –                                 | `{centre, stats, alerts}`                                     |
+| PATCH  | `/api/officer/centre`               | `{status: OPEN\|PAUSED}`          | Pause/resume intake                                           |
+| POST   | `/api/officer/assisted-request`     | `{farmerPhone, farmerName, cropId, quantityQuintals}` | Counter token for walk-in farmers; auto-registers new phones |
+
+## Request object — payment field
+
+Every completed procurement carries a `payment` object on its request:
+
+```json
+"payment": {
+  "status": "PENDING | PAID",       // PENDING = opened when officer completes procurement
+  "amountInr": 96600,               // quantity × crop MSP
+  "createdAt": "ISO", "paidAt": "ISO|null", "reference": "UTR string | ''"
+}
+```
+
+Non-completed requests have `"payment": null`.
+
+## Authority (read-only oversight)
+
+| Method | Endpoint                      | Response                                                        |
+| ------ | ----------------------------- | --------------------------------------------------------------- |
+| GET    | `/api/authority/overview`     | `{district, totals, centres:[…+stats+procuredQuintals+alerts]}` |
+| GET    | `/api/authority/centres/:id`  | `{centre, stats, alerts, recentRequests}`                       |
+
+## Domain model
+
+**Request status lifecycle**
+
+```
+WAITING ──CALL──▶ CALLED ──START──▶ PROCESSING ──COMPLETE──▶ COMPLETED
+   └──CANCEL──▶ CANCELLED      └────────REJECT (from WAITING/CALLED)──▶ REJECTED
+```
+
+`PENDING` exists in the enum for future approval-style flows; fresh requests start at `WAITING`.
+
+**Queue math (transparent, rule-based)**
+
+- Position = index in centre queue ordered by creation sequence (only `WAITING/CALLED/PROCESSING`)
+- Estimated wait = `aheadCount × centre.avgProcessingMinutesPerFarmer`
+- Recommendation score = `0.45·wait + 0.30·distance + 0.25·capacityUtil` (normalized); only `OPEN`
+  centres with `remainingCapacity ≥ quantity` are eligible. Deliberately **not ML**.
+
+**Alerts**: `CAPACITY_CRITICAL ≥90%`, `CAPACITY_HIGH ≥75%`, `QUEUE_LONG ≥10 waiting`, `CENTRE_NOT_OPEN`.

@@ -1,0 +1,8 @@
+**/node_modules
+frontend/dist
+backend/data/db.json
+.env
+*.log
+screenshots
+*.zip
+.git

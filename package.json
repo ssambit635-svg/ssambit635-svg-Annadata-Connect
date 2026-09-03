@@ -1,0 +1,14 @@
+{
+  "name": "annadata-connect",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Annadata Connect - crop procurement token & queue management (React + Express)",
+  "scripts": {
+    "setup": "npm --prefix backend install && npm --prefix frontend install",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix backend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "seed": "npm --prefix backend run seed"
+  }
+}
