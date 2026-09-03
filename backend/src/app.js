@@ -47,8 +47,7 @@ export function createApp() {
   app.use('/api', notFoundHandler);
 
   // Production: serve the built frontend as a single-port deployment.
-  const webDir = path.resolve(__dirname, '../../web');
-  const distDir = fs.existsSync(webDir) ? webDir : path.resolve(__dirname, '../../frontend/dist');
+ const distDir = path.resolve(__dirname, '../../frontend/dist');
   if (fs.existsSync(distDir)) {
     app.use(express.static(distDir));
     app.get('*', (req, res) => res.sendFile(path.join(distDir, 'index.html')));
