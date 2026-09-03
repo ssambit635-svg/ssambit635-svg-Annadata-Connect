@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import { useAuth, homeFor } from '../auth/AuthContext.jsx';
 import { useI18n } from '../i18n/I18nContext.jsx';
+import useHomeAnimations from '../hooks/useHomeAnimations.js';
 
 const MSP_ROWS = [
   { en: 'Paddy (Common)', hi: 'धान (सामान्य)', msp: 2300 },
@@ -44,9 +45,11 @@ export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const home = user ? homeFor(user.role) : '/login';
   const closeMenu = () => setMenuOpen(false);
+  const pageRef = useRef(null);
+  useHomeAnimations(pageRef);
 
   return (
-    <div className="landing landing-v2">
+    <div className="landing landing-v2" ref={pageRef}>
       <a className="home-skip-link" href="#home-main">{t('landing.skipToContent')}</a>
 
       <div className="home-tricolour" aria-hidden="true"><span /><span /><span /></div>
