@@ -54,6 +54,10 @@ export default function LandingPage() {
 
       <div className="home-tricolour" aria-hidden="true"><span /><span /><span /></div>
 
+      <div className="home-scroll-progress" aria-hidden="true">
+        <span className="home-scroll-progress-bar" />
+      </div>
+
       <div className="home-utility-bar">
         <div className="home-container home-utility-inner">
           <div className="home-utility-copy">

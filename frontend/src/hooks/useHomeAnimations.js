@@ -82,6 +82,16 @@ export default function useHomeAnimations(root) {
         });
       }
 
+      /* ---------------- Scroll progress line ---------------- */
+      const progress = scope.querySelector('.home-scroll-progress-bar');
+      if (progress) {
+        gsap.to(progress, {
+          scaleX: 1,
+          ease: 'none',
+          scrollTrigger: { start: 0, end: 'max', scrub: 0.25 },
+        });
+      }
+
       /* ---------------- Sticky header state ---------------- */
       const header = scope.querySelector('.home-header');
       if (header) {

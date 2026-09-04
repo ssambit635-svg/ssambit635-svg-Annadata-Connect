@@ -52,6 +52,30 @@
   92%, 100% { transform: translateX(100%); }
 }
 
+/* Reading-progress line: pinned under the tricolour strip, above the sticky
+   header (z-index 30 in global.css) so it stays visible for the whole page. */
+.landing-v2 .home-scroll-progress {
+  position: fixed;
+  top: 5px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 40;
+  background: rgba(7, 56, 42, 0.08);
+  pointer-events: none;
+}
+.landing-v2 .home-scroll-progress-bar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--home-forest), #14854c 45%, var(--home-gold));
+  box-shadow: 0 0 10px rgba(20, 133, 76, 0.45);
+}
+/* Motion-off fallback resets transforms globally; keep the line collapsed. */
+.landing-v2.home-motion-off .home-scroll-progress { display: none; }
+
 .landing-v2 .home-utility-bar {
   background:
     radial-gradient(120% 220% at 0% 0%, rgba(20, 133, 76, 0.35), transparent 55%),
@@ -434,6 +458,9 @@
 .landing-v2 .home-step { transition: transform 0.4s var(--home-ease); }
 .landing-v2 .home-step:hover { transform: translateY(-5px); }
 .landing-v2 .home-step-number {
+  /* The polish layer lightens the badge background, so the inherited white
+     numeral from global.css would vanish. Restore a dark, high-contrast ink. */
+  color: var(--home-forest-dark);
   background: linear-gradient(145deg, #ffffff, #eef5ef);
   box-shadow: var(--home-elev-1), inset 0 0 0 1px rgba(14, 91, 59, 0.12);
   transition: transform 0.4s var(--home-ease), background 0.35s ease, color 0.35s ease,
@@ -539,6 +566,18 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(242, 182, 50, 0.2), transparent 68%);
   pointer-events: none;
+}
+/* The card background is flipped to a dark forest gradient above, so every
+   inherited (dark) text colour from global.css has to be re-stated in light
+   ink — otherwise the whole "No smartphone?" block reads dark-on-dark. */
+/* #ffd166 rather than --home-gold: the base gold only hits 3.79:1 against the
+   light end of the gradient, this clears WCAG AA at 4.79:1 and matches the CTA. */
+.landing-v2 .home-assist-copy .home-overline { color: #ffd166; }
+.landing-v2 .home-assist-copy h2 { color: #ffffff; }
+.landing-v2 .home-assist-copy p { color: #cfe3d5; }
+.landing-v2 .home-assist-pattern {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 0 25px rgba(255, 255, 255, 0.045), 0 0 0 50px rgba(255, 255, 255, 0.03);
 }
 .landing-v2 .home-assist-icon {
   background: rgba(242, 182, 50, 0.16);
