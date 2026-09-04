@@ -41,6 +41,24 @@ layer (`frontend/src/services/api/*`) implements exactly these endpoints — not
 | GET    | `/api/reference/crops`   | –                                                           | `{crops:[{id,nameEn,nameHi,mspPerQuintal}]}` |
 | GET    | `/api/reference/villages`| –                                                           | `{villages:[{id,nameEn,nameHi}]}`          |
 
+## Historical mandi prices (public, read-only)
+
+Real Agmarknet monthly panel — see [HISTORICAL_DATA.md](HISTORICAL_DATA.md) for provenance.
+Common query params: `commodity` **or** `cropId` (`crop-paddy|crop-wheat|crop-maize|crop-mustard|crop-cotton`),
+`state`, `market`, `fromYear`, `toYear`.
+
+| Method | Endpoint                            | Extra params        | Response                                                                 |
+| ------ | ----------------------------------- | ------------------- | ------------------------------------------------------------------------ |
+| GET    | `/api/market-prices/meta`           | –                   | `{source, coverage, commodities[], states[], markets[], cropCommodityMap, months[]}` |
+| GET    | `/api/market-prices/series`         | –                   | `{query, points:[{period,year,month,modalPrice,minPrice,maxPrice,arrivalsMt,nObs}], summary}` |
+| GET    | `/api/market-prices/seasonality`    | –                   | `{query, overallAveragePrice, months:[{month,averagePrice,index,arrivalsMt}], best, worst, spreadPercent}` |
+| GET    | `/api/market-prices/markets`        | –                   | `{query, markets:[{marketName,stateName,averagePrice,last12MonthAverage,latestPrice,months}]}` |
+| GET    | `/api/market-prices/yearly`         | –                   | `{query, years:[{year,averagePrice,minPrice,maxPrice,arrivalsMt,months}]}` |
+| GET    | `/api/market-prices/benchmark`      | `pricePerQuintal`   | `{available, percentile, verdict:'STRONG'\|'TYPICAL'\|'WEAK', historicalAverage, last12MonthAverage, messageEn, messageHi}` |
+| GET    | `/api/market-prices/rows`           | `limit` (≤1000)     | `{total, limit, rows:[…raw CSV fields]}` |
+
+Additional error code: `NO_HISTORY_FOR_CROP` (400) — the crop has no counterpart in the dataset.
+
 ## Authenticated — any role
 
 | Method | Endpoint                  | Notes                                                     |

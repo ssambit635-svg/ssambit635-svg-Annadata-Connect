@@ -1,12 +1,15 @@
 # अन्नदाता कनेक्ट Annadata Connect — Full-Stack MVP
 
-A real, locally-runnable crop-procurement platform connecting **Farmers**, **Procurement Officers / Centres**, and **District Authority** — with token generation, live queue tracking, rule-based smart centre recommendation, **Smart Selling Options that compare buyers before you sell** (government MSP centres vs above-MSP market buyers), a bilingual (English ↔ हिन्दी) UI, and a controlled rule-based farmer assistant.
+A real, locally-runnable crop-procurement platform connecting **Farmers**, **Procurement Officers / Centres**, and **District Authority** — with token generation, live queue tracking, rule-based smart centre recommendation, **Smart Selling Options that compare buyers before you sell** (government MSP centres vs above-MSP market buyers), **historical mandi price intelligence built on real Agmarknet records (2021–2025)**, a bilingual
+(English ↔ हिन्दी) UI, and a controlled rule-based farmer assistant.
 
 ```
 kis an sathi/
 ├── backend/      Node.js + Express API (JWT auth, role-based access, JSON data store)
 ├── frontend/     React + Vite SPA (farmer / officer / authority interfaces)
+├── scripts/      Data pipeline (historical Agmarknet extract builder)
 ├── API_INTEGRATION_MAP.md
+├── HISTORICAL_DATA.md (real Agmarknet mandi price source + pipeline)
 └── DELIVERABLES.md (features implemented + known limitations)
 ```
 
@@ -45,6 +48,27 @@ npm start
 
 The backend automatically serves `frontend/dist` when it exists, so **one process** hosts the
 whole app at `http://localhost:5000`. This is also the recommended production layout.
+
+## 2b. Historical mandi prices (real data, no mock)
+
+The *Mandi Prices* page and the Smart Sell price check are driven by a real Agmarknet monthly panel —
+493 mandi-month records across 9 market series, extracted from
+[pointbreak71/dpi410-final-project-v2](https://github.com/pointbreak71/dpi410-final-project-v2)
+(scraped from `api.agmarknet.gov.in`, 2010–2025 nationally).
+
+```
+Historical CSV -> Backend loader -> Filter/aggregate -> /api/market-prices -> Frontend
+```
+
+The extract is committed at `backend/src/data/agmarknet/mandi_prices_monthly.csv`, so the app works
+offline with no extra setup. To regenerate or widen it:
+
+```bash
+npm run data:agmarknet      # clones the upstream repo into .data-src/ and rebuilds the extract
+```
+
+Full details — provenance, columns, selection rule, the `modal_price_avg` caveat and every endpoint —
+are in **[HISTORICAL_DATA.md](HISTORICAL_DATA.md)**.
 
 ## 3. Development mode (two terminals, hot reload)
 

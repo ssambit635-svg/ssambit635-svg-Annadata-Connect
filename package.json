@@ -9,6 +9,7 @@
     "start": "npm --prefix backend start",
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend run dev",
-    "seed": "npm --prefix backend run seed"
+    "seed": "npm --prefix backend run seed",
+    "data:agmarknet": "node scripts/build-agmarknet-sample.mjs"
   }
 }

@@ -1,0 +1,65 @@
+{
+  "dataset": "Agmarknet monthly mandi price & arrivals panel (curated extract)",
+  "isMockData": false,
+  "source": {
+    "repository": "https://github.com/pointbreak71/dpi410-final-project-v2",
+    "commit": "841ec503bfb5d0fb251d1eed11e03d103aa4ab64",
+    "file": "data/clean/did_inputs/within_mandi_range.csv",
+    "upstreamRows": 272785,
+    "originalSource": "Agmarknet 2.0 API (api.agmarknet.gov.in), Directorate of Marketing & Inspection, Govt. of India",
+    "collectedBy": "pointbreak71/dpi410-final-project-v2 (scripts/agmarknet_range_scraper.py)"
+  },
+  "extract": {
+    "generatedAt": "2026-09-04T18:35:16.039Z",
+    "generatedBy": "scripts/build-agmarknet-sample.mjs",
+    "rows": 493,
+    "series": 9,
+    "commodities": [
+      "cotton",
+      "maize",
+      "mustard",
+      "paddy",
+      "wheat"
+    ],
+    "states": [
+      "Chhattisgarh",
+      "Tamil Nadu",
+      "West Bengal"
+    ],
+    "markets": [
+      "Ambikapur APMC (Chhattisgarh)",
+      "Ammoor APMC (Tamil Nadu)",
+      "Bankura Sadar APMC (West Bengal)",
+      "Jaspur APMC (Chhattisgarh)",
+      "Keshkal APMC (Chhattisgarh)",
+      "Khatra APMC (West Bengal)",
+      "Kolathur APMC (Tamil Nadu)",
+      "Vellore APMC (Tamil Nadu)"
+    ],
+    "period": {
+      "fromYear": 2021,
+      "toYear": 2025
+    },
+    "minMonthsPerSeries": 24,
+    "selectionRule": "Round-robin over the requested commodities; for each, the market series with the most complete monthly coverage in the window, preferring a state not already used for that commodity. Series are taken whole until the row budget is spent."
+  },
+  "fields": {
+    "state_name": "State (derived from the Agmarknet state_id; upstream state_name column is empty)",
+    "market_name": "Mandi / APMC market name as listed on Agmarknet",
+    "district": "District of the mandi (blank where upstream could not match the mandi to the eNAM directory)",
+    "commodity": "Commodity (lowercase)",
+    "year": "Calendar year",
+    "month": "Calendar month, 1-12",
+    "arrivals_mt": "Total arrivals that month, metric tonnes",
+    "modal_price_avg": "Modal price, Rs/quintal — midpoint of the arrival-weighted monthly min and max averages (see note below)",
+    "min_price_avg": "Arrival-weighted monthly average of the daily minimum price, Rs/quintal",
+    "max_price_avg": "Arrival-weighted monthly average of the daily maximum price, Rs/quintal",
+    "n_obs": "Number of daily observations behind that month",
+    "mandi_id": "eNAM mandi id where upstream matched the market, else blank"
+  },
+  "notes": [
+    "Every row is real observed Agmarknet data. No values are simulated, interpolated or randomly generated.",
+    "The upstream repository publishes the min/max band panel but keeps the modal-price panel out of git, so modal_price_avg here is the midpoint of that band. Validated against the district-level modal means the same repo does publish (across_mandi_district.csv): r = 0.94 over 16,092 overlapping district-months, median absolute deviation 8.7%.",
+    "Re-run scripts/build-agmarknet-sample.mjs to regenerate or widen the extract."
+  ]
+}
