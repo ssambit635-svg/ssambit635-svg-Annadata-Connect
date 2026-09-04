@@ -6,6 +6,7 @@ import { ApiError } from '../middleware/error.js';
 import { requireFields, requireNumber } from '../middleware/validate.js';
 import { recommendCentres } from '../services/recommendation.service.js';
 import { queueSnapshot, ACTIVE_STATUSES } from '../services/queue.service.js';
+import { hasActiveSale } from '../services/smartSelling.service.js';
 import { presentRequest } from '../utils/present.js';
 import { notifyFarmer } from '../services/notifier.service.js';
 
@@ -50,6 +51,9 @@ router.post('/', (req, res, next) => {
     if (remaining < qty) throw new ApiError(409, 'CENTRE_CAPACITY_EXCEEDED', `This centre can accept only ${Math.max(remaining, 0)} quintals more.`);
     const existing = findActiveRequest(db, req.user.id);
     if (existing) throw new ApiError(409, 'ACTIVE_REQUEST_EXISTS', `You already have an active request (${existing.tokenNumber}). Complete or cancel it first.`);
+    if (hasActiveSale(db, req.user.id).activeBooking) {
+      throw new ApiError(409, 'ACTIVE_BOOKING_EXISTS', 'You already have a live market sell booking. Cancel it before starting a procurement request.');
+    }
 
     const { seq, tokenNumber } = nextToken(db);
     const now = new Date().toISOString();

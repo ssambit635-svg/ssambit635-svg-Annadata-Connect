@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import FarmerDashboard from './pages/farmer/FarmerDashboard.jsx';
 import NewRequestPage from './pages/farmer/NewRequestPage.jsx';
+import SmartSellPage from './pages/farmer/SmartSellPage.jsx';
 import TokenPage from './pages/farmer/TokenPage.jsx';
 import StatusPage from './pages/farmer/StatusPage.jsx';
 import CentresPage from './pages/farmer/CentresPage.jsx';
@@ -48,6 +49,7 @@ export default function App() {
               {/* Farmer */}
               <Route path="/farmer" element={<ProtectedRoute roles={['farmer']}><FarmerHome /></ProtectedRoute>} />
               <Route path="/requests/new" element={<ProtectedRoute roles={['farmer']}><NewRequestPage /></ProtectedRoute>} />
+              <Route path="/sell" element={<ProtectedRoute roles={['farmer']}><SmartSellPage /></ProtectedRoute>} />
               <Route path="/requests/:id" element={<ProtectedRoute roles={['farmer']}><TokenPage /></ProtectedRoute>} />
               <Route path="/requests/:id/status" element={<ProtectedRoute roles={['farmer']}><StatusPage /></ProtectedRoute>} />
               <Route path="/history" element={<ProtectedRoute roles={['farmer']}><HistoryPage /></ProtectedRoute>} />

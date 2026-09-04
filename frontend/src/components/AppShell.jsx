@@ -8,6 +8,7 @@ const NAV = {
   farmer: [
     { to: '/farmer', key: 'nav.dashboard', end: true },
     { to: '/requests/new', key: 'nav.newRequest' },
+    { to: '/sell', key: 'nav.smartSell' },
     { to: '/history', key: 'nav.history' },
     { to: '/id-card', key: 'nav.idCard' },
   ],

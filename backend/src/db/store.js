@@ -3,7 +3,7 @@ import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import config from '../config.js';
-import { CROPS, VILLAGES, CENTRES, USERS } from '../data/seed-data.js';
+import { CROPS, VILLAGES, CENTRES, USERS, BUYERS } from '../data/seed-data.js';
 
 const DB_PATH = config.dataFile;
 let cache = null;
@@ -81,7 +81,12 @@ export function seed(force = false) {
     crops: CROPS,
     villages: VILLAGES,
     centres: CENTRES.map((c) => ({ ...c })),
+    buyers: BUYERS.map((b) => ({
+      ...b,
+      crops: b.crops.map((c) => ({ ...c })),
+    })),
     requests: [],
+    saleBookings: [],
     notifications: [],
     smsLog: [],
   };
@@ -108,7 +113,12 @@ export function getDb() {
   // Forward-compatible migration for older data files.
   if (!Array.isArray(cache.smsLog)) cache.smsLog = [];
   if (!Array.isArray(cache.notifications)) cache.notifications = [];
+  if (!Array.isArray(cache.saleBookings)) cache.saleBookings = [];
   let mutated = false;
+  if (!Array.isArray(cache.buyers) || cache.buyers.length === 0) {
+    cache.buyers = BUYERS.map((b) => ({ ...b, crops: b.crops.map((c) => ({ ...c })) }));
+    mutated = true;
+  }
   // Assign Farmer IDs (ANC-F-0001…) to farmers that predate the ID feature.
   const nextSeq = () => {
     const max = cache.users

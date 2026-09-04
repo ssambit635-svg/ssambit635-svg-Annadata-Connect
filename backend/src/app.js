@@ -12,6 +12,7 @@ import referenceRoutes from './routes/reference.routes.js';
 import farmerRoutes from './routes/farmer.routes.js';
 import centreRoutes from './routes/centre.routes.js';
 import requestRoutes from './routes/request.routes.js';
+import sellingRoutes from './routes/selling.routes.js';
 import officerRoutes from './routes/officer.routes.js';
 import authorityRoutes from './routes/authority.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
@@ -40,6 +41,7 @@ export function createApp() {
   app.use('/api/farmers', farmerRoutes);
   app.use('/api/centres', centreRoutes);
   app.use('/api/requests', requestRoutes);
+  app.use('/api/selling', sellingRoutes);
   app.use('/api/officer', officerRoutes);
   app.use('/api/authority', authorityRoutes);
   app.use('/api/notifications', notificationRoutes);

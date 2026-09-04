@@ -24,6 +24,15 @@ export const requestService = {
   cancel: (id) => api(`/api/requests/${id}/cancel`, { method: 'POST', body: {} }),
 };
 
+export const sellingService = {
+  options: (cropId, quantityQuintal) =>
+    api('/api/selling/options', { method: 'POST', body: { cropId, quantityQuintal } }),
+  book: (payload) => api('/api/selling/book', { method: 'POST', body: payload }),
+  bookings: () => api('/api/selling/bookings'),
+  cancelBooking: (id) =>
+    api(`/api/selling/bookings/${id}/cancel`, { method: 'POST', body: {} }),
+};
+
 export const notificationService = {
   list: () => api('/api/notifications'),
   readAll: () => api('/api/notifications/read-all', { method: 'POST', body: {} }),
