@@ -112,6 +112,99 @@ export const CENTRES = [
   },
 ];
 
+// Market / private buyers for "Smart Selling Options".
+// Government MSP procurement centres are NOT listed here — they are computed at
+// request time from the centres above (each OPEN centre buys every crop at MSP).
+// These buyers buy selected crops at an above-MSP market rate, settled on the
+// spot. offerPerQuintal is ₹ per quintal; committedQuintal tracks live bookings.
+export const BUYERS = [
+  {
+    id: 'buyer-bbsr-mill',
+    type: 'market',
+    categoryEn: 'FPO · Rice Mill',
+    categoryHi: 'एफपीओ · चावल मिल',
+    nameEn: 'Bhubaneswar Rice Mill (Farmer Producer Org.)',
+    nameHi: 'भुवनेश्वर चावल मिल (किसान उत्पादक संगठन)',
+    district: 'Khordha',
+    address: 'Bhuasuni, Khordha Road, Bhubaneswar',
+    lat: 20.2345,
+    lng: 85.7221,
+    status: 'OPEN',
+    operatingHours: '07:00 - 20:00',
+    settlementEn: 'Paid on the spot (UPI / cash) at delivery',
+    settlementHi: 'डिलीवरी पर तुरंत भुगतान (UPI / नकद)',
+    noteEn: 'Market-linked rate above MSP; quality is graded at the mill.',
+    noteHi: 'MSP से ऊपर बाज़ार दर; मिल पर गुणवत्ता जाँच होती है।',
+    crops: [
+      { cropId: 'crop-paddy', offerPerQuintal: 2400, intakeCapacityQuintal: 600, committedQuintal: 0 },
+      { cropId: 'crop-moong', offerPerQuintal: 8900, intakeCapacityQuintal: 120, committedQuintal: 0 },
+    ],
+  },
+  {
+    id: 'buyer-balianta-trader',
+    type: 'market',
+    categoryEn: 'Private Trader',
+    categoryHi: 'निजी व्यापारी',
+    nameEn: 'Balianta Grain Trader',
+    nameHi: 'बाळियंता अनाज व्यापारी',
+    district: 'Khordha',
+    address: 'Balianta Main Market, near NH-316',
+    lat: 20.3311,
+    lng: 85.9486,
+    status: 'OPEN',
+    operatingHours: '06:30 - 19:00',
+    settlementEn: 'Cash on the spot',
+    settlementHi: 'मौके पर नकद',
+    noteEn: 'Daily market rate; compare before you sell.',
+    noteHi: 'दैनिक बाज़ार दर; बेचने से पहले तुलना करें।',
+    crops: [
+      { cropId: 'crop-paddy', offerPerQuintal: 2365, intakeCapacityQuintal: 200, committedQuintal: 0 },
+    ],
+  },
+  {
+    id: 'buyer-khordha-feed',
+    type: 'market',
+    categoryEn: 'Animal Feed Mill',
+    categoryHi: 'पशु आहार मिल',
+    nameEn: 'Khordha Animal Feed Mill',
+    nameHi: 'खोर्धा पशु आहार मिल',
+    district: 'Khordha',
+    address: 'NH-16 Service Road, Khordha Town',
+    lat: 20.1798,
+    lng: 85.6177,
+    status: 'OPEN',
+    operatingHours: '08:00 - 18:00',
+    settlementEn: 'Paid on delivery (bank transfer)',
+    settlementHi: 'डिलीवरी पर भुगतान (बैंक ट्रांसफर)',
+    noteEn: 'Buys maize for feed; pay on delivery.',
+    noteHi: 'चारे के लिए मक्का खरीदता है; डिलीवरी पर भुगतान।',
+    crops: [
+      { cropId: 'crop-maize', offerPerQuintal: 2350, intakeCapacityQuintal: 400, committedQuintal: 0 },
+    ],
+  },
+  {
+    id: 'buyer-moong-collector',
+    type: 'market',
+    categoryEn: 'Pulses Aggregator',
+    categoryHi: 'दाल एकत्रकर्ता',
+    nameEn: 'Khordha Pulses Collection Centre',
+    nameHi: 'खोर्धा दाल संग्रहण केंद्र',
+    district: 'Khordha',
+    address: 'Ranihat, Khordha',
+    lat: 20.1721,
+    lng: 85.6091,
+    status: 'CLOSED',
+    operatingHours: '09:00 - 17:00',
+    settlementEn: 'Cash on the spot',
+    settlementHi: 'मौके पर नकद',
+    noteEn: 'Temporarily closed for the season.',
+    noteHi: 'सीज़न के लिए अस्थायी रूप से बंद।',
+    crops: [
+      { cropId: 'crop-moong', offerPerQuintal: 8720, intakeCapacityQuintal: 90, committedQuintal: 0 },
+    ],
+  },
+];
+
 // Demo accounts. Passwords are hashed at seed time (see seed-cli / store).
 export const USERS = [
   {

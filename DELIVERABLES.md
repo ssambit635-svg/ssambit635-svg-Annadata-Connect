@@ -66,6 +66,22 @@
   (free `qrcode` lib, encodes ID/name/mobile/village for counter verification) with
   Print / Save-as-PDF support
 
+### Smart Selling Options — compare buyers before selling
+- ✅ New **Smart Sell** flow (nav + `/sell`) lets a farmer pick crop + quantity and compare **every
+  buyer** side-by-side before committing: government **MSP procurement centres** (guaranteed MSP,
+  queue/wait/storage) AND private **market buyers** (FPO / mill / trader) who pay an above-MSP rate
+  settled on the spot.
+- ✅ Transparent rule-based ranking: each option shows offer ₹/q, gross value, and net value after an
+  estimated transport cost (`₹0.4 per km per quintal`, same for every channel); options ranked by net
+  value, ties by distance; flags tag **Best value**, **Best MSP option** and **Best price**.
+- ✅ MSP options are derived live from the existing centres (OPEN + capacity ≥ quantity); market buyers
+  are a new seeded entity with per-crop offer rates, intake capacity and settlement terms.
+- ✅ One active sale per farmer across both channels (server-enforced); bookable MSP choice creates the
+  usual token (`ANC-…`); bookable market choice records a market booking (`SSB-…`) with the buyer and
+  releases quantity back on cancel. In-app **and** SMS notifications on every event.
+- ✅ Farmer sees their **market bookings** (reference, rate, status) on the Smart Sell page and can cancel
+  a confirmed booking; fully bilingual (EN/हिन्दी).
+
 ## Backend-dependent feature notes
 
 The backend is **in-repo** and implements the whole contract in `API_INTEGRATION_MAP.md`, so there
@@ -89,6 +105,10 @@ map, bilingual `nameEn/nameHi` fields, and the request lifecycle transitions lis
 - Push notifications remain in-app (polled); SMS covers the offline channel once a gateway is configured.
 - No password-reset flow; officers create assisted accounts with the default password `Kisan@123`.
 - Single district (Khordha) seeded; add more districts in `backend/src/data/seed-data.js`.
+- Market-buyer offer rates, capacities and coordinates in `BUYERS` are indicative demo values; the
+  transport-cost constant (`₹0.4/km/q`) is a documented rule for fair comparison, not a carrier quote.
+- Market bookings are a lightweight confirmation record (reference + terms); full in-yard delivery
+  tracking for private buyers is a future integration.
 
 ## Quality checklist — status
 
@@ -100,6 +120,7 @@ map, bilingual `nameEn/nameHi` fields, and the request lifecycle transitions lis
 | Hindi toggle works everywhere | ✅ incl. API data fields, statuses, assistant, errors |
 | Assistant answers only approved FAQs | ✅ out-of-scope questions hit the fixed fallback |
 | Farmer workflow end-to-end | ✅ login → request → recommendation → token → queue → journey |
+| Smart Selling end-to-end | ✅ compare MSP + market buyers → book token or market booking → cancel/release |
 | Officer workflow end-to-end | ✅ login → dashboard → call/start/complete/reject → farmer sees updates |
 | Unauthorized actions blocked | ✅ 401/403/redirects verified (incl. authority→officer, anon→app) |
 | Loading/error/empty states | ✅ every screen |

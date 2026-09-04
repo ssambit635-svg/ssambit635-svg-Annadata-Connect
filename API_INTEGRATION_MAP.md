@@ -26,6 +26,9 @@ layer (`frontend/src/services/api/*`) implements exactly these endpoints — not
 | `ACTIVE_REQUEST_EXISTS`   | 409  | Farmer already has an active request             |
 | `CENTRE_NOT_OPEN`         | 409  | Centre is PAUSED/CLOSED                          |
 | `CENTRE_CAPACITY_EXCEEDED`| 409  | Not enough remaining storage                     |
+| `ACTIVE_BOOKING_EXISTS`   | 409  | Farmer already has a live market sell booking    |
+| `BUYER_NOT_OPEN`          | 409  | Market buyer is not taking deliveries            |
+| `BUYER_CAPACITY_EXCEEDED` | 409  | Market buyer's intake for the crop is full       |
 | `INVALID_STATE`           | 409  | Illegal lifecycle transition                     |
 | `NETWORK_ERROR`           | –    | Frontend-generated (fetch failed)                |
 
@@ -60,6 +63,29 @@ layer (`frontend/src/services/api/*`) implements exactly these endpoints — not
 | GET    | `/api/requests/mine`        | –                                     | `{requests:[…]}` newest first                            |
 | GET    | `/api/requests/:id`         | –                                     | `{request(+timeline), queue:{position, aheadCount, estimatedWaitMinutes, centreSummary}}` |
 | POST   | `/api/requests/:id/cancel`  | –                                     | Only from `WAITING`/`PENDING` → `CANCELLED`              |
+
+### Smart Selling Options (farmer, `/api/selling`)
+
+| Method | Endpoint                          | Body                                  | Effect                                                  |
+| ------ | --------------------------------- | ------------------------------------- | ------------------------------------------------------- |
+| POST   | `/api/selling/options`            | `{cropId, quantityQuintal}`           | `{mspRatePerQuintal, options[], unavailable[], recommended, bestValueInr, basisEn, basisHi, summaryEn, summaryHi}` — ranks every buyer (MSP centres + above-MSP market buyers) by net value after an estimated transport cost; writes nothing |
+| POST   | `/api/selling/book`               | `{cropId, quantityQuintal, channel, buyerId}` | `channel=MSP` → creates a normal procurement request+token (`201 {channel, kind:'request', request, queue}`); `channel=MARKET` → records a market booking (`201 {channel, kind:'booking', booking}`). One active sale (request OR booking) per farmer. |
+| GET    | `/api/selling/bookings`           | –                                     | `{bookings:[…]}` — the farmer's private-buyer market bookings, newest first |
+| POST   | `/api/selling/bookings/:id/cancel`| –                                     | `CONFIRMED` booking → `CANCELLED`, releases the buyer's intake capacity |
+
+**Selling option object**: `{optionId, channel: MSP|MARKET, buyerId, nameEn/nameHi, categoryEn/Hi, address,
+distanceKm, ratePerQuintal, isPremium, premiumPercent, grossValueInr, netValueInr, transportCostInr,
+flags[], …}`. MSP options also carry `queueCount, estimatedWaitMinutes, capacityPct, remainingQuintal,
+paymentEn/Hi`; MARKET options carry `remainingQuintal, operatingHours, settlementEn/Hi, noteEn/Hi`.
+
+**Flags**: `BEST_OVERALL` (best net value), `BEST_MSP` (cheapest MSP wait among MSP options),
+`BEST_PRICE` (top ₹/q among several market buyers).
+
+**Market booking object**: `{id, reference(SSB-xxxx), status: CONFIRMED|CANCELLED, quantityQuintal,
+agreedRatePerQuintal, grossValueInr, crop, buyer, createdAt, timeline}`.
+
+**Selling ranking rule**: `net = gross − (distanceKm × quantity × ₹0.4/km/q)`; options sorted by net
+descending, ties by distance. Same transport constant for every channel. Deliberately **not ML**.
 
 ## Officer (bound to their `centreId`)
 

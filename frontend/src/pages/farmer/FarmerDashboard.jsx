@@ -117,6 +117,7 @@ export default function FarmerDashboard() {
             <h3 style={{ marginTop: 0 }}>{t('farmer.quickActions')}</h3>
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               <Link className="btn btn-outline btn-sm" to="/requests/new">＋ {t('nav.newRequest')}</Link>
+              <Link className="btn btn-outline btn-sm" to="/sell"><Icon name="wheat" size={15} /> {t('nav.smartSell')}</Link>
               <Link className="btn btn-outline btn-sm" to="/history"><Icon name="folder" size={15} /> {t('nav.history')}</Link>
               <Link className="btn btn-outline btn-sm" to="/centres"><Icon name="store" size={15} /> {t('farmer.centresTitle')}</Link>
               <Link className="btn btn-outline btn-sm" to="/id-card"><Icon name="idCard" size={15} /> {t('nav.idCard')}</Link>

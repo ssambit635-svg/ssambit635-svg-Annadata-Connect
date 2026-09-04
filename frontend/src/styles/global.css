@@ -1113,3 +1113,16 @@ table.data tbody tr:hover { background: #f4f8f5; }
 @media (max-width: 560px) {
   .landing-v2 .home-footer-base { padding-bottom: 3.6rem; }
 }
+
+/* ---------- Smart Selling Options ---------- */
+.form-banner.warning {
+  background: var(--c-warning-bg); color: var(--c-warning);
+  border: 1px solid #e6d29a;
+}
+.opt-row.opt-selected {
+  background: #eef6f0;
+  border: 1px solid var(--c-primary);
+  border-radius: 8px;
+}
+.opt-row .reco-factors .f { min-width: 96px; }
+.opt-row label > span { min-width: 0; }

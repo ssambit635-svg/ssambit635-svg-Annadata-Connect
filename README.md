@@ -1,6 +1,6 @@
 # अन्नदाता कनेक्ट Annadata Connect — Full-Stack MVP
 
-A real, locally-runnable crop-procurement platform connecting **Farmers**, **Procurement Officers / Centres**, and **District Authority** — with token generation, live queue tracking, rule-based smart centre recommendation, a bilingual (English ↔ हिन्दी) UI, and a controlled rule-based farmer assistant.
+A real, locally-runnable crop-procurement platform connecting **Farmers**, **Procurement Officers / Centres**, and **District Authority** — with token generation, live queue tracking, rule-based smart centre recommendation, **Smart Selling Options that compare buyers before you sell** (government MSP centres vs above-MSP market buyers), a bilingual (English ↔ हिन्दी) UI, and a controlled rule-based farmer assistant.
 
 ```
 kis an sathi/
@@ -102,8 +102,15 @@ Pick crop + quantity → Find Best Centre
 Read transparent recommendation           Login 9999999101 / Officer@123
 (distance/queue/capacity/wait)            Officer Dashboard → stats + alerts
 Confirm centre → Token ANC-xxx            Queue → Call → Start → Complete
-Live queue + journey auto-refresh  ◄────── Farmer gets notified at each step
+                                        Live queue + journey auto-refresh  ◄────── Farmer gets notified at each step
                                         Assisted Entry → token for walk-in farmer
+
+SMART SELL (compare buyers before selling):
+Login 9999999001 / Farmer@123 → Smart Sell → pick paddy + 20 q → compare ranked buyers
+(Govt MSP centres vs market buyers paying above MSP) → choose → booked as token (MSP)
+or a market booking reference (SSB-…) with on-the-spot settlement; market bookings are
+listed & cancellable on the Smart Sell page.
+
 AUTHORITY: Login 9999999201 → District Overview (congestion / capacity / volume / alerts)
 ```
 
