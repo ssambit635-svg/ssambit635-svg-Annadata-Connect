@@ -1126,3 +1126,51 @@ table.data tbody tr:hover { background: #f4f8f5; }
 }
 .opt-row .reco-factors .f { min-width: 96px; }
 .opt-row label > span { min-width: 0; }
+
+/* ---------- Historical mandi prices (Agmarknet) ---------- */
+.source-note { border-left: 4px solid var(--c-info, #1d4ed8); }
+.source-note code { background: var(--c-neutral-bg); padding: 0.05rem 0.3rem; border-radius: 4px; font-size: 0.82rem; }
+
+.card.filters {
+  display: grid; gap: 0.6rem 0.9rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.card.filters .field { margin-bottom: 0; }
+
+.price-chart { width: 100%; }
+.price-chart svg { width: 100%; height: auto; display: block; touch-action: pan-y; }
+.price-chart-readout {
+  display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: baseline;
+  font-size: 0.88rem; min-height: 1.4rem; margin-top: 0.35rem;
+  padding-top: 0.35rem; border-top: 1px dashed var(--c-border);
+}
+.price-chart-readout .soft { color: var(--c-text-soft); }
+
+.chart-legend { float: right; font-size: 0.78rem; font-weight: 500; color: var(--c-text-soft); display: inline-flex; gap: 0.5rem; align-items: center; }
+.chart-legend .k { width: 14px; height: 3px; border-radius: 2px; display: inline-block; margin-left: 0.5rem; }
+.chart-legend .k.line { background: #166534; }
+.chart-legend .k.band { background: rgba(22, 101, 52, 0.25); height: 9px; }
+.chart-legend .k.bar { background: rgba(148, 163, 184, 0.55); height: 9px; }
+
+.season-bars { display: grid; gap: 0.25rem; }
+.season-row { display: grid; grid-template-columns: 2.6rem 1fr 4.6rem; gap: 0.5rem; align-items: center; font-size: 0.85rem; }
+.season-row .track { background: var(--c-neutral-bg); border-radius: 999px; height: 12px; overflow: hidden; }
+.season-row .fill { display: block; height: 100%; background: #86b28f; border-radius: 999px; }
+.season-row.best .fill { background: var(--c-primary); }
+.season-row.best { font-weight: 700; }
+.season-row .v { text-align: right; font-variant-numeric: tabular-nums; }
+
+.callout {
+  background: var(--c-info-bg, #eef2ff); border-radius: var(--radius);
+  padding: 0.55rem 0.75rem; margin: 0 0 0.7rem; font-size: 0.92rem;
+}
+.foot-note { font-size: 0.8rem; color: var(--c-text-soft); margin: 0.6rem 0 0; }
+.soft { color: var(--c-text-soft); }
+.small { font-size: 0.78rem; }
+.row-active { background: #f1f7f2; }
+.linkish {
+  background: none; border: none; padding: 0; font: inherit; cursor: pointer;
+  color: var(--c-primary-dark); text-decoration: underline; text-underline-offset: 2px;
+}
+.price-benchmark { border-left: 4px solid var(--c-primary); }
+.price-benchmark .verdict { display: inline-flex; align-items: center; gap: 0.3rem; }

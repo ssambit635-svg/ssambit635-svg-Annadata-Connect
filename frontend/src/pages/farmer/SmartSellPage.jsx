@@ -5,6 +5,7 @@ import { useI18n } from '../../i18n/I18nContext.jsx';
 import { referenceService, sellingService, farmerService } from '../../services/api/farmerService.js';
 import { formatInr, formatDate } from '../../utils/format.js';
 import { Loading, ErrorState } from '../../components/States.jsx';
+import { PriceBenchmarkCard } from '../../components/PriceBenchmarkCard.jsx';
 
 const FLAG_LABEL = { BEST_OVERALL: 'bestOverall', BEST_MSP: 'bestMsp', BEST_PRICE: 'bestPrice' };
 const FLAG_TONE = { BEST_OVERALL: 'success', BEST_MSP: 'info', BEST_PRICE: 'warning' };
@@ -215,6 +216,7 @@ export default function SmartSellPage() {
 }
 
 function CompareStage({ crop, compare, selected, setSelected, onBook, onBack, busy, blocked, t, pick }) {
+  const selectedOption = compare.options.find((o) => o.optionId === selected) || compare.options[0] || null;
   return (
     <>
       <div className="card" style={{ background: 'var(--c-bg-soft, #f5f9f6)' }}>
@@ -248,6 +250,11 @@ function CompareStage({ crop, compare, selected, setSelected, onBook, onBack, bu
           <p className="hint" style={{ fontSize: '0.85rem' }}>
             <Icon name="info" size={14} /> {t('smartSell.basisNote')} {pick(compare, 'basis')}
           </p>
+          {/* Historical footing: how the selected offer compares with what this
+              crop actually fetched in the mandis (real Agmarknet records). */}
+          {crop && selectedOption && (
+            <PriceBenchmarkCard cropId={crop.id} pricePerQuintal={selectedOption.ratePerQuintal} />
+          )}
         </>
       )}
 

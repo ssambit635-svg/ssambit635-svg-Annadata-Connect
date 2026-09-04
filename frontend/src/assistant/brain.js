@@ -51,6 +51,16 @@ const INTENTS = [
     ],
   },
   {
+    key: 'market_price',
+    patterns: [
+      /(mandi|market|मंडी|बाज़ार|बाजार).*(price|bhav|rate|भाव|दर|कीमत)/i,
+      /(price|bhav|rate|भाव|दर|कीमत).*(history|trend|pichle|last year|इतिहास|पिछले|चाल)/i,
+      /(kab|कब).*(bech|बेच)/i,
+      /(best|sahi|सही|अच्छा).*(month|mahina|महीन).*(bech|बेच|sell)/i,
+      /agmarknet/i,
+    ],
+  },
+  {
     key: 'register',
     patterns: [
       /(register|registration|register).*(kaise|kare|karo|how)/i,

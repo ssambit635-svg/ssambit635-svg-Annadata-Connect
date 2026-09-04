@@ -4,3 +4,4 @@ dist/
 backend/data/db.json
 *.log
 .DS_Store
+.data-src/

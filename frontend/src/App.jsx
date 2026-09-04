@@ -20,6 +20,7 @@ import OfficerRequests from './pages/officer/OfficerRequests.jsx';
 import AssistedRequest from './pages/officer/AssistedRequest.jsx';
 import AuthorityDashboard from './pages/authority/AuthorityDashboard.jsx';
 import AuthorityCentreDetail from './pages/authority/AuthorityCentreDetail.jsx';
+import MarketPricesPage from './pages/MarketPricesPage.jsx';
 import { NotFoundPage, UnauthorizedPage } from './pages/ErrorPages.jsx';
 
 // '/' is the farmer home; officers/authority are routed to their dashboards.
@@ -55,6 +56,8 @@ export default function App() {
               <Route path="/history" element={<ProtectedRoute roles={['farmer']}><HistoryPage /></ProtectedRoute>} />
               <Route path="/id-card" element={<ProtectedRoute roles={['farmer']}><IdCardPage /></ProtectedRoute>} />
               <Route path="/centres" element={<ProtectedRoute roles={['farmer', 'officer', 'authority']}><CentresPage /></ProtectedRoute>} />
+              {/* Historical Agmarknet mandi prices - open to every signed-in role */}
+              <Route path="/market-prices" element={<ProtectedRoute roles={['farmer', 'officer', 'authority']}><MarketPricesPage /></ProtectedRoute>} />
               {/* Officer */}
               <Route path="/officer" element={<ProtectedRoute roles={['officer']}><OfficerDashboard /></ProtectedRoute>} />
               <Route path="/officer/queue" element={<ProtectedRoute roles={['officer']}><OfficerQueue /></ProtectedRoute>} />

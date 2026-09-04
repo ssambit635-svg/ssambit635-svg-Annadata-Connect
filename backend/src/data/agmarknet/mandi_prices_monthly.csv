@@ -1,0 +1,494 @@
+state_name,market_name,district,commodity,year,month,arrivals_mt,modal_price_avg,min_price_avg,max_price_avg,n_obs,mandi_id
+Tamil Nadu,Kolathur APMC,,cotton,2021,2,3.54,5400.57,5299.72,5501.41,5,
+Tamil Nadu,Kolathur APMC,,cotton,2021,3,68.16,4841.92,4718.34,4965.49,20,
+Tamil Nadu,Kolathur APMC,,cotton,2021,4,64.09,4001.98,3901.97,4102,10,
+Tamil Nadu,Kolathur APMC,,cotton,2021,5,0.08,5750,5500,6000,8,
+Tamil Nadu,Kolathur APMC,,cotton,2021,6,45.09,5677.29,5477.29,5877.29,11,
+Tamil Nadu,Kolathur APMC,,cotton,2021,7,254.44,5665.15,5518.48,5811.81,24,
+Tamil Nadu,Kolathur APMC,,cotton,2021,8,130.11,7119.29,6953.89,7284.69,21,
+Tamil Nadu,Kolathur APMC,,cotton,2021,9,44.12,6479.52,6354.53,6604.51,16,
+Tamil Nadu,Kolathur APMC,,cotton,2021,10,122.03,4593.57,4391.94,4795.2,6,
+Tamil Nadu,Kolathur APMC,,cotton,2021,11,82.08,4517.02,4417.01,4617.02,10,
+Tamil Nadu,Kolathur APMC,,cotton,2021,12,45.06,4600.09,4500.09,4700.09,7,
+Tamil Nadu,Kolathur APMC,,cotton,2022,1,140.61,7443.51,6762.76,8124.26,13,
+Tamil Nadu,Kolathur APMC,,cotton,2022,2,257.14,8718.58,8360.49,9076.66,18,
+Tamil Nadu,Kolathur APMC,,cotton,2022,3,257.73,9533.38,9281.15,9785.61,21,
+Tamil Nadu,Kolathur APMC,,cotton,2022,4,41.77,10776.6,10131.48,11421.71,15,
+Tamil Nadu,Kolathur APMC,,cotton,2022,5,22.24,10195.28,10045.82,10344.74,15,
+Tamil Nadu,Kolathur APMC,,cotton,2022,6,208.35,8319.3,7961.25,8677.34,17,
+Tamil Nadu,Kolathur APMC,,cotton,2022,7,191.43,7322.81,7049.47,7596.14,16,
+Tamil Nadu,Kolathur APMC,,cotton,2022,8,139.68,9867.29,9627.43,10107.15,16,
+Tamil Nadu,Kolathur APMC,,cotton,2022,9,74.76,7631.64,7222.08,8041.19,18,
+Tamil Nadu,Kolathur APMC,,cotton,2022,10,84.71,6949.21,6699.21,7199.21,16,
+Tamil Nadu,Kolathur APMC,,cotton,2022,11,34.76,6962.55,6712.46,7212.63,19,
+Tamil Nadu,Kolathur APMC,,cotton,2022,12,6.61,6575.57,6345.08,6806.05,18,
+Tamil Nadu,Kolathur APMC,,cotton,2023,1,405.5,6921.66,6706.61,7136.71,22,
+Tamil Nadu,Kolathur APMC,,cotton,2023,2,182.17,7200.02,7100.01,7300.03,11,
+Tamil Nadu,Kolathur APMC,,cotton,2023,3,359.49,6847.9,6747.9,6947.9,12,
+Tamil Nadu,Kolathur APMC,,cotton,2023,4,40.42,7099.4,6999.37,7199.42,14,
+Tamil Nadu,Kolathur APMC,,cotton,2023,5,105.07,6910.44,6800,7020.87,10,
+Tamil Nadu,Kolathur APMC,,cotton,2023,6,249.42,5539.21,5428.85,5649.57,13,
+Tamil Nadu,Kolathur APMC,,cotton,2023,7,347.71,5377.92,5250.62,5505.22,18,
+Tamil Nadu,Kolathur APMC,,cotton,2023,8,127.66,6597.34,6357.37,6837.32,12,
+Tamil Nadu,Kolathur APMC,,cotton,2023,9,0.07,6664.29,6471.43,6857.14,7,
+Tamil Nadu,Kolathur APMC,,cotton,2023,10,24.69,6333.05,6166.1,6500,8,
+Tamil Nadu,Kolathur APMC,,cotton,2023,11,3.41,6250,6000,6500,2,
+Tamil Nadu,Kolathur APMC,,cotton,2023,12,3.22,6150,6000,6300,3,
+Tamil Nadu,Kolathur APMC,,cotton,2024,1,43.24,5999.14,5865.45,6132.82,6,
+Tamil Nadu,Kolathur APMC,,cotton,2024,2,40.91,6118.33,6018.33,6218.33,10,
+Tamil Nadu,Kolathur APMC,,cotton,2024,3,43.45,7366.93,7231.14,7502.72,8,
+Tamil Nadu,Kolathur APMC,,cotton,2024,4,8.27,7276.12,7201.27,7350.97,5,
+Tamil Nadu,Kolathur APMC,,cotton,2024,5,12.32,7229.71,7047.32,7412.09,5,
+Tamil Nadu,Kolathur APMC,,cotton,2024,6,3.47,6152.16,6002.59,6301.73,8,
+Chhattisgarh,Keshkal APMC,,maize,2021,1,1413,1155.26,1124.9,1185.61,24,
+Chhattisgarh,Keshkal APMC,,maize,2021,2,1602.6,1150,1100,1200,22,
+Chhattisgarh,Keshkal APMC,,maize,2021,3,473.4,1250,1200,1300,18,
+Chhattisgarh,Keshkal APMC,,maize,2021,4,150.8,1315.05,1286.74,1343.37,7,
+Chhattisgarh,Keshkal APMC,,maize,2021,5,2615.6,1326.1,1300,1352.2,17,
+Chhattisgarh,Keshkal APMC,,maize,2021,6,11083.7,1357.46,1329.11,1385.8,29,
+Chhattisgarh,Keshkal APMC,,maize,2021,7,1113.8,1331.49,1305.19,1357.78,26,
+Chhattisgarh,Keshkal APMC,,maize,2021,8,553.9,1450,1400,1500,19,
+Chhattisgarh,Keshkal APMC,,maize,2021,9,256.3,1450,1400,1500,19,
+Chhattisgarh,Keshkal APMC,,maize,2021,10,308.2,1455.92,1411.84,1500,11,
+Chhattisgarh,Keshkal APMC,,maize,2021,11,1696.6,1493.31,1453.47,1533.15,22,
+Chhattisgarh,Keshkal APMC,,maize,2021,12,3419.4,1537.22,1511.46,1562.98,30,
+Chhattisgarh,Keshkal APMC,,maize,2022,1,1201.2,1558.85,1527.74,1589.95,29,
+Chhattisgarh,Keshkal APMC,,maize,2022,2,566.4,1731.43,1681.43,1781.43,19,
+Chhattisgarh,Keshkal APMC,,maize,2022,3,162.8,1846.81,1796.81,1896.81,15,
+Chhattisgarh,Keshkal APMC,,maize,2022,4,246.8,2047.86,1965.24,2130.47,17,
+Chhattisgarh,Keshkal APMC,,maize,2022,5,1217.1,2039.76,1969.41,2110.11,29,
+Chhattisgarh,Keshkal APMC,,maize,2022,6,2852.7,1983.46,1950,2016.92,27,
+Chhattisgarh,Keshkal APMC,,maize,2022,7,286.1,2048.53,1953.51,2143.55,19,
+Chhattisgarh,Keshkal APMC,,maize,2022,8,557.2,2223.39,2170.69,2276.08,25,
+Chhattisgarh,Keshkal APMC,,maize,2022,9,350.2,2250,2200,2300,18,
+Chhattisgarh,Keshkal APMC,,maize,2022,10,27.8,1944.96,1857.55,2032.37,3,
+Chhattisgarh,Keshkal APMC,,maize,2022,11,607.8,1888.78,1838.78,1938.78,18,
+Chhattisgarh,Keshkal APMC,,maize,2022,12,1545.3,1978.73,1938.3,2019.15,28,
+Chhattisgarh,Keshkal APMC,,maize,2023,1,1045.1,2025,2000,2050,29,
+Chhattisgarh,Keshkal APMC,,maize,2023,2,497.7,1942.83,1917.83,1967.83,17,
+Chhattisgarh,Keshkal APMC,,maize,2023,3,230.8,1947.59,1900,1995.17,9,
+Chhattisgarh,Keshkal APMC,,maize,2023,4,512.5,1946.68,1896.68,1996.68,22,
+Chhattisgarh,Keshkal APMC,,maize,2023,5,1657.8,1648.57,1613.26,1683.88,30,
+Chhattisgarh,Keshkal APMC,,maize,2023,6,7061.4,1562.2,1515.34,1609.05,30,
+Chhattisgarh,Keshkal APMC,,maize,2023,7,1096.7,1789.05,1746.21,1831.89,31,
+Chhattisgarh,Keshkal APMC,,maize,2023,8,1240.1,1929.05,1879.05,1979.05,28,
+Chhattisgarh,Keshkal APMC,,maize,2023,9,899.1,1950,1900,2000,29,
+Chhattisgarh,Keshkal APMC,,maize,2023,10,801,1946.97,1900,1993.94,27,
+Chhattisgarh,Keshkal APMC,,maize,2023,11,4294,1927.19,1901.84,1952.54,25,
+Chhattisgarh,Keshkal APMC,,maize,2023,12,6312.4,1906.63,1786.15,2027.11,27,
+Chhattisgarh,Keshkal APMC,,maize,2024,1,4164.3,2000,1950,2050,30,
+Chhattisgarh,Keshkal APMC,,maize,2024,2,856.2,1998.96,1948.96,2048.96,23,
+Chhattisgarh,Keshkal APMC,,maize,2024,3,294.7,2007.13,1957.13,2057.13,17,
+Chhattisgarh,Keshkal APMC,,maize,2024,4,672,2043.38,1999.03,2087.72,27,
+Chhattisgarh,Keshkal APMC,,maize,2024,5,1950.3,2025,2000,2050,31,
+Chhattisgarh,Keshkal APMC,,maize,2024,6,9442,2025.5,1999.65,2051.34,30,
+Chhattisgarh,Keshkal APMC,,maize,2024,7,3960.7,2115.28,2065.07,2165.49,28,
+Chhattisgarh,Keshkal APMC,,maize,2024,8,1969.5,2236.9,2187.41,2286.38,24,
+Chhattisgarh,Keshkal APMC,,maize,2024,9,513.8,2250,2200,2300,14,
+Chhattisgarh,Keshkal APMC,,maize,2024,10,830.2,2243.38,2193.38,2293.38,16,
+Chhattisgarh,Keshkal APMC,,maize,2024,11,4434.7,2150.92,2100.92,2200.92,23,
+Chhattisgarh,Keshkal APMC,,maize,2024,12,5352.1,2147.42,2097.42,2197.42,29,
+Chhattisgarh,Keshkal APMC,,maize,2025,1,2602.4,2156.32,2110.01,2202.64,27,
+Chhattisgarh,Keshkal APMC,,maize,2025,2,628.7,2183.85,2148.48,2219.21,17,
+Chhattisgarh,Keshkal APMC,,maize,2025,3,1721.4,2142.64,2098.26,2187.02,22,
+Chhattisgarh,Keshkal APMC,,maize,2025,4,814.9,2084.88,2052.02,2117.73,13,
+Chhattisgarh,Keshkal APMC,,maize,2025,5,2393.5,1997.43,1972.59,2022.27,19,
+Chhattisgarh,Keshkal APMC,,maize,2025,6,6399.9,1926.47,1882.79,1970.15,26,
+Chhattisgarh,Keshkal APMC,,maize,2025,7,770.6,2002.65,1972.3,2032.99,10,
+Chhattisgarh,Keshkal APMC,,maize,2025,8,1249.3,2008.51,1975.73,2041.28,15,
+Chhattisgarh,Keshkal APMC,,maize,2025,9,1510.2,1943.66,1905.51,1981.8,18,
+Chhattisgarh,Keshkal APMC,,maize,2025,10,1110.9,1853.45,1820.84,1886.05,9,
+Chhattisgarh,Keshkal APMC,,maize,2025,11,1032.8,1746.78,1702.02,1791.54,15,
+Chhattisgarh,Keshkal APMC,,maize,2025,12,1981,1716.19,1689.62,1742.76,21,
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,1,20.82,1548.64,1464.16,1633.11,14,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,2,18.05,1562.59,1531.14,1594.03,11,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,3,4.62,1714.47,1663.11,1765.83,6,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,4,1.19,1468,1161,1775,1,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,5,0.1,1655,1655,1655,1,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,6,1.49,1991.49,1991.49,1991.49,7,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,7,5.75,1898.25,1862.46,1934.04,6,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,8,1.05,2008.69,2006.09,2011.29,3,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,9,2.76,2182.31,2121.52,2243.1,10,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,10,12.23,1788.83,1646.6,1931.06,11,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,11,4.74,2040.42,1933.35,2147.48,7,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2021,12,11.88,2008.94,1875.3,2142.58,11,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,1,0.66,1936.06,1930,1942.12,5,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,2,1.7,2185.96,2185.96,2185.96,4,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,3,0.14,2625,2625,2625,1,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,4,0.63,2525,2525,2525,1,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,5,1.54,2606.69,2606.69,2606.69,4,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,6,3.5,2486.42,2467.08,2505.76,7,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,7,4.12,2456.25,2393.88,2518.61,5,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,8,11.19,2404.46,2374.66,2434.25,9,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,9,7.13,2319.4,2154.22,2484.58,8,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,10,5.52,2226.81,2194.13,2259.49,15,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,11,9.92,2396.91,2275.33,2518.49,15,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2022,12,8.72,2224.75,2138.55,2310.95,9,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,1,0.86,2611.36,2606.53,2616.19,6,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,2,1.45,2123,2010,2236,1,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,3,4.12,2265.76,2254.46,2277.06,7,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,4,0.92,2259.78,2259.78,2259.78,2,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,5,1.14,2286.2,2285.08,2287.32,7,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,6,0.42,2155,2155,2155,1,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,7,1.57,2161.98,2161.98,2161.98,6,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,8,1.36,2391.4,2391.4,2391.4,5,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,9,0.69,2156.57,2156.57,2156.57,4,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,10,13.2,2103.77,2064.83,2142.72,13,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,11,3.63,2135.19,2110.64,2159.73,7,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2023,12,1.32,2528.23,2525.35,2531.11,4,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,1,13.99,2383.35,2340.89,2425.8,9,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,2,1.62,2485.73,2485.73,2485.73,4,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,3,1.18,1621.53,1321.8,1921.26,3,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,4,0.3,2038,2038,2038,1,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,5,0.03,2275,2275,2275,1,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,6,0.95,2659.37,2659.37,2659.37,2,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,7,7.35,2750,2588.44,2911.56,15,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,8,11.31,2710,2545.98,2874.01,21,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,9,10.8,2598.38,2511.57,2685.19,19,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,10,9.2,2672.56,2611.41,2733.7,18,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,11,9.25,2552.71,2505.41,2600,20,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2024,12,4.5,2622.22,2611.11,2633.33,12,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,1,4.12,2953.88,2893.2,3014.56,9,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,2,5,2500,2500,2500,10,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,3,7.5,2466.67,2466.67,2466.67,15,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,4,6.75,2500,2500,2500,13,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,5,5.5,2500,2500,2500,11,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,6,6.75,2500,2500,2500,13,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,7,6.76,2547.34,2536.24,2558.43,13,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,8,6,2704.17,2683.33,2725,13,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,9,7.65,2263.07,2238.56,2287.58,16,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,10,3.5,2500,2500,2500,7,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,11,3.5,2500,2500,2500,7,1145
+Tamil Nadu,Vellore APMC,Vellore,maize,2025,12,4,2500,2500,2500,8,1145
+Chhattisgarh,Jaspur APMC,,mustard,2021,2,0.1,4000,4000,4000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2021,3,1.1,4000,4000,4000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2021,6,0.8,3750,3750,3750,1,
+Chhattisgarh,Jaspur APMC,,mustard,2021,7,3,4200,4100,4300,3,
+Chhattisgarh,Jaspur APMC,,mustard,2021,10,3.3,5331.82,5331.82,5331.82,2,
+Chhattisgarh,Jaspur APMC,,mustard,2021,11,0.2,4000,4000,4000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2022,4,0.3,5000,5000,5000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2022,5,1.5,4000,4000,4000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2022,6,2,5000,5000,5000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2022,7,1,5000,5000,5000,3,
+Chhattisgarh,Jaspur APMC,,mustard,2022,9,0.8,4687.5,4687.5,4687.5,2,
+Chhattisgarh,Jaspur APMC,,mustard,2022,10,0.5,3500,3500,3500,1,
+Chhattisgarh,Jaspur APMC,,mustard,2022,11,1.6,5500,5500,5500,2,
+Chhattisgarh,Jaspur APMC,,mustard,2022,12,0.3,5050,5050,5050,1,
+Chhattisgarh,Jaspur APMC,,mustard,2023,4,1.5,4366.67,4366.67,4366.67,3,
+Chhattisgarh,Jaspur APMC,,mustard,2023,6,3.3,4454.55,4454.55,4454.55,2,
+Chhattisgarh,Jaspur APMC,,mustard,2023,7,0.5,4000,4000,4000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2023,9,0.5,5000,5000,5000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2023,10,1.1,4500,4500,4500,1,
+Chhattisgarh,Jaspur APMC,,mustard,2023,11,0.5,4975,4500,5450,1,
+Chhattisgarh,Jaspur APMC,,mustard,2023,12,0.3,4975,4500,5450,1,
+Chhattisgarh,Jaspur APMC,,mustard,2024,1,0.4,4500,4500,4500,1,
+Chhattisgarh,Jaspur APMC,,mustard,2024,4,1.3,4500,4500,4500,1,
+Chhattisgarh,Jaspur APMC,,mustard,2024,7,0.2,5000,5000,5000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2024,8,3.8,4500,4500,4500,1,
+Chhattisgarh,Jaspur APMC,,mustard,2024,10,1.4,4750,4500,5000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2024,12,1.5,4000,4000,4000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2025,1,1.1,3500,3500,3500,1,
+Chhattisgarh,Jaspur APMC,,mustard,2025,5,1.1,4681.82,4681.82,4681.82,2,
+Chhattisgarh,Jaspur APMC,,mustard,2025,6,0.2,5500,5500,5500,1,
+Chhattisgarh,Jaspur APMC,,mustard,2025,7,1.5,5000,5000,5000,2,
+Chhattisgarh,Jaspur APMC,,mustard,2025,10,0.1,5000,5000,5000,1,
+Chhattisgarh,Jaspur APMC,,mustard,2025,11,0.9,5000,5000,5000,2,
+West Bengal,Bankura Sadar APMC,,mustard,2021,1,22,4150,4100,4200,11,
+West Bengal,Bankura Sadar APMC,,mustard,2021,2,23,4145.65,4091.3,4200,10,
+West Bengal,Bankura Sadar APMC,,mustard,2021,3,20.5,4145.12,4090.24,4200,10,
+West Bengal,Bankura Sadar APMC,,mustard,2021,4,86,5052.62,4901.86,5203.37,22,
+West Bengal,Bankura Sadar APMC,,mustard,2021,5,71.7,6031.59,5869.32,6193.86,21,
+West Bengal,Bankura Sadar APMC,,mustard,2021,6,64.7,6640.27,6476.82,6803.71,23,
+West Bengal,Bankura Sadar APMC,,mustard,2021,7,61.4,6736.32,6633.88,6838.76,21,
+West Bengal,Bankura Sadar APMC,,mustard,2021,8,65.9,6855.69,6755.69,6955.69,20,
+West Bengal,Bankura Sadar APMC,,mustard,2021,9,66.4,7314.39,7163.86,7464.91,23,
+West Bengal,Bankura Sadar APMC,,mustard,2021,10,52.1,8014.88,7863.53,8166.22,18,
+West Bengal,Bankura Sadar APMC,,mustard,2021,11,68.5,8031.32,7834.16,8228.47,23,
+West Bengal,Bankura Sadar APMC,,mustard,2021,12,74.2,8079.05,7937.2,8220.89,25,
+West Bengal,Bankura Sadar APMC,,mustard,2022,1,45.9,8002.62,7864.27,8140.96,16,
+West Bengal,Bankura Sadar APMC,,mustard,2022,2,58.7,8077.34,7900,8254.68,20,
+West Bengal,Bankura Sadar APMC,,mustard,2022,3,71.2,8014.12,7870.93,8157.3,24,
+West Bengal,Bankura Sadar APMC,,mustard,2022,4,59.4,7816.59,7668.52,7964.65,21,
+West Bengal,Bankura Sadar APMC,,mustard,2022,5,57.8,7704.24,7586.85,7821.63,21,
+West Bengal,Bankura Sadar APMC,,mustard,2022,6,72.8,7489.42,7332.28,7646.57,23,
+West Bengal,Bankura Sadar APMC,,mustard,2022,7,55,7059.46,6901.09,7217.82,17,
+West Bengal,Bankura Sadar APMC,,mustard,2022,8,65.1,6941.32,6741.32,7141.32,21,
+West Bengal,Bankura Sadar APMC,,mustard,2022,9,64.8,6945.06,6745.06,7145.06,20,
+West Bengal,Bankura Sadar APMC,,mustard,2022,10,48.6,6831.79,6638.07,7025.51,16,
+West Bengal,Bankura Sadar APMC,,mustard,2022,11,76.6,6865.8,6701.44,7030.16,21,
+West Bengal,Bankura Sadar APMC,,mustard,2022,12,83.6,6683.97,6488.16,6879.78,22,
+West Bengal,Bankura Sadar APMC,,mustard,2023,1,82.1,6751.83,6553.96,6949.7,24,
+West Bengal,Bankura Sadar APMC,,mustard,2023,2,71.3,6745.72,6527.63,6963.81,22,
+West Bengal,Bankura Sadar APMC,,mustard,2023,3,79,6321.71,6073.92,6569.49,26,
+West Bengal,Bankura Sadar APMC,,mustard,2023,4,60.8,5927.22,5719.57,6134.87,19,
+West Bengal,Bankura Sadar APMC,,mustard,2023,5,78.6,5714.06,5500.64,5927.48,27,
+West Bengal,Bankura Sadar APMC,,mustard,2023,6,63.9,5623.09,5457.12,5789.05,22,
+West Bengal,Bankura Sadar APMC,,mustard,2023,7,71.2,5516.15,5400,5632.3,23,
+West Bengal,Bankura Sadar APMC,,mustard,2023,8,71.2,5683.57,5501.83,5865.31,23,
+West Bengal,Bankura Sadar APMC,,mustard,2023,9,71.8,5406.62,5213.23,5600,24,
+West Bengal,Bankura Sadar APMC,,mustard,2023,10,65.3,5400,5200,5600,20,
+West Bengal,Bankura Sadar APMC,,mustard,2023,11,56.2,5296.8,4993.59,5600,19,
+West Bengal,Bankura Sadar APMC,,mustard,2023,12,58.7,5200,4800,5600,21,
+West Bengal,Bankura Sadar APMC,,mustard,2024,1,58.1,5330.21,5060.41,5600,22,
+West Bengal,Bankura Sadar APMC,,mustard,2024,2,54.9,5369.04,5138.07,5600,21,
+West Bengal,Bankura Sadar APMC,,mustard,2024,3,53.7,5180.45,4760.89,5600,20,
+West Bengal,Bankura Sadar APMC,,mustard,2024,4,55.3,5601.49,5502.98,5700,20,
+West Bengal,Bankura Sadar APMC,,mustard,2024,5,66.7,5625,5550,5700,22,
+West Bengal,Bankura Sadar APMC,,mustard,2024,6,52.7,5603.13,5506.26,5700,18,
+West Bengal,Bankura Sadar APMC,,mustard,2024,7,73.9,5500.65,5301.29,5700,25,
+West Bengal,Bankura Sadar APMC,,mustard,2024,8,63.1,5473.62,5247.23,5700,21,
+West Bengal,Bankura Sadar APMC,,mustard,2024,9,72,5473.09,5246.18,5700,24,
+West Bengal,Bankura Sadar APMC,,mustard,2024,10,44,5497.56,5248.52,5746.59,14,
+West Bengal,Bankura Sadar APMC,,mustard,2024,11,60.8,5719.29,5419.82,6018.75,20,
+West Bengal,Bankura Sadar APMC,,mustard,2024,12,67.5,5506.37,5250,5762.74,23,
+West Bengal,Bankura Sadar APMC,,mustard,2025,1,59.9,5562.31,5365.69,5758.93,21,
+West Bengal,Bankura Sadar APMC,,mustard,2025,2,59.1,5576.27,5405.5,5747.04,20,
+West Bengal,Bankura Sadar APMC,,mustard,2025,3,73.4,5611.04,5472.07,5750,22,
+West Bengal,Bankura Sadar APMC,,mustard,2025,4,84.9,5795.14,5590.28,6000,24,
+West Bengal,Bankura Sadar APMC,,mustard,2025,5,80.1,5844.38,5688.76,6000,25,
+West Bengal,Bankura Sadar APMC,,mustard,2025,6,62.9,5850,5700,6000,18,
+West Bengal,Bankura Sadar APMC,,mustard,2025,7,88.2,6017.38,5755.27,6279.48,24,
+West Bengal,Bankura Sadar APMC,,mustard,2025,8,73.5,6113.1,5832.31,6393.88,21,
+West Bengal,Bankura Sadar APMC,,mustard,2025,9,91.6,6044.24,5816.43,6272.05,28,
+West Bengal,Bankura Sadar APMC,,mustard,2025,10,94.5,6000,5800,6200,29,
+West Bengal,Bankura Sadar APMC,,mustard,2025,11,44.95,6000.7,5801.39,6200,24,
+West Bengal,Bankura Sadar APMC,,mustard,2025,12,25.65,6048.15,5800,6296.3,28,
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,1,92396,1884.91,1884.78,1885.04,40,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,2,907.2,1841.2,1841.2,1841.2,18,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,3,869.7,1663.58,1640.27,1686.89,13,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,4,410,1550.17,1550.17,1550.17,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,5,452.6,1550,1550,1550,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,6,994,1436.71,1436.71,1436.71,12,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,7,1119.9,1422.89,1420.29,1425.49,15,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,8,1513.2,1441.52,1440.27,1442.76,17,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,9,1179,1459.23,1447.58,1470.87,19,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,10,1407.7,1479.38,1476.24,1482.51,20,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,11,1811.1,1812.58,1803.38,1821.78,18,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2021,12,90295.2,1936.05,1935.02,1937.08,33,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,1,106018.3,1944.38,1944.38,1944.38,25,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,2,5445.1,1941.71,1941.67,1941.74,20,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,3,614,1949.72,1949.2,1950.23,13,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,4,610,1951.23,1951.23,1951.23,10,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,5,758,1947.85,1947.85,1947.85,7,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,6,800,1716.25,1716.25,1716.25,5,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,7,1615.2,1249.93,1225.84,1274.02,11,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,8,5221,1283.35,1117.13,1449.56,9,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,9,3769.5,1320.69,1241.37,1400.01,11,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,10,3056.8,1279.74,1276.81,1282.67,14,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,11,17675.7,1957.81,1941.21,1974.4,25,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2022,12,116720.6,2026.96,2024.68,2029.24,26,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,1,91571.9,2039.14,2038.27,2040.01,26,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,2,1200,1671.58,1671.58,1671.58,11,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,3,1108,2054.89,2054.89,2054.89,13,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,4,724,2033.07,2029.35,2036.8,10,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,5,930,2053.92,2053.92,2053.92,8,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,6,725.8,2045.4,2045.4,2045.4,14,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,7,850,2052.63,2051.44,2053.82,5,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,8,350,2050.71,2050.71,2050.71,5,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,9,1170,2054.37,2054.37,2054.37,14,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,10,1077,2053.5,2053.5,2053.5,12,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,11,5235,2183.76,2183.51,2184,16,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2023,12,90919.7,2184.6,2184.6,2184.6,15,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,1,193803.6,2184.72,2184.72,2184.72,23,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,2,4307.1,2205.99,2205.9,2206.07,18,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,3,1680.9,2211.04,2209.66,2212.41,13,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,4,1429.4,2193.72,2193.67,2193.77,9,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,5,1326.7,2192.4,2191.37,2193.44,12,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,6,1032,2196.98,2196.16,2197.8,8,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,7,1451.8,2250.71,2250.71,2250.71,33,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,8,1230.2,2193.15,2191.84,2194.45,24,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,9,1036.4,2195.07,2194.93,2195.22,15,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,10,1860.4,2195.26,2195.1,2195.42,21,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,11,5111.3,2302.84,2299.56,2306.11,17,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2024,12,159953.4,2302.13,2302.1,2302.16,17,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,1,155500.4,2300.6,2300.6,2300.6,18,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,2,2602.8,2311.86,2306.5,2317.23,13,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,3,1585.3,2324.8,2324.8,2324.8,14,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,4,1831.4,2315.99,2315.55,2316.43,11,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,5,556.4,2306.51,2306.02,2307,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,6,756.7,2321.86,2321.86,2321.86,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,7,82.6,2323.99,2319.36,2328.61,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,8,54,2324.56,2324.56,2324.56,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,9,725.15,2245.41,2245.41,2245.41,7,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,10,706.8,2324.54,2324.54,2324.54,9,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,11,12520.5,2369.04,2369.04,2369.04,19,78
+Chhattisgarh,Ambikapur APMC,Sarguja,paddy,2025,12,119274,2369,2369,2369,24,78
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,1,1005.01,1376.7,1181.42,1571.97,34,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,2,1390.95,1398.99,1250.71,1547.26,37,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,3,4615.12,1439.6,1331.61,1547.59,43,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,4,2893.51,1259.13,1189.13,1329.13,35,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,5,1639.5,1222.32,1145.35,1299.28,29,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,6,2369.41,1334.93,1237.83,1432.02,42,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,7,3859.2,1226.42,1085.09,1367.75,49,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,8,2897.32,1215.76,1134.23,1297.3,50,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,9,2543.7,1346.09,1168.53,1523.64,70,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,10,2081.78,1489.53,1340.97,1638.08,31,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,11,2229.12,1412.24,1159.69,1664.79,38,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2021,12,2693.45,1440.2,1061.97,1818.42,68,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,1,1267.49,1540.56,1211.48,1869.64,68,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,2,794.83,1487.11,1294.09,1680.12,69,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,3,5141.59,1496.75,1355.86,1637.63,98,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,4,5524.87,1383.42,1202.91,1563.93,73,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,5,3502.79,1426.82,1277.55,1576.08,75,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,6,1800.33,1611.59,1436.6,1786.59,63,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,7,3750.88,1557.94,1337.24,1778.63,65,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,8,4197.23,1541.69,1367.58,1715.8,49,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,9,3800.22,1733.97,1520.3,1947.63,70,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,10,1676.97,1818.67,1465.5,2171.84,56,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,11,2306.94,1837.42,1549.75,2125.08,65,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2022,12,2386.98,1925.48,1649.9,2201.06,90,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,1,1604.55,1926.95,1738.98,2114.92,82,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,2,1649.03,1820.74,1584.4,2057.07,70,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,3,7403.28,1723.45,1567.78,1879.11,83,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,4,4982.02,1671.95,1491.1,1852.79,52,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,5,4093.7,1719.85,1472.79,1966.9,56,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,6,2880.77,1870.53,1606.27,2134.78,55,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,7,5040.64,1865.66,1440.03,2291.29,51,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,8,6356.5,1641.68,1059.17,2224.19,66,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,9,4934.5,1793.52,1211.64,2375.39,62,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,10,3421.91,2104.38,1565.01,2643.75,65,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,11,3644.69,2012.63,1578.59,2446.66,76,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2023,12,4046.69,2360.81,1957.85,2763.77,119,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,1,1231.69,2423.76,2145.86,2701.65,77,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,2,4795.83,2010.45,1638.26,2382.64,94,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,3,8191.68,1936.04,1540.01,2332.07,87,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,4,5156.78,1842.64,1414.03,2271.25,63,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,5,5144.05,1875.68,1389.92,2361.44,93,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,6,1746.81,2079.43,1686.9,2471.95,48,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,7,1340.41,2038.84,1729.81,2347.86,19,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,8,6322.51,2164.54,1709.86,2619.22,20,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,9,5302.14,2317.55,1673.64,2961.45,19,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,10,4832.73,2510.45,1918.6,3102.3,18,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,11,5558.96,2186.62,1596.31,2776.93,19,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2024,12,3577.03,2197.35,1544.44,2850.26,20,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,1,1766.58,2152.22,1554.26,2750.17,16,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,2,5542.39,2216.82,1664.88,2768.75,19,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,3,9148.34,2156.06,1838.65,2473.47,20,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,4,6585.53,2018.5,1693.85,2343.15,18,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,5,2392.33,1837.58,1587.56,2087.6,21,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,6,2043.33,2105.23,1684.26,2526.19,18,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,7,6884.88,1985.12,1560.84,2409.4,18,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,8,5436.42,1926.05,1494.53,2357.56,14,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,9,5918.54,2159.1,1668.27,2649.92,21,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,10,3577.83,2151.26,1628.48,2674.04,18,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,11,4639.52,2142.09,1601.7,2682.49,20,1140
+Tamil Nadu,Ammoor APMC,Vellore,paddy,2025,12,3005.77,2239.72,1738.22,2741.21,20,1140
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,1,50,1930,1930,1930,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,2,75,1930,1930,1930,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,3,90,1770.28,1700,1840.56,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,5,400,1700,1700,1700,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,6,210,1652.38,1652.38,1652.38,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,7,125,1700,1700,1700,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,8,224,1705.36,1705.36,1705.36,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,9,100,1700,1700,1700,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,10,140,1771.43,1771.43,1771.43,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,11,27.2,1800,1800,1800,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2021,12,450.8,1941.47,1933.45,1949.48,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,1,433.2,1960.25,1930.5,1990,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,2,180,1937.78,1933.89,1941.67,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,3,298.9,1949.23,1943.71,1954.75,5,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,4,220,1980,1980,1980,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,5,522.5,2018.45,2017.62,2019.27,9,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,6,220,2020,2020,2020,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,7,200,2020,2020,2020,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,8,205,2021.46,2021.46,2021.46,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,9,120,2028.44,2021.88,2035,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,10,100,2050,2050,2050,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,11,100,2050,2050,2050,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2022,12,101,2055.45,2055.45,2055.45,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,1,165,2057.27,2057.27,2057.27,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,2,215.5,2531.46,2475.87,2587.04,6,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,3,259.5,2052.39,2051.7,2053.07,5,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,4,295,2130,2130,2130,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,5,635,2130,2130,2130,5,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,6,70,2120.71,2120.71,2120.71,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,7,173,2128.87,2128.87,2128.87,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,8,20,2130,2130,2130,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,9,358.2,2255.91,2177.75,2334.07,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,10,120.4,2130,2130,2130,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,11,50,2130,2130,2130,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2023,12,90,2130,2130,2130,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,1,70,2130,2130,2130,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,2,160.8,2130.19,2129.9,2130.49,5,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,3,275.6,2130.5,2128.5,2132.49,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,4,362.8,2260.84,2227.6,2294.08,7,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,5,393.4,2280,2280,2280,9,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,6,453.31,2323.07,2323.07,2323.07,12,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,7,234,2280,2280,2280,15,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,8,132.9,2279.98,2279.31,2280.64,11,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,9,147.8,2212.22,2143.06,2281.37,11,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,10,4.8,2281,2281,2281,7,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,11,134.8,2280.24,2280.24,2280.24,6,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2024,12,140,2280,2280,2280,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,1,120,2290,2280,2300,1,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,2,180,2288.89,2288.89,2288.89,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,3,386.3,2293.96,2287.22,2300.69,4,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,4,383.6,2367.47,2363.78,2371.15,5,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,5,1748.2,2542.47,2516.12,2568.82,12,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,6,688.9,2518.39,2515.46,2521.32,14,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,7,568.5,2536.46,2513.99,2558.92,12,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,8,30.2,2427.26,2427.26,2427.26,11,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,9,199,2428.12,2428.12,2428.12,9,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,10,149,2523.02,2523.02,2523.02,3,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,11,250,2430,2430,2430,2,78
+Chhattisgarh,Ambikapur APMC,Sarguja,wheat,2025,12,351.3,2426.19,2426.19,2426.19,13,78
+West Bengal,Khatra APMC,,wheat,2021,1,11.65,1977,1901.29,2052.7,26,
+West Bengal,Khatra APMC,,wheat,2021,2,8.75,1899.9,1856.29,1943.51,22,
+West Bengal,Khatra APMC,,wheat,2021,3,9.1,1883.91,1842.97,1924.84,27,
+West Bengal,Khatra APMC,,wheat,2021,4,6.9,1879.19,1841.23,1917.14,26,
+West Bengal,Khatra APMC,,wheat,2021,5,4.1,1878.09,1841.1,1915.07,24,
+West Bengal,Khatra APMC,,wheat,2021,6,5.3,1871.49,1841.32,1901.65,27,
+West Bengal,Khatra APMC,,wheat,2021,7,7.1,1871.73,1840.35,1903.1,27,
+West Bengal,Khatra APMC,,wheat,2021,8,5.35,1905,1869.63,1940.37,26,
+West Bengal,Khatra APMC,,wheat,2021,9,5.07,1897.69,1849.31,1946.06,26,
+West Bengal,Khatra APMC,,wheat,2021,10,2.75,1896.64,1847.82,1945.45,26,
+West Bengal,Khatra APMC,,wheat,2021,11,3.79,1899.84,1849.68,1950,25,
+West Bengal,Khatra APMC,,wheat,2021,12,5.2,1903.18,1852.94,1953.41,27,
+West Bengal,Khatra APMC,,wheat,2022,1,5.08,1900.54,1851.57,1949.51,26,
+West Bengal,Khatra APMC,,wheat,2022,2,7.1,1900,1850,1950,24,
+West Bengal,Khatra APMC,,wheat,2022,3,5.44,1981.57,1941.45,2021.69,28,
+West Bengal,Khatra APMC,,wheat,2022,4,7.8,2017.34,1984.49,2050.19,26,
+West Bengal,Khatra APMC,,wheat,2022,5,4.2,2017.98,1985.24,2050.71,24,
+West Bengal,Khatra APMC,,wheat,2022,6,6.65,2017.15,1984.29,2050,26,
+West Bengal,Khatra APMC,,wheat,2022,7,4.19,2023.63,1997.61,2049.64,24,
+West Bengal,Khatra APMC,,wheat,2022,8,4.97,2057.7,2002.41,2112.98,27,
+West Bengal,Khatra APMC,,wheat,2022,9,5.72,2075.65,2000,2151.31,26,
+West Bengal,Khatra APMC,,wheat,2022,10,4.53,2083.28,2001.99,2164.57,27,
+West Bengal,Khatra APMC,,wheat,2022,11,4.51,2096.79,2000,2193.57,26,
+West Bengal,Khatra APMC,,wheat,2022,12,5,2145.8,2041.8,2249.8,27,
+West Bengal,Khatra APMC,,wheat,2023,1,6.1,2189.22,2100,2278.44,26,
+West Bengal,Khatra APMC,,wheat,2023,2,5.97,2203.56,2113.4,2293.72,23,
+West Bengal,Khatra APMC,,wheat,2023,3,6.33,2215.92,2133.41,2298.42,28,
+West Bengal,Khatra APMC,,wheat,2023,4,5.07,2223.13,2146.25,2300,25,
+West Bengal,Khatra APMC,,wheat,2023,5,4.79,2223.28,2150,2296.56,27,
+West Bengal,Khatra APMC,,wheat,2023,6,4.23,2397.34,2293.74,2500.95,26,
+West Bengal,Khatra APMC,,wheat,2023,7,4.84,2727.59,2605.58,2849.59,27,
+West Bengal,Khatra APMC,,wheat,2023,8,5.92,2726.13,2601.86,2850.39,26,
+West Bengal,Khatra APMC,,wheat,2023,9,4.29,2725,2600,2850,26,
+West Bengal,Khatra APMC,,wheat,2023,10,19.98,2729.77,2604.15,2855.38,27,
+West Bengal,Khatra APMC,,wheat,2023,11,4.24,2763.39,2630.66,2896.11,26,
+West Bengal,Khatra APMC,,wheat,2023,12,3.93,2771.88,2640.2,2903.56,25,
+West Bengal,Khatra APMC,,wheat,2024,1,4.16,2770.38,2635.46,2905.29,27,
+West Bengal,Khatra APMC,,wheat,2024,2,4.51,2812.81,2695.23,2930.38,25,
+West Bengal,Khatra APMC,,wheat,2024,3,3.81,2885.63,2772.44,2998.82,25,
+West Bengal,Khatra APMC,,wheat,2024,4,3.73,2849.2,2712.33,2986.06,25,
+West Bengal,Khatra APMC,,wheat,2024,5,3.63,2834.23,2703.22,2965.23,27,
+West Bengal,Khatra APMC,,wheat,2024,6,3.27,2785.66,2711.62,2859.69,25,
+West Bengal,Khatra APMC,,wheat,2024,7,3.5,2863.22,2729.86,2996.57,27,
+West Bengal,Khatra APMC,,wheat,2024,8,3.67,2864.78,2729.56,3000,27,
+West Bengal,Khatra APMC,,wheat,2024,9,3.4,2858.97,2717.94,3000,25,
+West Bengal,Khatra APMC,,wheat,2024,10,4.98,2850,2700,3000,27,
+West Bengal,Khatra APMC,,wheat,2024,11,3.65,2852.01,2705.34,2998.68,27,
+West Bengal,Khatra APMC,,wheat,2024,12,3.62,2851.8,2703.59,3000,26,
+West Bengal,Khatra APMC,,wheat,2025,1,4.05,2855.93,2713.7,2998.15,27,
+West Bengal,Khatra APMC,,wheat,2025,2,3.57,2849.3,2702.8,2995.8,24,
+West Bengal,Khatra APMC,,wheat,2025,3,4.03,2903.72,2747.89,3059.55,26,
+West Bengal,Khatra APMC,,wheat,2025,4,3.86,3000.91,2807.25,3194.56,26,
+West Bengal,Khatra APMC,,wheat,2025,5,4.09,3000,2800,3200,27,
+West Bengal,Khatra APMC,,wheat,2025,6,3.8,3000,2800,3200,25,
+West Bengal,Khatra APMC,,wheat,2025,7,4.12,3001.94,2800,3203.88,27,
+West Bengal,Khatra APMC,,wheat,2025,8,3.98,3000,2800,3200,26,
+West Bengal,Khatra APMC,,wheat,2025,9,4.14,3000,2800,3200,25,
+West Bengal,Khatra APMC,,wheat,2025,10,19.37,3000.47,2800,3200.93,27,
+West Bengal,Khatra APMC,,wheat,2025,11,4.19,3096.12,2896.3,3295.94,20,
+West Bengal,Khatra APMC,,wheat,2025,12,5.51,3068.61,2900,3237.21,27,

@@ -9,6 +9,7 @@ const NAV = {
     { to: '/farmer', key: 'nav.dashboard', end: true },
     { to: '/requests/new', key: 'nav.newRequest' },
     { to: '/sell', key: 'nav.smartSell' },
+    { to: '/market-prices', key: 'nav.marketPrices' },
     { to: '/history', key: 'nav.history' },
     { to: '/id-card', key: 'nav.idCard' },
   ],
@@ -17,8 +18,12 @@ const NAV = {
     { to: '/officer/queue', key: 'nav.queue' },
     { to: '/officer/requests', key: 'nav.requests' },
     { to: '/officer/assisted', key: 'nav.assisted' },
+    { to: '/market-prices', key: 'nav.marketPrices' },
   ],
-  authority: [{ to: '/authority', key: 'nav.overview', end: true }],
+  authority: [
+    { to: '/authority', key: 'nav.overview', end: true },
+    { to: '/market-prices', key: 'nav.marketPrices' },
+  ],
 };
 
 export function AppShell() {

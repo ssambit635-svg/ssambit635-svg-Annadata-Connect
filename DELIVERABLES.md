@@ -82,6 +82,24 @@
 - ✅ Farmer sees their **market bookings** (reference, rate, status) on the Smart Sell page and can cancel
   a confirmed booking; fully bilingual (EN/हिन्दी).
 
+### Historical mandi prices — real Agmarknet data (no mock)
+- ✅ New **Mandi Prices** page (nav + `/market-prices`, open to farmer/officer/authority) built on a
+  **real** Agmarknet monthly panel: 493 mandi-month records across 9 market series (paddy, wheat,
+  maize, mustard, cotton; 2021–2025), extracted from
+  [pointbreak71/dpi410-final-project-v2](https://github.com/pointbreak71/dpi410-final-project-v2)
+  (scraped from `api.agmarknet.gov.in`). **No generated or simulated history anywhere.**
+- ✅ Pipeline exactly as specified: `Historical CSV → backend loader → filter/aggregate → API → frontend`
+  (`backend/src/data/marketPrices.js` → `services/marketPrices.service.js` → `/api/market-prices/*`).
+- ✅ Fields preserved end-to-end: `state_name`, `market_name`, `commodity`, `year`, `month`,
+  `arrivals_mt`, `modal_price_avg`, `n_obs` (+ `district`, `min/max_price_avg`, `mandi_id`).
+- ✅ Page shows: filters (crop / state / mandi / year range), KPI stats, SVG price trend with min–max
+  band and arrivals, **best month to sell** seasonality, mandi-vs-mandi comparison, year-by-year table,
+  and the raw source rows with a CSV download — fully bilingual.
+- ✅ Smart Sell embeds a **historical price check**: the selected buyer's ₹/quintal is placed in the
+  percentile distribution of real mandi prices for that crop, with a 24-month sparkline.
+- ✅ Reproducible extract: `npm run data:agmarknet` (`scripts/build-agmarknet-sample.mjs`), provenance
+  and caveats committed in `backend/src/data/agmarknet/source.meta.json` and `HISTORICAL_DATA.md`.
+
 ## Backend-dependent feature notes
 
 The backend is **in-repo** and implements the whole contract in `API_INTEGRATION_MAP.md`, so there
@@ -109,6 +127,11 @@ map, bilingual `nameEn/nameHi` fields, and the request lifecycle transitions lis
   transport-cost constant (`₹0.4/km/q`) is a documented rule for fair comparison, not a carrier quote.
 - Market bookings are a lightweight confirmation record (reference + terms); full in-yard delivery
   tracking for private buyers is a future integration.
+- The historical extract keeps ~500 of the upstream 272,785 rows (9 well-covered mandi series) — enough
+  to chart trends, not a national coverage claim. `modal_price_avg` is the midpoint of the published
+  arrival-weighted min/max band (the upstream modal panel is not in git); validated at r = 0.94 against
+  that repo's district modal means. Widen or rebuild with `npm run data:agmarknet`.
+- Historical prices are descriptive only — no forecasting is offered or implied.
 
 ## Quality checklist — status
 
