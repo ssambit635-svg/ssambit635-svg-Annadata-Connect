@@ -159,7 +159,7 @@ export default function LandingPage() {
             <div className="home-hero-visual">
               <div className="home-visual-backdrop" aria-hidden="true" />
               <div className="home-image-frame">
-                <img src="/annadata-hero.jpg" alt={t('landing.heroImageAlt')} />
+                <img src="/annadata-hero.jpg" alt={t('landing.heroImageAlt')} loading="eager" fetchPriority="high" decoding="async" />
                 <div className="home-image-shade" aria-hidden="true" />
                 <div className="home-image-caption">
                   <span className="home-caption-dot" />

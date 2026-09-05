@@ -122,7 +122,7 @@ export default function SmartSellPage() {
   }
 
   return (
-    <div className="page narrow" style={{ margin: '0 auto', padding: 0 }}>
+    <div className="page narrow">
       <h1 style={{ marginBottom: '0.15rem' }}>
         <Icon name="wheat" size={20} /> {t('smartSell.title')}
       </h1>

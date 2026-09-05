@@ -19,7 +19,7 @@ export default function TokenPage() {
   const { request, queue } = data;
 
   return (
-    <div className="page narrow" style={{ margin: '0 auto', padding: 0 }}>
+    <div className="page narrow">
       <div className="page-head">
         <h1>{t('farmer.yourToken')}</h1>
         <button className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}>

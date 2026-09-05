@@ -42,7 +42,7 @@ export default function AssistedRequest() {
   }
 
   return (
-    <div className="page narrow" style={{ margin: '0 auto', padding: 0 }}>
+    <div className="page narrow">
       <h1>{t('officer.assistedTitle')}</h1>
       <p style={{ color: 'var(--c-text-soft)' }}>{t('officer.assistedHint')}</p>
 

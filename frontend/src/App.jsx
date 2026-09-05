@@ -3,6 +3,7 @@ import { AuthProvider, useAuth, homeFor } from './auth/AuthContext.jsx';
 import { I18nProvider } from './i18n/I18nContext.jsx';
 import { AppShell } from './components/AppShell.jsx';
 import { ProtectedRoute } from './components/ProtectedRoute.jsx';
+import { ErrorBoundary } from './components/ErrorBoundary.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
@@ -35,6 +36,7 @@ export default function App() {
   return (
     <I18nProvider>
       <AuthProvider>
+        <ErrorBoundary>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -71,6 +73,7 @@ export default function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        </ErrorBoundary>
       </AuthProvider>
     </I18nProvider>
   );

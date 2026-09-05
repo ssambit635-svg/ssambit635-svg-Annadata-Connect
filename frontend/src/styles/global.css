@@ -674,7 +674,8 @@ table.data tbody tr:hover { background: #f4f8f5; }
 
 /* Print: show only the card */
 @media print {
-  .app-header, .app-nav, .assistant-fab, .assistant-panel, .to-top, .no-print { display: none !important; }
+  .app-header, .app-nav, .assistant-fab, .assistant-panel, .to-top, .no-print,
+  .bottom-tabs, .more-sheet, .sheet-scrim, .user-menu-pop { display: none !important; }
   body { background: #fff; }
   .page, .idcard-page { max-width: none; padding: 0; margin: 0; }
   .idcard-sheet { overflow: visible; padding: 0; }
@@ -1177,3 +1178,222 @@ table.data tbody tr:hover { background: #f4f8f5; }
 }
 .price-benchmark { border-left: 4px solid var(--c-primary); }
 .price-benchmark .verdict { display: inline-flex; align-items: center; gap: 0.3rem; }
+
+/* ============================================================================
+   APP SHELL — brand mark, account menu, mobile bottom tab bar (UX overhaul)
+   ============================================================================ */
+
+/* Persistent logo mark so the brand is visible on every portal page. */
+.app-header .brand { gap: 0.6rem; }
+.brand-mark {
+  width: 40px; height: 40px; flex-shrink: 0; border-radius: 11px;
+  background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #14532d;
+  display: grid; place-items: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 2px 6px rgba(0, 0, 0, 0.28);
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.12; min-width: 0; }
+.app-header .brand .hi { font-size: 1.06rem; font-weight: 800; letter-spacing: 0; }
+.app-header .brand .en { font-size: 0.64rem; opacity: 0.78; letter-spacing: 0.09em; text-transform: uppercase; }
+
+.header-tools { display: flex; align-items: center; gap: 0.75rem; margin-left: auto; min-width: 0; }
+.header-desktop-only { display: flex; align-items: center; gap: 0.75rem; }
+
+/* ---------- Account menu (replaces the flat chip + logout button) ---------- */
+.user-menu { position: relative; }
+.user-menu-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 42px;
+  background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff; border-radius: 999px; padding: 0.3rem 0.75rem 0.3rem 0.32rem;
+  cursor: pointer; transition: background 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+.user-menu-btn:hover { background: rgba(255, 255, 255, 0.18); }
+.user-avatar {
+  width: 31px; height: 31px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #14532d;
+  display: grid; place-items: center; font-weight: 800; font-size: 0.95rem;
+}
+.user-menu-name { font-weight: 600; font-size: 0.9rem; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-menu-caret { opacity: 0.85; transition: transform 0.18s var(--ease); flex-shrink: 0; }
+.user-menu-caret.is-open { transform: rotate(180deg); }
+
+.user-menu-pop {
+  position: absolute; right: 0; top: calc(100% + 10px); z-index: 80;
+  width: min(280px, calc(100vw - 1.5rem)); background: #fff; color: var(--c-text);
+  border: 1px solid var(--c-border); border-radius: 14px; box-shadow: var(--shadow-xl);
+  padding: 0.9rem; display: grid; gap: 0.75rem; animation: menu-pop 0.16s var(--ease);
+}
+@keyframes menu-pop { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+.user-menu-id { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; font-size: 0.98rem; }
+.user-menu-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.user-menu-row-label { font-size: 0.82rem; color: var(--c-text-soft); font-weight: 600; }
+.user-menu-logout { width: 100%; }
+
+.lang-toggle.on-light { border-color: #b9c4ba; }
+.lang-toggle.on-light button { color: var(--c-text-soft); }
+.lang-toggle.on-light button.active { background: var(--c-primary); color: #fff; }
+
+/* ---------- Mobile bottom tab bar ---------- */
+.bottom-tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+  display: none; grid-template-columns: repeat(auto-fit, 1fr);
+  background: rgba(255, 255, 255, 0.97); backdrop-filter: blur(10px);
+  border-top: 1px solid var(--c-border);
+  padding: 0.3rem 0.35rem calc(0.45rem + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 24px rgba(16, 40, 27, 0.1);
+}
+.bottom-tabs .tab {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.18rem; min-height: 54px; padding: 0.4rem 0.15rem 0.35rem;
+  background: none; border: 0; border-radius: 10px; cursor: pointer;
+  color: var(--c-text-soft); font-size: 0.64rem; font-weight: 700; line-height: 1.15;
+  text-decoration: none; letter-spacing: 0.01em;
+  transition: color 0.15s var(--ease), background 0.15s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.bottom-tabs .tab:hover { color: var(--c-primary-dark); background: var(--c-success-bg); }
+.bottom-tabs .tab.active { color: var(--c-primary-dark); }
+.bottom-tabs .tab.active::before {
+  content: ''; position: absolute; top: 0; left: 22%; right: 22%; height: 3px;
+  border-radius: 0 0 4px 4px; background: #fbbf24;
+}
+.bottom-tabs .tab .icon { width: 22px; height: 22px; }
+
+/* ---------- "More" bottom sheet ---------- */
+.sheet-scrim { position: fixed; inset: 0; z-index: 85; background: rgba(8, 24, 16, 0.48); animation: scrim-in 0.18s ease; }
+@keyframes scrim-in { from { opacity: 0; } }
+.more-sheet {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; z-index: 90;
+  width: 100%; max-width: 540px; background: #fff; color: var(--c-text);
+  border-radius: 18px 18px 0 0; padding: 0.65rem 1rem calc(1.25rem + env(safe-area-inset-bottom));
+  box-shadow: 0 -14px 44px rgba(0, 0, 0, 0.28); animation: sheet-up 0.24s var(--ease);
+}
+@keyframes sheet-up { from { transform: translate(-50%, 42%); opacity: 0.4; } }
+.more-sheet-handle { width: 42px; height: 4px; border-radius: 999px; background: #cfdad0; margin: 0.15rem auto 0.85rem; }
+.more-sheet h2 { font-size: 1.05rem; margin: 0 0 0.55rem; color: var(--c-primary-dark); }
+.more-sheet-row {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 0.55rem;
+  border-radius: 11px; text-decoration: none; color: var(--c-text); font-weight: 600;
+  transition: background 0.14s var(--ease);
+}
+.more-sheet-row:hover { background: var(--c-success-bg); }
+.more-sheet-row.active { background: var(--c-success-bg); color: var(--c-primary-dark); }
+.more-sheet-icon {
+  width: 37px; height: 37px; border-radius: 10px; flex-shrink: 0;
+  background: var(--c-neutral-bg); color: var(--c-primary-dark); display: grid; place-items: center;
+}
+.more-sheet-row.active .more-sheet-icon { background: var(--c-primary); color: #fff; }
+.more-sheet-caret { margin-left: auto; color: var(--c-text-soft); }
+.more-sheet-close { margin-top: 0.8rem; width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .more-sheet, .sheet-scrim, .user-menu-pop { animation: none; }
+  .more-sheet { transform: translateX(-50%); }
+}
+
+/* ---------- Mobile shell layout ---------- */
+@media (max-width: 860px) {
+  .app-header { padding: 0.55rem 0.8rem; }
+  .app-header .brand .hi { font-size: 1rem; }
+  .app-nav { display: none; }
+  .header-desktop-only { display: none; }
+  .user-menu-name { display: none; }
+  .user-menu-btn { padding: 0.26rem 0.6rem 0.26rem 0.26rem; min-height: 38px; }
+  .bottom-tabs { display: grid; }
+  .page { padding: 1rem 0.8rem calc(7.4rem + env(safe-area-inset-bottom)); }
+  .assistant-fab { bottom: calc(4.7rem + env(safe-area-inset-bottom)); right: 0.8rem; }
+  /* Full-screen chat sheet on mobile — sits above the bottom tab bar. */
+  .assistant-panel {
+    inset: 0; width: 100%; max-height: 100dvh; border-radius: 0; border: 0; z-index: 95;
+  }
+}
+
+@media (max-width: 400px) {
+  .app-header .brand .en { display: none; }
+  .app-header .brand { gap: 0.5rem; }
+  .brand-mark { width: 37px; height: 37px; border-radius: 10px; }
+  .bottom-tabs .tab { font-size: 0.6rem; }
+}
+
+/* ---------- Dashboard de-cluttering ---------- */
+.quick-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; }
+.quick-tile {
+  display: flex; flex-direction: column; align-items: center; gap: 0.45rem;
+  padding: 0.75rem 0.4rem 0.65rem; border: 1px solid var(--c-border); border-radius: 12px;
+  background: #fff; text-decoration: none; color: var(--c-text); font-size: 0.78rem; font-weight: 600;
+  text-align: center; line-height: 1.2;
+  transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+.quick-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: #a9c8b0; color: var(--c-primary-dark); }
+.quick-tile .quick-ico {
+  width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+  background: var(--c-success-bg); color: var(--c-primary);
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
+}
+.quick-tile:hover .quick-ico { background: var(--c-primary); color: #fff; }
+@media (min-width: 861px) { .quick-grid { grid-template-columns: repeat(6, 1fr); } }
+
+.dash-actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 0.9rem; }
+.queue-line { display: flex; align-items: center; justify-content: center; gap: 0.4rem; color: var(--c-text-soft); font-size: 0.92rem; margin: 0.7rem 0 0; }
+.queue-line .icon { color: var(--c-primary); }
+
+.dash-section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin: 0; }
+.notif-stack { display: grid; gap: 0.5rem; margin-top: 0.75rem; }
+
+/* Auth pages: brand mark above wordmark */
+.auth-card .logo { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+.auth-logo-mark {
+  width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center;
+  background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #14532d;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 4px 10px rgba(184, 130, 18, 0.3);
+}
+
+/* ---------- Branded loading / error states ---------- */
+.state.splash { padding: 3.5rem 1rem 2rem; }
+.splash-mark {
+  width: 64px; height: 64px; margin: 0 auto 1rem; border-radius: 18px;
+  background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #14532d;
+  display: grid; place-items: center; box-shadow: 0 10px 22px rgba(184, 130, 18, 0.3);
+}
+.splash-word { display: flex; flex-direction: column; text-align: center; margin-bottom: 1.15rem; }
+.splash-word strong { font-size: 1.3rem; color: var(--c-primary-dark); letter-spacing: -0.01em; }
+.splash-word small { margin-top: 0.2rem; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--c-text-soft); }
+.splash-label { margin-top: 0.95rem; font-size: 0.92rem; }
+
+.state-ico {
+  width: 58px; height: 58px; border-radius: 50%; margin: 0 auto 0.7rem;
+  display: grid; place-items: center; background: var(--c-neutral-bg); color: var(--c-text-soft);
+}
+.state[role="alert"] .state-ico { background: var(--c-danger-bg); color: var(--c-danger); }
+.state h2 { margin: 0 0 0.35rem; color: var(--c-primary-dark); font-size: 1.2rem; }
+.state .hint { font-size: 0.85rem; color: var(--c-text-soft); margin: 0.45rem 0 0; }
+.error-card { max-width: 460px; margin: 0 auto; }
+
+/* ---------- Global crash screen (ErrorBoundary fallback) ---------- */
+.crash-screen { min-height: 100vh; display: grid; place-items: center; padding: 1.5rem; background: var(--c-bg); }
+.crash-card {
+  background: #fff; border: 1px solid var(--c-border); border-radius: 16px; box-shadow: var(--shadow-lg);
+  padding: 2rem 1.8rem; max-width: 420px; width: 100%; text-align: center;
+  display: grid; justify-items: center;
+}
+.crash-mark {
+  width: 56px; height: 56px; border-radius: 16px; margin-bottom: 0.7rem;
+  background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #14532d;
+  display: grid; place-items: center; box-shadow: 0 6px 16px rgba(184, 130, 18, 0.28);
+}
+.crash-card h1 { font-size: 1.35rem; margin: 0 0 0.3rem; color: var(--c-primary-dark); }
+.crash-card p { margin: 0 0 1.1rem; color: var(--c-text-soft); font-size: 0.95rem; }
+
+/* Smooth anchor scrolling (landing page), off for reduced-motion users. */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.active-request-wrap .token-card { margin-bottom: 0; }
+
+/* ---------- Mobile interaction feel ---------- */
+a, button, input, select, textarea, label { touch-action: manipulation; }
+a, button { -webkit-tap-highlight-color: transparent; }
+
+/* Pages that bring their own .page.narrow wrapper (token, status, smart-sell,
+   new request, assisted entry) sit inside the shell's main.page — the outer
+   page owns the gutters, so the inner wrapper drops its own padding. */
+.page > .page { padding: 0; margin: 0; }

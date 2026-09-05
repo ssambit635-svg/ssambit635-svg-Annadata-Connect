@@ -22,7 +22,30 @@ export default function useHomeAnimations(root) {
       return undefined;
     }
 
-    const ctx = gsap.context((self) => {
+    /* Above-the-fold elements that must end up visible even if a tween never
+       completes. If GSAP fails mid-sequence (or an element is left at
+       opacity: 0 for any reason), the safety net below force-reveals them. */
+    const INTRO_SELECTOR = [
+      '.home-tricolour span',
+      '.home-utility-inner > *',
+      '.home-header-inner > *',
+      '.home-announcement-inner',
+      '.home-eyebrow',
+      '.home-eyebrow-line',
+      '.home-hero h1',
+      '.home-hero-sub',
+      '.home-hero-actions .home-button',
+      '.home-hero-trust span',
+      '.home-visual-backdrop',
+      '.home-image-frame',
+      '.home-image-caption',
+      '.home-token-float',
+      '.home-payment-float',
+    ].join(', ');
+
+    let ctx;
+    try {
+      ctx = gsap.context((self) => {
       const q = self.selector;
       const ease = 'power3.out';
 
@@ -243,7 +266,31 @@ export default function useHomeAnimations(root) {
           heroSection.removeEventListener('mouseleave', onLeave);
         }
       });
-    }, scope);
+      }, scope);
+    } catch (err) {
+      /* Never leave the page half-hidden if the motion layer fails: drop the
+         class (hides the progress bar) and clear every inline style GSAP set. */
+      console.error('[annadata-connect] homepage motion failed — showing static layout', err);
+      scope.classList.add('home-motion-off');
+      scope.querySelectorAll('*').forEach((el) => {
+        el.style.cssText = '';
+      });
+      return undefined;
+    }
+
+    /* Safety net: the intro timeline finishes in ~2.5s. If any above-the-fold
+       element is still (nearly) invisible at 3.2s — e.g. a tween that never
+       ran — force it back to its normal visible state. */
+    const safety = window.setTimeout(() => {
+      scope.querySelectorAll(INTRO_SELECTOR).forEach((el) => {
+        if (parseFloat(window.getComputedStyle(el).opacity) < 0.99) {
+          el.style.opacity = '';
+          el.style.transform = '';
+          el.style.clipPath = '';
+          el.style.filter = '';
+        }
+      });
+    }, 3200);
 
     const refresh = () => ScrollTrigger.refresh();
     window.addEventListener('load', refresh);
@@ -252,6 +299,7 @@ export default function useHomeAnimations(root) {
     return () => {
       window.removeEventListener('load', refresh);
       window.clearTimeout(timer);
+      window.clearTimeout(safety);
       ctx.revert();
     };
   }, [root]);
