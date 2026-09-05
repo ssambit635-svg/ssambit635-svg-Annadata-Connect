@@ -126,6 +126,7 @@ export function AppShell() {
                       </button>
                     </div>
                   </div>
+                  <Link to="/account" className="btn btn-outline btn-sm user-menu-logout" role="menuitem"><Icon name="lock" size={16} /> {t('auth.accountTitle')}</Link>
                   <button type="button" className="btn btn-outline btn-sm user-menu-logout" onClick={doLogout} role="menuitem">
                     <Icon name="logout" size={16} /> {t('nav.logout')}
                   </button>

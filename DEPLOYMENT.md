@@ -25,7 +25,8 @@ npm run build          # builds frontend into frontend/dist
 npm start              # serves everything on http://localhost:5000
 ```
 
-3. Log in with demo creds (farmer `9999999001 / Farmer@123`) and confirm the UI works.
+3. For an isolated demo, enable `ALLOW_DEMO_LOGIN=true` and use the matching role + Password method
+   (farmer `9999999001 / Farmer@123`). For real sign-ins, follow [AUTH_SETUP.md](AUTH_SETUP.md).
 
 ## Step 1 — Put it on GitHub (recommended)
 
@@ -62,7 +63,9 @@ git push -u origin main
 
 ```bash
 # 1. On the server
-sudo apt update && sudo apt install -y nodejs npm nginx
+# Install Node.js 22 LTS (or newer) and npm from your trusted Node distribution first.
+node --version   # must be 22+ for the Google authentication SDK
+sudo apt update && sudo apt install -y nginx
 sudo npm install -g pm2
 
 # 2. Pull the code
@@ -71,11 +74,13 @@ cd annadata-connect
 npm run setup && npm run build
 
 # 3. Configure production env
-cat > backend/.env <<'EOF'
+cat > backend/.env <<EOF
 PORT=5000
 NODE_ENV=production
 JWT_SECRET=$(openssl rand -hex 32)
 SEED_ON_BOOT=true
+ALLOW_DEMO_LOGIN=false
+TRUST_PROXY=1
 CORS_ORIGIN=
 EOF
 
@@ -136,9 +141,10 @@ Behind a reverse proxy/step 5 above, terminate TLS there as usual.
 1. **Database** — the JSON store (`backend/data/db.json`) is single-writer demo-grade. For real
    production, migrate `backend/src/db/store.js` to PostgreSQL (routes/services unchanged). If
    staying on JSON short-term: mount a persistent volume and schedule backups (nightly cron copy).
-2. **Secrets** — always set a strong `JWT_SECRET` via environment, never commit it. Assisted
-   accounts use default password `Kisan@123` — tell officers to log in and note it down per farmer,
-   or add a password-change flow.
+2. **Secrets and identity** — set a unique random `JWT_SECRET` of at least 32 characters and
+   keep `ALLOW_DEMO_LOGIN=false`. Configure Google/Twilio Verify/SMTP and provision approved
+   staff using [AUTH_SETUP.md](AUTH_SETUP.md). Walk-in farmers claim access by SMS verification,
+   not a shared default password. Provider settings are backend runtime secrets.
 3. **CORS** — leave empty (same-origin, single service). Only set `CORS_ORIGIN=https://your-domain`
    if you ever host the frontend separately; then rebuild the frontend with
    `VITE_API_BASE_URL=https://api.your-domain` (Vite env vars are **build-time**).
@@ -148,17 +154,23 @@ Behind a reverse proxy/step 5 above, terminate TLS there as usual.
 5. **HTTPS** — mandatory; cookies aren't used, but the JWT travels in an `Authorization` header on
    every request.
 6. **Monitoring** — health probe `/api/health`; `pm2 monit` or uptime alerts (UptimeRobot et al.).
-7. **Rate limiting** (optional but wise for the public login endpoint): `express-rate-limit` on
-   `/api/auth/*`.
+7. **Rate limiting** — auth endpoints already enforce IP and contact limits. Configure the
+   exact trusted proxy chain (`TRUST_PROXY`), and use a shared atomic verification/rate-limit
+   store before running multiple replicas. Pending codes are intentionally lost on restart.
 
 ## Verify the deployment
 
 ```bash
-curl https://your-domain/api/health          # {"status":"ok"...}
-curl -X POST https://your-domain/api/auth/login \
-  -H 'Content-Type: application/json' \
-  -d '{"phone":"9999999001","password":"Farmer@123"}'   # returns a JWT
+curl https://your-domain/api/health
+curl https://your-domain/api/auth/options
 ```
 
-Open the site, log in as the demo farmer, create one request, then as the demo officer complete it —
-if the farmer sees the status update, the deployment is fully working end-to-end.
+Check that provider availability matches your setup (availability reflects configuration,
+not provider health). With actual approved accounts, test Google account selection, SMS
+and email code delivery, rejected/expired codes, and correct-role dashboard navigation.
+Never enable sample passwords on a deployment holding real user data. Google authorized
+origins must exactly match the browser URL, including a remote preview origin.
+
+Finally, create a farmer request and complete it as an approved officer. Confirm the
+farmer sees status updates. Authentication provider activation is not a substitute for
+testing the procurement workflow and production storage/security requirements.

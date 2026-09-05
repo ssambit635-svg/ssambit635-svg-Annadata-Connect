@@ -3,7 +3,8 @@
 // - Normalizes errors into { status, code, message }
 // - Emits 'ks:unauthorized' on 401 so the app can log out cleanly
 
-const BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+// Dev browsers always use Vite's same-origin /api proxy, including remote previews.
+const BASE = (import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || '')).replace(/\/$/, '');
 const TOKEN_KEY = 'ks-auth';
 
 export function getStoredAuth() {
@@ -20,10 +21,11 @@ export function setStoredAuth(auth) {
 }
 
 export class ApiError extends Error {
-  constructor(status, code, message) {
+  constructor(status, code, message, details) {
     super(message);
     this.status = status;
     this.code = code;
+    this.details = details;
   }
 }
 
@@ -54,10 +56,10 @@ export async function api(path, { method = 'GET', body, token } = {}) {
 
   if (!res.ok) {
     const err = data?.error || {};
-    if (res.status === 401 && bearer) {
+    if (res.status === 401 && bearer && ['AUTH_TOKEN_INVALID', 'AUTH_TOKEN_MISSING'].includes(err.code) && getStoredAuth()?.token === bearer) {
       window.dispatchEvent(new Event('ks:unauthorized'));
     }
-    throw new ApiError(res.status, err.code || 'ERROR', err.message || 'Unexpected error');
+    throw new ApiError(res.status, err.code || 'ERROR', err.message || 'Unexpected error', err.details);
   }
   return data;
 }

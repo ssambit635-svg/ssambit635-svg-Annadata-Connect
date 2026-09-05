@@ -74,6 +74,7 @@ export function seed(force = false) {
     meta: { tokenSeq: 100, seededAt: new Date().toISOString() },
     users: USERS.map((u) => ({
       ...u,
+      isDemo: true,
       passwordHash: bcrypt.hashSync(u.password, 10),
       password: undefined,
       createdAt: new Date().toISOString(),
@@ -115,6 +116,22 @@ export function getDb() {
   if (!Array.isArray(cache.notifications)) cache.notifications = [];
   if (!Array.isArray(cache.saleBookings)) cache.saleBookings = [];
   let mutated = false;
+  for (const user of cache.users) {
+    if (USERS.some((seedUser) => seedUser.id === user.id) && !user.isDemo) {
+      user.isDemo = true;
+      mutated = true;
+    }
+    if (user.registeredBy?.startsWith('officer:') && user.passwordHash && bcrypt.compareSync('Kisan@123', user.passwordHash)) {
+      user.passwordHash = null;
+      mutated = true;
+    }
+    // Old Google demo flow allowed anyone to self-assign staff privileges.
+    // An administrator must explicitly re-provision those accounts.
+    if (user.registeredBy === 'self:google' && user.role !== 'farmer' && !user.accessApproved && !user.authDisabled) {
+      user.authDisabled = true;
+      mutated = true;
+    }
+  }
   if (!Array.isArray(cache.buyers) || cache.buyers.length === 0) {
     cache.buyers = BUYERS.map((b) => ({ ...b, crops: b.crops.map((c) => ({ ...c })) }));
     mutated = true;

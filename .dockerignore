@@ -6,3 +6,11 @@ backend/data/db.json
 screenshots
 *.zip
 .git
+
+# Never bake provider credentials or browser-test artifacts into an image.
+**/.env
+**/.env.*
+!**/.env.example
+**/.cache
+**/test-results
+**/playwright-report

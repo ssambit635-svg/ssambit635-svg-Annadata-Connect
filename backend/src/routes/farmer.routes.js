@@ -39,7 +39,7 @@ router.get('/id-card', async (req, res, next) => {
       'ANNADATA CONNECT — FARMER ID',
       `ID: ${req.user.farmerId || 'N/A'}`,
       `NAME: ${req.user.name}`,
-      `MOBILE: ${req.user.phone}`,
+      `MOBILE: ${req.user.phone || 'Not linked'}`,
       `VILLAGE: ${village ? village.nameEn : 'N/A'}`,
       `DISTRICT: ${req.user.district || 'Khordha'}`,
     ].join('\n');

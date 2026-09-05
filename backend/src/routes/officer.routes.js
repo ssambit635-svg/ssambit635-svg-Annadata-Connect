@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { randomUUID } from 'node:crypto';
-import bcrypt from 'bcryptjs';
 import { getDb, saveDb, nextToken, mintFarmerId } from '../db/store.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { ApiError } from '../middleware/error.js';
@@ -220,15 +219,16 @@ router.post('/assisted-request', (req, res, next) => {
     if (centre.status !== 'OPEN') throw new ApiError(409, 'CENTRE_NOT_OPEN', 'Centre intake is not open.');
 
     let farmer = db.users.find((u) => u.phone === phone && u.role === 'farmer');
+    if (!farmer && db.users.some((u) => u.phone === phone)) throw new ApiError(409, 'PHONE_ALREADY_REGISTERED', 'This number belongs to a staff account. Use the farmer’s own mobile number.');
     if (!farmer) {
-      // Register the walk-in farmer with a temporary password they can change later.
+      // Walk-in accounts claim access by verifying SMS; never use a shared password.
       farmer = {
         id: randomUUID(),
         role: 'farmer',
         farmerId: mintFarmerId(db),
         name: String(req.body.farmerName).trim(),
         phone,
-        passwordHash: bcrypt.hashSync('Kisan@123', 10),
+        passwordHash: null,
         villageId: db.villages[0].id,
         district: centre.district,
         createdAt: new Date().toISOString(),
@@ -237,7 +237,7 @@ router.post('/assisted-request', (req, res, next) => {
       db.users.push(farmer);
       sendSms(db, {
         to: phone,
-        text: `Annadata Connect: Account created at ${centre.nameEn}. Login: ${phone}, password: Kisan@123. Use the app to track your token.`,
+        text: `Annadata Connect: Account created at ${centre.nameEn}. Verify your mobile number with an SMS code in the app to track your token.`,
       }).catch(() => {});
     }
     if (db.requests.some((r) => r.farmerId === farmer.id && ACTIVE_STATUSES.includes(r.status))) {

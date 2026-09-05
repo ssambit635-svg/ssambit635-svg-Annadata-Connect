@@ -16,6 +16,8 @@ import { saveDb } from '../db/store.js';
  * SMS delivery never blocks or breaks the API: dispatch is fire-and-forget.
  */
 export async function sendSms(db, { to, text }) {
+  // Email/Google farmers may not have linked a mobile number yet.
+  if (!to) return null;
   const entry = {
     id: randomUUID(),
     to,

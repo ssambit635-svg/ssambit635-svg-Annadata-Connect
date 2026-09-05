@@ -1,5 +1,5 @@
 # ---------- Stage 1: build the frontend ----------
-FROM node:20-alpine AS fe-build
+FROM node:22-alpine AS fe-build
 WORKDIR /app/frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci --no-audit --no-fund
@@ -12,7 +12,7 @@ ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
 # ---------- Stage 2: backend runtime (serves API + built frontend) ----------
-FROM node:20-alpine
+FROM node:22-alpine
 ENV NODE_ENV=production
 WORKDIR /app/backend
 COPY backend/package.json backend/package-lock.json ./
