@@ -17,10 +17,26 @@ export function requireNumber(value, name, { min = -Infinity, max = Infinity } =
   return n;
 }
 
+// Accepts any 10-digit mobile number, with or without the +91 / 91 / 0 prefix.
+export function normalizePhone(value, name = 'phone') {
+  let s = String(value || '').trim().replace(/[\s\-().]/g, '');
+  if (s.startsWith('+')) s = s.slice(1);
+  if (/^91\d{10}$/.test(s)) s = s.slice(2);
+  else if (/^0\d{10}$/.test(s)) s = s.slice(1);
+  if (!/^\d{10}$/.test(s)) {
+    throw new ApiError(400, 'VALIDATION_ERROR', `${name} must be a valid 10-digit mobile number.`);
+  }
+  return s;
+}
+
 export function requirePhone(value, name = 'phone') {
-  const s = String(value || '').trim();
-  if (!/^[6-9]\d{9}$/.test(s)) {
-    throw new ApiError(400, 'VALIDATION_ERROR', `${name} must be a valid 10-digit Indian mobile number.`);
+  return normalizePhone(value, name);
+}
+
+export function requireEmail(value, name = 'email') {
+  const s = String(value || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s) || s.length > 254) {
+    throw new ApiError(400, 'VALIDATION_ERROR', `${name} must be a valid email address.`);
   }
   return s;
 }

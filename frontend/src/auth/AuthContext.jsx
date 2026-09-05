@@ -30,6 +30,18 @@ export function AuthProvider({ children }) {
         setAuth(data);
         return data.user;
       },
+      async loginWithPhone(phone, profile) {
+        const data = await authService.phoneLogin({ phone, ...profile });
+        setStoredAuth(data);
+        setAuth(data);
+        return data.user;
+      },
+      async loginWithGoogle(payload) {
+        const data = await authService.googleLogin(payload);
+        setStoredAuth(data);
+        setAuth(data);
+        return data.user;
+      },
       async register(payload) {
         const data = await authService.register(payload);
         setStoredAuth(data);

@@ -12,6 +12,11 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || 'annadata-connect-dev-secret-do-not-use-in-prod',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '12h',
   corsOrigin: process.env.CORS_ORIGIN || '',
+  // Google Sign-In (officers / district authorities). When GOOGLE_CLIENT_ID is
+  // set, Google ID-token credentials are verified against it; when it is empty
+  // the API runs in demo mode and accepts any Google-style email address so
+  // the flow works out of the box without registering OAuth credentials.
+  googleClientId: process.env.GOOGLE_CLIENT_ID || '',
   seedOnBoot: (process.env.SEED_ON_BOOT || 'true') !== 'false',
   dataFile: path.resolve(__dirname, '../data/db.json'),
   // SMS delivery

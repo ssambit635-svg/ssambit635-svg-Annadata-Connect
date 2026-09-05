@@ -23,7 +23,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setError(null);
     if (form.name.trim().length < 2) return setError({ message: t('auth.name') });
-    if (!/^[6-9]\d{9}$/.test(form.phone.trim())) return setError({ message: t('auth.phonePlaceholder') });
+    if (!/^\d{10}$/.test(form.phone.trim())) return setError({ message: t('auth.phonePlaceholder') });
     if (form.password.length < 8) return setError({ message: t('auth.passwordHint') });
     if (!form.villageId) return setError({ message: t('auth.chooseVillage') });
     setBusy(true);
@@ -58,6 +58,10 @@ export default function RegisterPage() {
             <div className="tag">{t('app.tagline')}</div>
           </div>
           <h1 style={{ textAlign: 'center', fontSize: '1.15rem' }}>{t('auth.registerTitle')}</h1>
+          <p className="auth-role-hint" style={{ marginTop: 0 }}>
+            {t('auth.farmerTabHint')}{' '}
+            <Link to="/login" style={{ fontWeight: 600 }}>{t('auth.login')}</Link>
+          </p>
           {error && <div className="form-banner error">{error.message}</div>}
           <form onSubmit={onSubmit} noValidate>
             <div className="field">
