@@ -4,10 +4,18 @@ import { usePoll } from '../../hooks/usePoll.js';
 import { farmerService, notificationService, requestService } from '../../services/api/farmerService.js';
 import { Loading, ErrorState, EmptyState } from '../../components/States.jsx';
 import { TokenCard } from '../../components/TokenCard.jsx';
-import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { formatDate } from '../../utils/format.js';
 import { useState } from 'react';
 import Icon from '../../components/Icon.jsx';
+
+const QUICK_ACTIONS = [
+  { to: '/requests/new', icon: 'plus', key: 'farmer.createRequest' },
+  { to: '/sell', icon: 'wheat', key: 'nav.smartSell' },
+  { to: '/market-prices', icon: 'chart', key: 'nav.marketPrices' },
+  { to: '/history', icon: 'folder', key: 'nav.history' },
+  { to: '/centres', icon: 'store', key: 'farmer.centresTitle' },
+  { to: '/id-card', icon: 'idCard', key: 'nav.idCard' },
+];
 
 export default function FarmerDashboard() {
   const { t, pick, lang } = useI18n();
@@ -53,34 +61,37 @@ export default function FarmerDashboard() {
         <section aria-labelledby="active-h">
           <h2 id="active-h">{t('farmer.activeRequest')}</h2>
           {activeRequest ? (
-            <>
+            <div className="active-request-wrap">
               <TokenCard request={activeRequest} queue={activeQueue} />
               {activeQueue?.inQueue && (
-                <p style={{ textAlign: 'center', color: 'var(--c-text-soft)' }}>
-                  {activeQueue.aheadCount} {t('farmer.aheadOfYou')}
+                <p className="queue-line">
+                  <Icon name="users" size={16} />
+                  <span>
+                    <strong className="mono">{activeQueue.aheadCount}</strong> {t('farmer.aheadOfYou')}
+                  </span>
                 </p>
               )}
-              <div style={{ display: 'flex', gap: '0.6rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <Link className="btn btn-primary" to={`/requests/${activeRequest.id}`}>
+              <div className="dash-actions">
+                <Link className="btn btn-primary btn-sm" to={`/requests/${activeRequest.id}`}>
                   <Icon name="ticket" size={16} /> {t('farmer.viewToken')}
                 </Link>
-                <Link className="btn btn-outline" to={`/requests/${activeRequest.id}/status`}>
+                <Link className="btn btn-outline btn-sm" to={`/requests/${activeRequest.id}/status`}>
                   <Icon name="clipboard" size={16} /> {t('farmer.viewStatus')}
                 </Link>
                 {activeRequest.status === 'WAITING' && (
-                  <button className="btn btn-danger" onClick={onCancel} disabled={cancelBusy}>
+                  <button className="btn btn-danger btn-sm" onClick={onCancel} disabled={cancelBusy}>
                     {t('farmer.cancelRequest')}
                   </button>
                 )}
               </div>
-            </>
+            </div>
           ) : (
             <EmptyState
               title={t('farmer.noActive')}
               hint={t('farmer.noActiveHint')}
               action={
                 <Link className="btn btn-primary" to="/requests/new">
-                  ＋ {t('farmer.createRequest')}
+                  <Icon name="plus" size={16} /> {t('farmer.createRequest')}
                 </Link>
               }
             />
@@ -88,10 +99,10 @@ export default function FarmerDashboard() {
         </section>
 
         <section aria-labelledby="notif-h">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <h2 id="notif-h" style={{ margin: 0 }}>
+          <h2 id="notif-h" className="dash-section-title">
+            <span>
               {t('farmer.notifications')} {unread > 0 && <span className="badge info">{unread}</span>}
-            </h2>
+            </span>
             {unread > 0 && (
               <button
                 className="btn btn-outline btn-sm"
@@ -103,9 +114,11 @@ export default function FarmerDashboard() {
                 {t('farmer.markAllRead')}
               </button>
             )}
-          </div>
-          <div style={{ marginTop: '0.75rem' }}>
-            {notifications.length === 0 && <div className="card">{t('farmer.noNotifications')}</div>}
+          </h2>
+          <div className="notif-stack">
+            {notifications.length === 0 && (
+              <div className="card" style={{ marginBottom: 0 }}>{t('farmer.noNotifications')}</div>
+            )}
             {notifications.slice(0, 6).map((n) => (
               <div key={n.id} className={`notif ${n.read ? '' : 'unread'}`}>
                 <div>{pick(n, 'message')}</div>
@@ -113,19 +126,20 @@ export default function FarmerDashboard() {
               </div>
             ))}
           </div>
-          <div className="card" style={{ marginTop: '1rem' }}>
-            <h3 style={{ marginTop: 0 }}>{t('farmer.quickActions')}</h3>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <Link className="btn btn-outline btn-sm" to="/requests/new">＋ {t('nav.newRequest')}</Link>
-              <Link className="btn btn-outline btn-sm" to="/sell"><Icon name="wheat" size={15} /> {t('nav.smartSell')}</Link>
-              <Link className="btn btn-outline btn-sm" to="/market-prices"><Icon name="chart" size={15} /> {t('nav.marketPrices')}</Link>
-              <Link className="btn btn-outline btn-sm" to="/history"><Icon name="folder" size={15} /> {t('nav.history')}</Link>
-              <Link className="btn btn-outline btn-sm" to="/centres"><Icon name="store" size={15} /> {t('farmer.centresTitle')}</Link>
-              <Link className="btn btn-outline btn-sm" to="/id-card"><Icon name="idCard" size={15} /> {t('nav.idCard')}</Link>
-            </div>
-          </div>
         </section>
       </div>
+
+      <section className="card" aria-labelledby="quick-h" style={{ marginTop: '1rem' }}>
+        <h2 id="quick-h" style={{ marginTop: 0, marginBottom: '0.9rem' }}>{t('farmer.quickActions')}</h2>
+        <div className="quick-grid">
+          {QUICK_ACTIONS.map((a) => (
+            <Link key={a.to} className="quick-tile" to={a.to}>
+              <span className="quick-ico"><Icon name={a.icon} size={19} /></span>
+              {t(a.key)}
+            </Link>
+          ))}
+        </div>
+      </section>
     </>
   );
 }

@@ -20,7 +20,7 @@ export default function StatusPage() {
   const terminal = ['CANCELLED', 'REJECTED'].includes(request.status);
 
   return (
-    <div className="page narrow" style={{ margin: '0 auto', padding: 0 }}>
+    <div className="page narrow">
       <h1>{t('farmer.statusJourney')}</h1>
       <div className="card">
         <p style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>

@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthContext.jsx';
 import { useI18n } from '../i18n/I18nContext.jsx';
 import { referenceService } from '../services/api/farmerService.js';
 import { LanguageToggle } from '../components/LanguageToggle.jsx';
+import Icon from '../components/Icon.jsx';
 
 export default function RegisterPage() {
   const { t, pick, lang } = useI18n();
@@ -52,6 +53,7 @@ export default function RegisterPage() {
         </div>
         <div className="auth-card">
           <div className="logo">
+            <span className="auth-logo-mark" aria-hidden="true"><Icon name="wheat" size={30} strokeWidth={2} /></span>
             <div className="hi">अन्नदाता कनेक्ट</div>
             <div className="tag">{t('app.tagline')}</div>
           </div>

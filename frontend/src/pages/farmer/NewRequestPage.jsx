@@ -75,7 +75,7 @@ export default function NewRequestPage() {
   const crop = crops.find((c) => c.id === form.cropId);
 
   return (
-    <div className="page narrow" style={{ margin: '0 auto', padding: 0 }}>
+    <div className="page narrow">
       <h1>{t('farmer.newRequestTitle')}</h1>
       <div className="steps" aria-hidden>
         {['crop', 'centre', 'token'].map((s, i) => (

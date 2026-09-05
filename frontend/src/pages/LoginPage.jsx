@@ -57,6 +57,7 @@ export default function LoginPage() {
         </div>
         <div className="auth-card">
           <div className="logo">
+            <span className="auth-logo-mark" aria-hidden="true"><Icon name="wheat" size={30} strokeWidth={2} /></span>
             <div className="hi">अन्नदाता कनेक्ट</div>
             <div className="tag">{t('app.tagline')}</div>
           </div>

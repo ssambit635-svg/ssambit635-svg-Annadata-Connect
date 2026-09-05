@@ -6,7 +6,8 @@ export const translations = {
     nav: {
       dashboard: 'Dashboard', newRequest: 'New Request', smartSell: 'Smart Sell',
       queue: 'Queue', requests: 'Requests', assisted: 'Assisted Entry', overview: 'District Overview', logout: 'Logout',
-      history: 'My Records', idCard: 'ID Card', marketPrices: 'Mandi Prices',
+      history: 'My Records', idCard: 'ID Card', marketPrices: 'Mandi Prices', centres: 'Centres',
+      more: 'More', accountMenu: 'Account menu',
     },
     idCard: {
       title: 'My Farmer ID Card', print: 'Print / Save as PDF',
@@ -32,6 +33,9 @@ export const translations = {
       yes: 'Yes', no: 'No', all: 'All', today: 'Today', viewAll: 'View all', view: 'View',
       empty: 'Nothing to show here', errorGeneric: 'Something went wrong. Please try again.',
       errorNetwork: 'Cannot reach the server. Please check your connection and try again.',
+      offlineHint: 'Public pages still work — portal pages need a connection to the server.',
+      crashTitle: 'Something went wrong', crashBody: 'The app hit an unexpected problem. Nothing was lost — reload to continue.',
+      reload: 'Reload app',
       sessionExpired: 'Your session has expired. Please log in again.',
       notAllowed: 'You are not allowed to access this page.', notFoundTitle: 'Page not found',
       goHome: 'Go to dashboard', officer: 'Officer', farmer: 'Farmer', authority: 'Authority',
@@ -272,7 +276,8 @@ export const translations = {
     nav: {
       dashboard: 'डैशबोर्ड', newRequest: 'नया अनुरोध', smartSell: 'स्मार्ट बिक्री',
       queue: 'कतार', requests: 'अनुरोध', assisted: 'सहायक प्रविष्टि', overview: 'जिला सारांश', logout: 'लॉग आउट',
-      history: 'मेरे रिकॉर्ड', idCard: 'पहचान पत्र', marketPrices: 'मंडी भाव',
+      history: 'मेरे रिकॉर्ड', idCard: 'पहचान पत्र', marketPrices: 'मंडी भाव', centres: 'केंद्र',
+      more: 'और', accountMenu: 'खाता मेन्यू',
     },
     idCard: {
       title: 'मेरा किसान पहचान पत्र', print: 'प्रिंट करें / PDF सेव करें',
@@ -298,6 +303,9 @@ export const translations = {
       yes: 'हाँ', no: 'नहीं', all: 'सभी', today: 'आज', viewAll: 'सभी देखें', view: 'देखें',
       empty: 'यहाँ कुछ नहीं है', errorGeneric: 'कुछ गड़बड़ हुई। कृपया फिर कोशिश करें।',
       errorNetwork: 'सर्वर से संपर्क नहीं हो पा रहा। अपना कनेक्शन जाँचें और पुनः प्रयास करें।',
+      offlineHint: 'पब्लिक पेज चलते रहेंगे — पोर्टल पेज के लिए सर्वर कनेक्शन ज़रूरी है।',
+      crashTitle: 'कुछ गड़बड़ हो गई', crashBody: 'एप्लिकेशन में अपेक्षित समस्या आई। कुछ नहीं खोया गया — जारी रखने के लिए रीलोड करें।',
+      reload: 'एप्लिकेशन रीलोड करें',
       sessionExpired: 'आपका सत्र समाप्त हो गया है। कृपया फिर लॉगिन करें।',
       notAllowed: 'आपको इस पेज की अनुमति नहीं है।', notFoundTitle: 'पेज नहीं मिला',
       goHome: 'डैशबोर्ड पर जाएँ', officer: 'अधिकारी', farmer: 'किसान', authority: 'प्राधिकारी',
