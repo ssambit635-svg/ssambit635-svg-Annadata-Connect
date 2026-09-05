@@ -1,0 +1,396 @@
+/* ============================================================================
+   ANNADATA CONNECT — PORTAL CREAM THEME
+   ----------------------------------------------------------------------------
+   Restyles the signed-in interior (farmer / officer / authority portals) and
+   the auth pages to match the public landing page: warm cream backgrounds,
+   deep forest green, saffron-gold accents and soft warm shadows.
+
+   This file is imported LAST (after global.css and home-polish.css) so it can
+   retune the shared --c-* design tokens. The landing page itself is untouched:
+   it is scoped to .landing-v2 and paints its own cream palette.
+   ========================================================================= */
+
+:root {
+  /* Warm cream retune of the portal palette (landing-page colours). */
+  --c-primary: #0e5b3b;
+  --c-primary-dark: #07382a;
+  --c-primary-darker: #052c22;
+  --c-bg: #fbfaf5;
+  --c-surface: #fffdf8;
+  --c-border: #e6dfcc;
+  --c-text: #17382d;
+  --c-text-soft: #5c6b5e;
+  --c-neutral-bg: #f3efe1;
+  --p-cream: #fbfaf5;
+  --p-cream-deep: #f6f1e2;
+  --p-cream-soft: #faf5e6;
+  --p-gold: #f2b632;
+  --p-gold-deep: #b98a10;
+  --p-gold-soft: #fff2d3;
+  --shadow: 0 1px 2px rgba(9, 48, 32, 0.07);
+  --shadow-sm: 0 1px 2px rgba(9, 48, 32, 0.06);
+  --shadow-lg: 0 8px 24px rgba(9, 48, 32, 0.11);
+  --shadow-xl: 0 14px 34px rgba(9, 48, 32, 0.15);
+  --ring: 0 0 0 3px rgba(14, 91, 59, 0.16);
+}
+
+/* ---------- Base ---------- */
+body {
+  background:
+    radial-gradient(1100px 480px at 88% -180px, rgba(242, 182, 50, 0.07), transparent 60%),
+    radial-gradient(900px 420px at -8% -160px, rgba(14, 91, 59, 0.05), transparent 55%),
+    var(--p-cream);
+}
+
+/* ---------- App header: deep forest with a gold hairline ---------- */
+.app-header {
+  background: linear-gradient(120deg, #052c22 0%, #07382a 45%, #0e5b3b 100%);
+  border-bottom: 3px solid var(--p-gold);
+  box-shadow: 0 2px 14px rgba(9, 48, 32, 0.22);
+}
+
+/* ---------- Nav strip: warm cream like the landing header ---------- */
+.app-nav {
+  background: var(--p-cream-deep);
+  border-bottom: 1px solid var(--c-border);
+}
+.app-nav a { color: #4c5b4f; }
+.app-nav a:hover { color: var(--c-primary-dark); background: rgba(14, 91, 59, 0.07); }
+.app-nav a.active { color: var(--c-primary-dark); border-bottom-color: var(--p-gold); }
+
+/* ---------- Cards, stats, grids ---------- */
+.card { background: var(--c-surface); border-color: var(--c-border); }
+.card h2 { color: var(--c-primary-dark); }
+.stat { background: var(--c-surface); border-color: var(--c-border); }
+.stat:hover { box-shadow: var(--shadow-lg); }
+.stat .num { color: var(--c-primary-dark); }
+
+/* ---------- Buttons ---------- */
+.btn-primary { background: var(--c-primary); }
+.btn-primary:hover:not(:disabled) { background: var(--c-primary-dark); }
+.btn-outline { background: var(--c-surface); border-color: #b9cdbf; color: var(--c-primary-dark); }
+.btn-outline:hover:not(:disabled) { background: var(--p-cream-soft); border-color: var(--c-primary); }
+.btn-danger { background: var(--c-surface); }
+
+/* ---------- Forms ---------- */
+.input, .select {
+  background: #fff;
+  border: 1.5px solid #d8cfb8;
+}
+.input:hover:not(:focus), input:hover:not(:focus), select:hover:not(:focus) { border-color: #b7ab8a; }
+.input:focus, .input:focus-visible, input:focus, select:focus, textarea:focus {
+  border-color: var(--c-primary);
+  box-shadow: var(--ring);
+}
+.pw-field { display: flex; gap: 0.4rem; }
+.pw-field .input { flex: 1; }
+
+/* ---------- Tables ---------- */
+.table-wrap { background: var(--c-surface); }
+table.data th, table.data td { border-bottom: 1px solid #eee7d4; }
+table.data th { background: #f6f1e2; }
+table.data tbody tr:hover { background: var(--p-cream-soft); }
+.alt-row { border-bottom-color: #efe8d6; }
+.alt-row:hover { background: var(--p-cream-soft); }
+
+/* ---------- Badges, bars, alerts ---------- */
+.bar { background: #efe8d5; }
+.notif { background: var(--c-surface); }
+.notif.unread { background: var(--p-cream-soft); }
+.reco-card { background: #fffdf6; }
+
+/* ---------- Journey / token card ---------- */
+.journey .node { background: var(--c-surface); }
+.journey li.current .node {
+  border-color: #e0a91c; color: #8a6207; background: #fff4d4;
+  box-shadow: 0 0 0 4px rgba(242, 182, 50, 0.22);
+}
+.token-card {
+  background: var(--c-surface);
+  border: 2px solid var(--c-primary);
+  border-top: 5px solid var(--p-gold);
+}
+.token-card .token-label { color: var(--p-gold-deep); }
+.token-card .rows .cell { background: var(--p-cream-deep); }
+
+/* ---------- Spinner / states ---------- */
+.spinner { border-color: #e3dccb; border-top-color: var(--c-primary); }
+.state-ico { background: var(--c-neutral-bg); }
+
+/* ---------- Assistant ---------- */
+.assistant-panel { background: var(--c-surface); }
+.assistant-head { background: linear-gradient(120deg, #07382a, #0e5b3b); }
+.msg.bot { background: #f1ecdc; }
+.chips button { background: var(--c-surface); border-color: var(--c-primary); color: var(--c-primary-dark); }
+
+/* ---------- Account menu / mobile chrome ---------- */
+.user-menu-pop { background: var(--c-surface); }
+.bottom-tabs {
+  background: rgba(255, 253, 248, 0.96);
+  border-top: 1px solid var(--c-border);
+  box-shadow: 0 -8px 24px rgba(9, 48, 32, 0.09);
+}
+.bottom-tabs .tab:hover { color: var(--c-primary-dark); background: var(--p-cream-soft); }
+.bottom-tabs .tab.active::before { background: var(--p-gold); }
+.more-sheet { background: var(--c-surface); }
+.more-sheet-row:hover { background: var(--p-cream-soft); }
+.more-sheet-row.active { background: var(--p-cream-soft); color: var(--c-primary-dark); }
+.more-sheet-icon { background: var(--p-cream-deep); color: var(--c-primary-dark); }
+.more-sheet-handle { background: #ddd5bd; }
+
+/* ---------- Demo box (login page) ---------- */
+.demo-box { background: var(--p-cream-soft); border: 1px dashed #d9c99a; }
+
+/* ============================================================================
+   AUTH PAGES — cream stage, role toggle, phone field, Google sign-in
+   ========================================================================= */
+
+.auth-layout {
+  min-height: 100vh;
+  padding: 1.75rem 1rem 3rem;
+  background:
+    radial-gradient(900px 430px at 82% -8%, rgba(242, 182, 50, 0.12), transparent 62%),
+    radial-gradient(820px 400px at -6% 2%, rgba(14, 91, 59, 0.08), transparent 56%),
+    linear-gradient(180deg, #f7f3e7 0%, #fbfaf5 46%);
+}
+.auth-wrap { width: 100%; max-width: 452px; }
+.auth-card {
+  background: var(--c-surface);
+  border: 1px solid #e6ddc6;
+  border-radius: 18px;
+  box-shadow: 0 2px 6px rgba(9, 48, 32, 0.05), 0 18px 44px rgba(9, 48, 32, 0.12);
+  padding: 1.6rem 1.5rem 1.4rem;
+}
+.auth-card .logo .hi { color: var(--c-primary-dark); }
+
+/* Role toggle — farmer / officer / authority */
+.role-toggle {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  background: var(--p-cream-deep);
+  border: 1px solid #e5ddc5;
+  border-radius: 13px;
+  padding: 4px;
+  margin: 1rem 0 0.6rem;
+}
+.role-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 42px;
+  padding: 0 0.3rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #6b7263;
+  font-weight: 700;
+  font-size: 0.92rem;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.role-toggle-btn:hover { color: var(--c-primary-dark); }
+.role-toggle-btn.active {
+  background: var(--c-surface);
+  color: var(--c-primary-dark);
+  border-color: #e2d9bf;
+  box-shadow: 0 2px 8px rgba(9, 48, 32, 0.1), inset 0 -2.5px 0 var(--p-gold);
+}
+.auth-role-hint {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--c-text-soft);
+  margin: 0 0 1rem;
+}
+
+/* Phone field with +91 prefix */
+.phone-field { display: flex; }
+.phone-prefix {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.85rem;
+  background: var(--p-cream-deep);
+  border: 1.5px solid #d8cfb8;
+  border-right: 0;
+  border-radius: 8px 0 0 8px;
+  color: #4c5b4f;
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+.phone-input { border-radius: 0 8px 8px 0; }
+.phone-field:focus-within .phone-prefix { border-color: var(--c-primary); }
+.phone-field .phone-input:focus { box-shadow: none; border-color: #d8cfb8; }
+.phone-field:focus-within .phone-input { border-color: var(--c-primary); box-shadow: var(--ring); }
+
+/* Secondary text links inside the auth card */
+.auth-alt-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  min-height: 38px;
+  margin-top: 0.55rem;
+  background: none;
+  border: 0;
+  color: #6b7263;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.auth-alt-link:hover { color: var(--c-primary); text-decoration: underline; }
+
+/* New-number profile step */
+.auth-new-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  margin: 0.1rem auto 0.95rem;
+  padding: 0.32rem 0.85rem;
+  background: #e7f2e7;
+  border: 1px solid #bfe0c6;
+  border-radius: 999px;
+  color: var(--c-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+.auth-new-badge button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #5c6b5e;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  min-height: auto;
+}
+.auth-step-title {
+  font-size: 1.08rem;
+  color: var(--c-primary-dark);
+  text-align: center;
+  margin: 0 0 0.2rem;
+}
+.auth-step-sub {
+  font-size: 0.87rem;
+  color: var(--c-text-soft);
+  text-align: center;
+  margin: 0 0 1rem;
+}
+.auth-register-line { text-align: center; margin: 1.05rem 0 0; }
+
+/* Google sign-in zone */
+.auth-google-zone {
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  padding: 0.4rem 0 0.15rem;
+}
+.google-gis-wrap { min-height: 44px; display: grid; place-items: center; }
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 280px;
+  min-height: 46px;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 999px;
+  color: #1f1f1f;
+  font-weight: 600;
+  font-size: 0.97rem;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.18);
+  transition: box-shadow 0.15s ease, background 0.15s ease;
+}
+.google-btn:hover:not(:disabled) { background: #fafafa; box-shadow: 0 2px 8px rgba(60, 64, 67, 0.28); }
+.google-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Google account chooser (demo mode) */
+.gac-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(23, 42, 33, 0.5);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: scrim-in 0.18s ease;
+}
+.gac-card {
+  width: 100%;
+  max-width: 400px;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 24px 64px rgba(9, 48, 32, 0.32);
+  padding: 1.45rem 1.2rem 1rem;
+  animation: menu-pop 0.2s var(--ease);
+}
+.gac-head { text-align: center; margin-bottom: 0.85rem; }
+.gac-head h2 { font-size: 1.18rem; color: #1f1f1f; margin: 0.6rem 0 0.15rem; letter-spacing: 0; }
+.gac-head p { margin: 0; color: #5f6368; font-size: 0.88rem; }
+.gac-list { display: grid; gap: 0.15rem; }
+.gac-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.6rem 0.55rem;
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.13s ease;
+}
+.gac-row:hover:not(:disabled) { background: #f7f7f5; }
+.gac-row:disabled { opacity: 0.55; cursor: wait; }
+.gac-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.gac-avatar-plain { background: #fff; border: 1px solid #dadce0; color: #5f6368; }
+.gac-row-text { display: grid; min-width: 0; }
+.gac-row-text strong { font-size: 0.95rem; color: #202124; }
+.gac-row-text span {
+  font-size: 0.82rem;
+  color: #5f6368;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gac-row-caret { margin-left: auto; color: #9aa0a6; transform: rotate(-90deg); flex-shrink: 0; }
+.gac-form { padding: 0.55rem 0.35rem 0.3rem; border-top: 1px solid #f0efec; margin-top: 0.35rem; }
+.gac-note { text-align: center; font-size: 0.76rem; color: #9aa0a6; margin: 0.85rem 0 0; }
+.gac-spinner {
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #e6e6e4;
+  border-top-color: var(--c-primary);
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .role-toggle-btn span { font-size: 0.84rem; }
+  .role-toggle-btn .icon { display: none; }
+  .gac-card { padding: 1.2rem 0.9rem 0.9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gac-card, .gac-overlay { animation: none; }
+}

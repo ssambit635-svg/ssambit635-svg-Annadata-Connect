@@ -94,26 +94,44 @@ cd frontend && npm run dev
 | `JWT_EXPIRES_IN`  | `12h`                                  | Token validity                                      |
 | `CORS_ORIGIN`     | empty = allow any (dev convenience)    | Comma-separated allowed origins in production       |
 | `SEED_ON_BOOT`    | `true`                                 | Creates demo data if `data/db.json` is missing      |
+| `GOOGLE_CLIENT_ID`| empty = **demo mode**                  | Google OAuth client id; when set, Google sign-in verifies real ID tokens |
 | `NODE_ENV`        | `development`                          | Log format etc.                                     |
 
 ### Frontend (`frontend/.env`, see `.env.example`)
 
-| Variable            | Default                 | Purpose                                                                                |
-| ------------------- | ----------------------- | -------------------------------------------------------------------------------------- |
-| `VITE_API_BASE_URL` | `http://localhost:5000` | API origin used by the Vite **dev proxy**, and by the app when hosted **separately**. Leave **empty** when the backend serves the frontend build (same-origin calls). |
+| Variable               | Default                 | Purpose                                                                                |
+| ---------------------- | ----------------------- | -------------------------------------------------------------------------------------- |
+| `VITE_API_BASE_URL`    | `http://localhost:5000` | API origin used by the Vite **dev proxy**, and by the app when hosted **separately**. Leave **empty** when the backend serves the frontend build (same-origin calls). |
+| `VITE_GOOGLE_CLIENT_ID`| empty = demo chooser    | Renders the real Google Identity Services button for officer/authority sign-in.        |
 
-## 5. Demo credentials
+## 5. Login & demo credentials
 
-| Role      | Phone        | Password       | Scope                                  |
-| --------- | ------------ | -------------- | -------------------------------------- |
-| Farmer    | `9999999001` | `Farmer@123`   | Own requests, tokens, queue, history   |
-| Farmer 2  | `9999999002` | `Farmer@123`   | Seeded queue history at BBSR Central   |
-| Officer   | `9999999101` | `Officer@123`  | Bhubaneswar Central Procurement Centre |
-| Officer   | `9999999102` | `Officer@123`  | Jatni Mandi Procurement Centre         |
-| Authority | `9999999201` | `Authority@123` | District-wide overview (read-only)     |
+The login page has a **role toggle (Farmer / Officer / Authority)** and supports two real,
+passwordless flows — plus the classic password form as a fallback for the seeded demo accounts:
 
-New farmers can self-register on `/register`. Officers can create walk-in (assisted) tokens from
-**Assisted Entry**; first-time phone numbers get an account with default password `Kisan@123`.
+- **Farmer → mobile-number login (no password).** Enter **any 10-digit mobile number**
+  (with or without `+91`). An existing account is signed in immediately; a brand-new
+  number gets a one-time name + village step and the farmer account is created on the spot.
+- **Officer / Authority → Google (Gmail) sign-in.** Out of the box this runs in demo mode:
+  a Google-style account chooser lists the seeded officers/district admin, and **any other
+  Gmail address** can be used (a matching account is created on first sign-in — officers are
+  assigned a default open centre). To switch to **real Google Identity Services**, set
+  `GOOGLE_CLIENT_ID` (backend) and `VITE_GOOGLE_CLIENT_ID` (frontend) — the backend then
+  verifies the Google ID token against Google's tokeninfo endpoint and demo mode is disabled.
+
+Classic password accounts (also available via "Use password instead" on the login page):
+
+| Role      | Phone        | Password       | Google (demo)               | Scope                                  |
+| --------- | ------------ | -------------- | --------------------------- | -------------------------------------- |
+| Farmer    | `9999999001` | `Farmer@123`   | —                           | Own requests, tokens, queue, history   |
+| Farmer 2  | `9999999002` | `Farmer@123`   | —                           | Seeded queue history at BBSR Central   |
+| Officer   | `9999999101` | `Officer@123`  | `rashmi.das.anc@gmail.com`  | Bhubaneswar Central Procurement Centre |
+| Officer   | `9999999102` | `Officer@123`  | `manoj.behera.anc@gmail.com`| Jatni Mandi Procurement Centre         |
+| Authority | `9999999201` | `Authority@123`| `district.admin.anc@gmail.com` | District-wide overview (read-only) |
+
+Farmers can also self-register with a password on `/register` (or just sign in with their
+mobile number — the account is created automatically). Officers can create walk-in (assisted)
+tokens from **Assisted Entry**; first-time phone numbers get an account with default password `Kisan@123`.
 
 Reset all demo data: `cd backend && npm run seed`
 
