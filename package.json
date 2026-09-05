@@ -10,6 +10,8 @@
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend run dev",
     "seed": "npm --prefix backend run seed",
-    "data:agmarknet": "node scripts/build-agmarknet-sample.mjs"
+    "data:agmarknet": "node scripts/build-agmarknet-sample.mjs",
+    "data:agmarknet:levels": "node scripts/build-agmarknet-levels.mjs",
+    "data:agmarknet:all": "node scripts/build-agmarknet-sample.mjs && node scripts/build-agmarknet-levels.mjs"
   }
 }

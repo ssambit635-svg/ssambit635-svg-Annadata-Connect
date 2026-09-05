@@ -1,0 +1,183 @@
+{
+  "dataset": "Agmarknet district/state monthly modal price means (curated extracts)",
+  "isMockData": false,
+  "source": {
+    "repository": "https://github.com/pointbreak71/dpi410-final-project-v2",
+    "commit": "841ec503bfb5d0fb251d1eed11e03d103aa4ab64",
+    "files": {
+      "district": {
+        "file": "data/clean/did_inputs/across_mandi_district.csv",
+        "upstreamRows": 21324
+      },
+      "state": {
+        "file": "data/clean/did_inputs/across_mandi_state.csv",
+        "upstreamRows": 27326
+      }
+    },
+    "originalSource": "Agmarknet 2.0 API (api.agmarknet.gov.in), Directorate of Marketing & Inspection, Govt. of India",
+    "collectedBy": "pointbreak71/dpi410-final-project-v2 (scripts/agmarknet_range_scraper.py)"
+  },
+  "extract": {
+    "generatedAt": "2026-09-05T06:58:37.116Z",
+    "generatedBy": "scripts/build-agmarknet-levels.mjs",
+    "commodities": [
+      "cotton",
+      "maize",
+      "mustard",
+      "paddy",
+      "wheat"
+    ],
+    "period": {
+      "fromYear": 2021,
+      "toYear": 2025
+    },
+    "filters": {
+      "priceMeanGt": 0,
+      "priceMeanLt": 100000,
+      "minMandis": 1
+    },
+    "selectionRule": "Full window kept for the requested commodities (no row budget, no min-months cutoff): district coverage is sparse for some crops, so every observed month is retained. Series are never partially cut.",
+    "district": {
+      "file": "mandi_prices_district_monthly.csv",
+      "rows": 3567,
+      "series": 147,
+      "commodities": [
+        "cotton",
+        "maize",
+        "mustard",
+        "paddy",
+        "wheat"
+      ],
+      "states": [
+        "Gujarat",
+        "Haryana",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Punjab",
+        "Rajasthan",
+        "Tamil Nadu",
+        "Uttar Pradesh",
+        "Uttarakhand"
+      ],
+      "districts": [
+        "Ahmedabad",
+        "Ahmednagar",
+        "Alwar",
+        "Ambala",
+        "Amrawati",
+        "Amreli",
+        "Anand",
+        "Aravalli",
+        "Badaun",
+        "Banaskantha",
+        "Baran",
+        "Bathinda",
+        "Beed",
+        "Bharatpur",
+        "Bhiwani",
+        "Bikaner",
+        "Buldhana",
+        "Bundi",
+        "Chhatarpur",
+        "Chittorgarh",
+        "Cuddalore",
+        "Dausa",
+        "Dharmapuri",
+        "Dindigul",
+        "Fatehabad",
+        "Firozabad",
+        "Hanumangarh",
+        "Harda",
+        "Hisar",
+        "Indore",
+        "Jaipur",
+        "Jamnagar",
+        "Jhalawar",
+        "Jhunjhunu",
+        "Jind",
+        "Jodhpur",
+        "Kaithal",
+        "Kancheepuram",
+        "Karnal",
+        "Kurukshetra",
+        "Mansa",
+        "Mehsana",
+        "Mohindergarh",
+        "Nagapattinam",
+        "Nashik",
+        "Pali",
+        "Patan",
+        "Patiala",
+        "Pune",
+        "Rajkot",
+        "Rewa",
+        "Sabarkantha",
+        "Sagar",
+        "Salem",
+        "Sirsa",
+        "Solapur",
+        "Sri Ganganagar",
+        "Tarn Taran Sahib",
+        "Thanjavur",
+        "Tiruppur",
+        "Tiruvannamalai",
+        "Tonk",
+        "Udham Singh Nagar",
+        "Vellore",
+        "Villupuram",
+        "Wardha",
+        "Washim"
+      ]
+    },
+    "state": {
+      "file": "mandi_prices_state_monthly.csv",
+      "rows": 3148,
+      "series": 73,
+      "commodities": [
+        "cotton",
+        "maize",
+        "mustard",
+        "paddy",
+        "wheat"
+      ],
+      "states": [
+        "Andhra Pradesh",
+        "Bihar",
+        "Chhattisgarh",
+        "Gujarat",
+        "Haryana",
+        "Jharkhand",
+        "Karnataka",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Nagaland",
+        "Odisha",
+        "Puducherry",
+        "Punjab",
+        "Rajasthan",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttar Pradesh",
+        "Uttarakhand"
+      ],
+      "districts": []
+    }
+  },
+  "fields": {
+    "state_name": "State (upstream state_clean / state_final)",
+    "district": "District (district file only)",
+    "commodity": "Commodity (lowercase; upstream crop column)",
+    "year": "Calendar year",
+    "month": "Calendar month, 1-12",
+    "price_mean": "Mean of the daily modal prices across the mandis of that district/state that month, Rs/quintal",
+    "price_sd": "Standard deviation of those modal prices across mandis, Rs/quintal (blank where upstream has none)",
+    "n_mandis": "Number of mandis behind that district/state-month mean"
+  },
+  "notes": [
+    "Every row is real observed Agmarknet data. No values are simulated, interpolated or randomly generated.",
+    "price_mean is a published upstream aggregate (mean across mandis), unlike the mandi extract whose modal price is reconstructed as the midpoint of the published min/max band.",
+    "Some state-month means rest on a single mandi (n_mandis = 1); the count is shipped alongside so consumers can weigh them. District-month means always rest on 4+ mandis in this window.",
+    "Re-run scripts/build-agmarknet-levels.mjs to regenerate or widen the extracts."
+  ]
+}

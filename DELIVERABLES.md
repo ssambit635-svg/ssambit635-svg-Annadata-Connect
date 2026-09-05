@@ -84,21 +84,29 @@
 
 ### Historical mandi prices — real Agmarknet data (no mock)
 - ✅ New **Mandi Prices** page (nav + `/market-prices`, open to farmer/officer/authority) built on a
-  **real** Agmarknet monthly panel: 493 mandi-month records across 9 market series (paddy, wheat,
-  maize, mustard, cotton; 2021–2025), extracted from
+  **real** multilevel Agmarknet panel: 7,208 monthly records — 493 mandi-month rows (9 market series),
+  3,567 district-month rows (147 district series, 9 states) and 3,148 state-month rows (73 state
+  series, 19 states incl. Odisha) — for paddy, wheat, maize, mustard, cotton (2021–2025), extracted from
   [pointbreak71/dpi410-final-project-v2](https://github.com/pointbreak71/dpi410-final-project-v2)
   (scraped from `api.agmarknet.gov.in`). **No generated or simulated history anywhere.**
-- ✅ Pipeline exactly as specified: `Historical CSV → backend loader → filter/aggregate → API → frontend`
-  (`backend/src/data/marketPrices.js` → `services/marketPrices.service.js` → `/api/market-prices/*`).
-- ✅ Fields preserved end-to-end: `state_name`, `market_name`, `commodity`, `year`, `month`,
-  `arrivals_mt`, `modal_price_avg`, `n_obs` (+ `district`, `min/max_price_avg`, `mandi_id`).
-- ✅ Page shows: filters (crop / state / mandi / year range), KPI stats, SVG price trend with min–max
-  band and arrivals, **best month to sell** seasonality, mandi-vs-mandi comparison, year-by-year table,
-  and the raw source rows with a CSV download — fully bilingual.
+- ✅ Pipeline exactly as specified: `Historical CSVs → backend loader → filter/aggregate → API → frontend`
+  (`backend/src/data/marketPrices.js` → `services/marketPrices.service.js` → `/api/market-prices/*`),
+  with a `level` selector (`market` default · `district` · `state`) plus `district` filtering and
+  district-by-district (`/districts`) and state-by-state (`/states`) comparison endpoints.
+- ✅ Fields preserved end-to-end: mandi level keeps `state_name`, `market_name`, `commodity`, `year`,
+  `month`, `arrivals_mt`, `modal_price_avg`, `n_obs` (+ `district`, `min/max_price_avg`, `mandi_id`);
+  district/state levels keep `state_name`, `district`, `commodity`, `year`, `month`, `price_mean`,
+  `price_sd`, `n_mandis`.
+- ✅ Page shows: level tabs (Mandi / District / State), filters (crop / state / district / mandi /
+  year range), KPI stats, SVG price trend (min–max band + arrivals at mandi level, clean mean line
+  otherwise), **best month to sell** seasonality, mandi-vs-mandi / district-vs-district /
+  state-vs-state comparison, year-by-year table, and the raw source rows with a CSV download —
+  fully bilingual.
 - ✅ Smart Sell embeds a **historical price check**: the selected buyer's ₹/quintal is placed in the
   percentile distribution of real mandi prices for that crop, with a 24-month sparkline.
-- ✅ Reproducible extract: `npm run data:agmarknet` (`scripts/build-agmarknet-sample.mjs`), provenance
-  and caveats committed in `backend/src/data/agmarknet/source.meta.json` and `HISTORICAL_DATA.md`.
+- ✅ Reproducible extracts: `npm run data:agmarknet:all` (`scripts/build-agmarknet-sample.mjs` +
+  `scripts/build-agmarknet-levels.mjs`), provenance and caveats committed in
+  `backend/src/data/agmarknet/source.meta.json`, `levels.meta.json` and `HISTORICAL_DATA.md`.
 
 ## Backend-dependent feature notes
 
@@ -127,10 +135,11 @@ map, bilingual `nameEn/nameHi` fields, and the request lifecycle transitions lis
   transport-cost constant (`₹0.4/km/q`) is a documented rule for fair comparison, not a carrier quote.
 - Market bookings are a lightweight confirmation record (reference + terms); full in-yard delivery
   tracking for private buyers is a future integration.
-- The historical extract keeps ~500 of the upstream 272,785 rows (9 well-covered mandi series) — enough
-  to chart trends, not a national coverage claim. `modal_price_avg` is the midpoint of the published
-  arrival-weighted min/max band (the upstream modal panel is not in git); validated at r = 0.94 against
-  that repo's district modal means. Widen or rebuild with `npm run data:agmarknet`.
+- The historical extracts keep ~7.2k of the upstream ~321k panel rows (9 mandi + 147 district + 73 state
+  series) — enough to chart trends, not a full national coverage claim; district coverage is sparse for
+  some crops and the mandi level covers 3 states. Mandi-level `modal_price_avg` is the midpoint of the
+  published arrival-weighted min/max band (the upstream modal panel is not in git); validated at r = 0.94
+  against that repo's district modal means. Widen or rebuild with `npm run data:agmarknet:all`.
 - Historical prices are descriptive only — no forecasting is offered or implied.
 
 ## Quality checklist — status

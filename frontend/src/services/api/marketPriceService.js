@@ -1,7 +1,8 @@
 import { api } from './client.js';
 
 // Historical Agmarknet mandi prices (real data, see backend/src/data/agmarknet).
-// Query objects are plain { commodity | cropId, state, market, fromYear, toYear }.
+// Query objects are plain { level, commodity | cropId, state, district, market,
+// fromYear, toYear }. Level defaults to 'market' server-side.
 function qs(params = {}) {
   const search = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
@@ -17,6 +18,8 @@ export const marketPriceService = {
   series: (params) => api(`/api/market-prices/series${qs(params)}`),
   seasonality: (params) => api(`/api/market-prices/seasonality${qs(params)}`),
   markets: (params) => api(`/api/market-prices/markets${qs(params)}`),
+  districts: (params) => api(`/api/market-prices/districts${qs(params)}`),
+  states: (params) => api(`/api/market-prices/states${qs(params)}`),
   yearly: (params) => api(`/api/market-prices/yearly${qs(params)}`),
   benchmark: (params) => api(`/api/market-prices/benchmark${qs(params)}`),
   rows: (params) => api(`/api/market-prices/rows${qs(params)}`),

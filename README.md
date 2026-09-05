@@ -51,20 +51,22 @@ whole app at `http://localhost:5000`. This is also the recommended production la
 
 ## 2b. Historical mandi prices (real data, no mock)
 
-The *Mandi Prices* page and the Smart Sell price check are driven by a real Agmarknet monthly panel —
-493 mandi-month records across 9 market series, extracted from
+The *Mandi Prices* page and the Smart Sell price check are driven by a real multilevel Agmarknet
+panel — 7,208 monthly records across three levels (493 mandi + 3,567 district + 3,148 state
+observations; paddy, wheat, maize, mustard, cotton; 2021–2025), extracted from
 [pointbreak71/dpi410-final-project-v2](https://github.com/pointbreak71/dpi410-final-project-v2)
-(scraped from `api.agmarknet.gov.in`, 2010–2025 nationally).
+(scraped from `api.agmarknet.gov.in`, 2010–2025 nationally). The state level covers 19 states,
+including Odisha.
 
 ```
-Historical CSV -> Backend loader -> Filter/aggregate -> /api/market-prices -> Frontend
+Historical CSVs -> Backend loader -> Filter/aggregate -> /api/market-prices -> Frontend
 ```
 
-The extract is committed at `backend/src/data/agmarknet/mandi_prices_monthly.csv`, so the app works
-offline with no extra setup. To regenerate or widen it:
+The extracts are committed under `backend/src/data/agmarknet/`, so the app works
+offline with no extra setup. To regenerate or widen them:
 
 ```bash
-npm run data:agmarknet      # clones the upstream repo into .data-src/ and rebuilds the extract
+npm run data:agmarknet:all  # clones the upstream repo into .data-src/ and rebuilds all extracts
 ```
 
 Full details — provenance, columns, selection rule, the `modal_price_avg` caveat and every endpoint —
