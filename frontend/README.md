@@ -8,7 +8,7 @@ React 18 + Vite SPA for the Annadata Connect procurement platform.
 - Dedicated API service layer in `src/services/api/`
 
 ```bash
-cp .env.example .env    # defaults to http://localhost:5000
+cp .env.example .env    # browser calls /api; Vite proxies to the backend
 npm install
 npm run dev             # http://localhost:5173 (proxies /api → backend)
 npm run build           # production bundle in dist/ (backend serves it)
@@ -29,3 +29,7 @@ src/
 ```
 
 See **../README.md** for the full run guide and **../API_INTEGRATION_MAP.md** for the contract.
+
+Verified Google/SMS/email sign-in and provider activation: **../AUTH_SETUP.md**.
+Google client configuration comes from the backend at runtime; do not add provider secrets to VITE_* variables.
+Browser contract tests: `npx playwright install chromium && npm run test:e2e`.

@@ -5,3 +5,10 @@ backend/data/db.json
 *.log
 .DS_Store
 .data-src/
+
+# Private local env overrides and browser-test artifacts
+.env.*
+!.env.example
+test-results/
+playwright-report/
+.cache/

@@ -8,7 +8,9 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "seed": "node src/db/seed-cli.js"
+    "seed": "node src/db/seed-cli.js",
+    "test": "node --test test/*.test.js",
+    "auth:provision": "node src/scripts/provision-account.js"
   },
   "dependencies": {
     "annadata-connect": "file:..",
@@ -16,8 +18,17 @@
     "cors": "2.8.5",
     "dotenv": "16.4.5",
     "express": "4.21.0",
+    "express-rate-limit": "^8.7.0",
+    "google-auth-library": "^11.0.2",
     "jsonwebtoken": "9.0.2",
     "morgan": "1.10.0",
+    "nodemailer": "^10.0.0",
     "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

@@ -2,7 +2,7 @@ import { ApiError } from './error.js';
 
 // Minimal request-body validators. The backend remains the source of validation truth.
 export function requireFields(body, fields) {
-  const missing = fields.filter((f) => body[f] === undefined || body[f] === null || body[f] === '');
+  const missing = fields.filter((f) => body?.[f] === undefined || body[f] === null || body[f] === '');
   if (missing.length) {
     throw new ApiError(400, 'VALIDATION_ERROR', `Missing required field(s): ${missing.join(', ')}`, {
       fields: missing,
@@ -43,8 +43,8 @@ export function requireEmail(value, name = 'email') {
 
 export function requirePassword(value) {
   const s = String(value || '');
-  if (s.length < 8) {
-    throw new ApiError(400, 'VALIDATION_ERROR', 'Password must be at least 8 characters long.');
+  if (s.length < 8 || Buffer.byteLength(s) > 72) {
+    throw new ApiError(400, 'VALIDATION_ERROR', 'Password must be at least 8 characters and no more than 72 bytes.');
   }
   return s;
 }

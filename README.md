@@ -22,9 +22,10 @@ the same backend state (officer actions update the farmer's view in real time vi
 
 ## 1. Prerequisites
 
-- **Node.js ≥ 18** (20 LTS recommended) and npm
-- That's it. No database server is required — the backend persists to a JSON file
+- **Node.js ≥ 22** (22 LTS or newer; required by the Google authentication SDK) and npm
+- That's it. No database server is required for the local pilot — the backend persists to a JSON file
   (`backend/data/db.json`), auto-created and seeded on first boot.
+- Real Google/SMS/email sign-in needs your own provider configuration; see [AUTH_SETUP.md](AUTH_SETUP.md).
 
 ## 2. Quick start (recommended: single-port deployment)
 
@@ -94,48 +95,70 @@ cd frontend && npm run dev
 | `JWT_EXPIRES_IN`  | `12h`                                  | Token validity                                      |
 | `CORS_ORIGIN`     | empty = allow any (dev convenience)    | Comma-separated allowed origins in production       |
 | `SEED_ON_BOOT`    | `true`                                 | Creates demo data if `data/db.json` is missing      |
-| `GOOGLE_CLIENT_ID`| empty = **demo mode**                  | Google OAuth client id; when set, Google sign-in verifies real ID tokens |
+| `GOOGLE_CLIENT_ID` | empty = unavailable | Google Web OAuth client ID, shared with the frontend at runtime |
+| `AUTH_SMS_PROVIDER` | `none` | `twilio-verify` for real SMS OTP; needs Twilio credentials + Verify Service SID |
+| `AUTH_EMAIL_PROVIDER` | `none` | `smtp` for email OTP; needs authenticated SMTP settings |
+| `ALLOW_DEMO_LOGIN` | false in production | Opt in only for isolated sample-account password demos |
+| `TRUST_PROXY` | `0` | Exact trusted reverse-proxy hop count for IP rate limits |
 | `NODE_ENV`        | `development`                          | Log format etc.                                     |
 
 ### Frontend (`frontend/.env`, see `.env.example`)
 
 | Variable               | Default                 | Purpose                                                                                |
 | ---------------------- | ----------------------- | -------------------------------------------------------------------------------------- |
-| `VITE_API_BASE_URL`    | `http://localhost:5000` | API origin used by the Vite **dev proxy**, and by the app when hosted **separately**. Leave **empty** when the backend serves the frontend build (same-origin calls). |
-| `VITE_GOOGLE_CLIENT_ID`| empty = demo chooser    | Renders the real Google Identity Services button for officer/authority sign-in.        |
+| `VITE_API_BASE_URL` | empty = same origin | Optional public HTTPS API origin for a separately hosted production frontend. Dev browsers always use same-origin `/api`. |
+| `API_PROXY_TARGET` | `http://127.0.0.1:5000` | Server-side Vite proxy target, never called directly by a remote browser. |
 
-## 5. Login & demo credentials
+## 5. Verified sign-in & demo credentials
 
-The login page has a **role toggle (Farmer / Officer / Authority)** and supports two real,
-passwordless flows — plus the classic password form as a fallback for the seeded demo accounts:
+The bilingual login page offers **Google, SMS OTP, email OTP, and password** for all three
+roles. Provider methods are unavailable until configured — no fake account chooser,
+no arbitrary-email Google login, and no unverified phone-number login.
 
-- **Farmer → mobile-number login (no password).** Enter **any 10-digit mobile number**
-  (with or without `+91`). An existing account is signed in immediately; a brand-new
-  number gets a one-time name + village step and the farmer account is created on the spot.
-- **Officer / Authority → Google (Gmail) sign-in.** Out of the box this runs in demo mode:
-  a Google-style account chooser lists the seeded officers/district admin, and **any other
-  Gmail address** can be used (a matching account is created on first sign-in — officers are
-  assigned a default open centre). To switch to **real Google Identity Services**, set
-  `GOOGLE_CLIENT_ID` (backend) and `VITE_GOOGLE_CLIENT_ID` (frontend) — the backend then
-  verifies the Google ID token against Google's tokeninfo endpoint and demo mode is disabled.
+- **Google:** Google's official account-selection UI; server verifies signed Google ID
+  tokens (audience, issuer, expiry, verified email, and one-use nonce).
+- **SMS OTP:** Twilio Verify sends a real six-digit code to an Indian mobile number;
+  checking the code is required before sign-in. Available to **authorities**, officers,
+  and farmers. This does not use the notification `SMS_PROVIDER=sim` outbox.
+- **Email OTP:** an authenticated SMTP provider sends a real verification code. Farmers
+  can create an email-based profile or use an email already linked to their account.
+- **Password:** registered mobile or linked email plus password, for every role.
 
-Classic password accounts (also available via "Use password instead" on the login page):
+New farmers verify first, then complete their name and village; setting a password is
+optional. Existing farmers can open **Account menu → Sign-in & contact details** to
+verify and link email or mobile without creating a duplicate profile. Email-only
+accounts still receive in-app notifications; SMS notifications need a linked phone.
 
-| Role      | Phone        | Password       | Google (demo)               | Scope                                  |
-| --------- | ------------ | -------------- | --------------------------- | -------------------------------------- |
-| Farmer    | `9999999001` | `Farmer@123`   | —                           | Own requests, tokens, queue, history   |
-| Farmer 2  | `9999999002` | `Farmer@123`   | —                           | Seeded queue history at BBSR Central   |
-| Officer   | `9999999101` | `Officer@123`  | `rashmi.das.anc@gmail.com`  | Bhubaneswar Central Procurement Centre |
-| Officer   | `9999999102` | `Officer@123`  | `manoj.behera.anc@gmail.com`| Jatni Mandi Procurement Centre         |
-| Authority | `9999999201` | `Authority@123`| `district.admin.anc@gmail.com` | District-wide overview (read-only) |
+**Officers and authorities require administrator-provisioned contacts and scope.**
+Choosing a role in the UI never grants privileges. Full provider setup, staff provisioning,
+security limits, migration notes and live-testing instructions: **[AUTH_SETUP.md](AUTH_SETUP.md)**.
+Do not put real credentials in frontend variables or source control.
 
-Farmers can also self-register with a password on `/register` (or just sign in with their
-mobile number — the account is created automatically). Officers can create walk-in (assisted)
-tokens from **Assisted Entry**; first-time phone numbers get an account with default password `Kisan@123`.
+### Isolated local demo (password only)
 
-Reset all demo data: `cd backend && npm run seed`
+To explore sample data without configuring providers, set `ALLOW_DEMO_LOGIN=true` in
+`backend/.env` and restart. The login page then has a separately labelled **Explore demo
+accounts** section. Leave it **false for real deployments** (the example `.env` does).
+Real Google/SMS/email sign-ins never authenticate seeded sample identities.
+
+| Role      | Phone        | Password        | Scope                                  |
+| --------- | ------------ | --------------- | -------------------------------------- |
+| Farmer    | `9999999001` | `Farmer@123`    | Own requests, tokens, queue, history    |
+| Farmer 2  | `9999999002` | `Farmer@123`    | Seeded queue history at BBSR Central    |
+| Officer   | `9999999101` | `Officer@123`   | Bhubaneswar Central Procurement Centre |
+| Officer   | `9999999102` | `Officer@123`   | Jatni Mandi Procurement Centre          |
+| Authority | `9999999201` | `Authority@123` | District-wide overview                  |
+
+Walk-in farmers created by officers use SMS verification to claim their account; there
+is no shared default password. Old bypass-era sessions are invalidated, and legacy
+self-created staff accounts require explicit re-provisioning.
+
+Reset sample data: `cd backend && npm run seed` (**destructive; never use on real user data**).
 
 ## 6. End-to-end demo script
+
+For an isolated demo, first enable sample password access as described above. Select the
+matching role and the **Password** method, or use the explicit demo section.
 
 ```
 FARMER                                    OFFICER (same backend state)
@@ -155,7 +178,7 @@ Login 9999999001 / Farmer@123 → Smart Sell → pick paddy + 20 q → compare r
 or a market booking reference (SSB-…) with on-the-spot settlement; market bookings are
 listed & cancellable on the Smart Sell page.
 
-AUTHORITY: Login 9999999201 → District Overview (congestion / capacity / volume / alerts)
+AUTHORITY: Login 9999999201 / Authority@123 → District Overview (congestion / capacity / volume / alerts)
 ```
 
 ## 7. Troubleshooting
@@ -185,4 +208,6 @@ AUTHORITY: Login 9999999201 → District Overview (congestion / capacity / volum
   server-side (`farmer` / `officer` / `authority`). Frontend route guards are UX-only.
 - Farmers can only see/touch their own requests and notifications; officers only their own centre.
 - Request validation lives in the backend; the UI validates only for convenience.
-- Secrets are never committed — see `.gitignore` and the `.env.example` pattern.
+- Auth endpoints enforce IP limits; OTPs also have contact-level limits, expiry and single-use checks.
+- Provider secrets stay server-side — see `.gitignore`, `.env.example`, and [AUTH_SETUP.md](AUTH_SETUP.md).
+- Use persistent transactional storage and a shared verification/rate-limit store before scaling beyond one process.

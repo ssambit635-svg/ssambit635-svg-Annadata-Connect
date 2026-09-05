@@ -16,7 +16,8 @@ export function errorHandler(err, req, res, _next) {
   const status = err.status || 500;
   const code = err.code || 'INTERNAL_ERROR';
   const message = err.status ? err.message : 'Something went wrong on the server.';
-  if (status >= 500) console.error(err);
+  if (status >= 500) console.error(`[API] ${code}`);
+  if (status === 429 && err.details?.retryAfterSeconds) res.set('Retry-After', String(err.details.retryAfterSeconds));
   res.status(status).json({
     error: {
       code,

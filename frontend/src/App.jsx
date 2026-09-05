@@ -6,6 +6,7 @@ import { ProtectedRoute } from './components/ProtectedRoute.jsx';
 import { ErrorBoundary } from './components/ErrorBoundary.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+import AccountPage from './pages/AccountPage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import FarmerDashboard from './pages/farmer/FarmerDashboard.jsx';
 import NewRequestPage from './pages/farmer/NewRequestPage.jsx';
@@ -49,6 +50,7 @@ export default function App() {
                 </ProtectedRoute>
               }
             >
+              <Route path="/account" element={<AccountPage />} />
               {/* Farmer */}
               <Route path="/farmer" element={<ProtectedRoute roles={['farmer']}><FarmerHome /></ProtectedRoute>} />
               <Route path="/requests/new" element={<ProtectedRoute roles={['farmer']}><NewRequestPage /></ProtectedRoute>} />

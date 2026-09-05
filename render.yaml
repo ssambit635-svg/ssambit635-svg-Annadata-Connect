@@ -13,6 +13,10 @@ services:
         generateValue: true   # Render generates a strong secret automatically
       - key: SEED_ON_BOOT
         value: "true"
+      - key: ALLOW_DEMO_LOGIN
+        value: "false"
+      # Add Google/Twilio/SMTP secrets in Render settings; see AUTH_SETUP.md.
+      # Set TRUST_PROXY to match the trusted proxy chain for your host.
       # CORS_ORIGIN is not needed: API + UI are same-origin in this image.
     # Paid plans: uncomment for a persistent disk so the JSON store survives deploys.
     # disk:

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nContext.jsx';
-import Icon from './Icon.jsx';
+import { authService } from '../services/api/authService.js';
+import { authErrorMessage } from '../utils/auth.js';
 
 // Official 4-colour Google "G".
 export function GoogleG({ size = 18 }) {
@@ -14,197 +15,92 @@ export function GoogleG({ size = 18 }) {
   );
 }
 
-// Demo accounts offered in the account chooser (matched to the backend seed).
-const DEMO_GOOGLE_ACCOUNTS = {
-  officer: [
-    { name: 'Rashmi Das', email: 'rashmi.das.anc@gmail.com' },
-    { name: 'Manoj Behera', email: 'manoj.behera.anc@gmail.com' },
-  ],
-  authority: [{ name: 'Suresh IAS (Dist. Admin)', email: 'district.admin.anc@gmail.com' }],
-};
-
-const AVATAR_COLOURS = ['#0e5b3b', '#1d4ed8', '#92600a', '#b42318'];
-
-function avatarColour(seed) {
-  let h = 0;
-  for (let i = 0; i < seed.length; i += 1) h = (h * 31 + seed.charCodeAt(i)) % 997;
-  return AVATAR_COLOURS[h % AVATAR_COLOURS.length];
-}
-
-function AccountAvatar({ name, email }) {
-  const letter = (name || email || '?').trim().charAt(0).toUpperCase();
-  return (
-    <span className="gac-avatar" style={{ background: avatarColour(email || name || 'x') }} aria-hidden="true">
-      {letter}
-    </span>
-  );
-}
-
-/**
- * Google sign-in for officers and district authorities.
- *
- * - When VITE_GOOGLE_CLIENT_ID is set, the real Google Identity Services
- *   button is rendered and the returned ID-token credential is sent to the
- *   backend for verification.
- * - Without a client id the component falls back to a built-in account
- *   chooser so the flow works out of the box (backend demo mode). Any Google
- *   address can be used and a matching account is created on first sign-in.
- */
-export function GoogleSignIn({ role, disabled, onSuccess, onError }) {
-  const { t } = useI18n();
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
-  const [chooserOpen, setChooserOpen] = useState(false);
-  const [anotherOpen, setAnotherOpen] = useState(false);
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [busy, setBusy] = useState(false);
-  const gisRef = useRef(null);
-  // Keep the latest callback without re-initializing GIS on every parent render.
-  const onSuccessRef = useRef(onSuccess);
-  useEffect(() => {
-    onSuccessRef.current = onSuccess;
+// One shared loader is safe across role changes, remounts and React StrictMode.
+let googleScript;
+function loadGoogle() {
+  if (window.google?.accounts?.id) return Promise.resolve(window.google.accounts.id);
+  if (googleScript) return googleScript;
+  googleScript = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    const fail = () => {
+      clearTimeout(timeout);
+      script.remove();
+      googleScript = null;
+      reject({ code: 'AUTH_GOOGLE_LOAD_FAILED' });
+    };
+    const timeout = setTimeout(fail, 12000);
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onerror = fail;
+    script.onload = () => {
+      if (!window.google?.accounts?.id) return fail();
+      clearTimeout(timeout);
+      resolve(window.google.accounts.id);
+    };
+    document.head.appendChild(script);
   });
+  return googleScript;
+}
 
-  // Real Google Identity Services button.
+// Only Google's own UI can show the user's real Google accounts. No local
+// chooser, typed-email fallback, guessed account list, or automatic demo login.
+export function GoogleSignIn({ role, clientId, disabled, onSuccess }) {
+  const { t, lang } = useI18n();
+  const container = useRef(null);
+  const callbacks = useRef({ onSuccess, disabled });
+  callbacks.current = { onSuccess, disabled };
+  const [error, setError] = useState(null);
+  const [ready, setReady] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+
   useEffect(() => {
     if (!clientId) return undefined;
-    let cancelled = false;
-    const renderButton = () => {
-      if (cancelled || !window.google?.accounts?.id || !gisRef.current) return;
-      window.google.accounts.id.initialize({
+    let active = true;
+    let renewal;
+    setReady(false);
+    setError(null);
+    Promise.all([loadGoogle(), authService.googleChallenge(role)]).then(([google, challenge]) => {
+      if (!active || !container.current) return;
+      google.initialize({
         client_id: clientId,
+        nonce: challenge.nonce,
+        ux_mode: 'popup',
+        auto_select: false,
+        button_auto_select: false,
         callback: (response) => {
-          if (response?.credential) {
-            onSuccessRef.current({ role, credential: response.credential });
-          }
+          if (!active || callbacks.current.disabled) return;
+          Promise.resolve().then(() => {
+            if (!response?.credential) throw { code: 'AUTH_GOOGLE_INVALID' };
+            return callbacks.current.onSuccess({ role, credential: response.credential, challengeId: challenge.challengeId });
+          }).catch((err) => { if (active) setError(err); })
+            .finally(() => { if (active) setAttempt((n) => n + 1); });
         },
       });
-      window.google.accounts.id.renderButton(gisRef.current, {
-        theme: 'outline',
-        size: 'large',
-        shape: 'pill',
-        text: 'continue_with',
-        width: 280,
+      container.current.replaceChildren();
+      google.renderButton(container.current, {
+        theme: 'outline', size: 'large', shape: 'rectangular', text: 'signin_with',
+        width: Math.max(200, Math.min(400, container.current.clientWidth)), locale: lang,
       });
-    };
-    if (window.google?.accounts?.id) {
-      renderButton();
-    } else {
-      const s = document.createElement('script');
-      s.src = 'https://accounts.google.com/gsi/client';
-      s.async = true;
-      s.defer = true;
-      s.onload = renderButton;
-      document.head.appendChild(s);
-    }
-    return () => {
-      cancelled = true;
-    };
-  }, [clientId, role]);
+      setReady(true);
+      // Refresh an idle button's nonce instead of leaving a stale login challenge.
+      renewal = setTimeout(() => { if (active) setAttempt((n) => n + 1); }, (challenge.expiresInSeconds - 15) * 1000);
+    }).catch((err) => { if (active) setError(err); });
+    return () => { active = false; clearTimeout(renewal); };
+  }, [clientId, role, lang, attempt]);
 
-  async function signInWith(demoEmail, demoName) {
-    setBusy(true);
-    try {
-      await onSuccess({ role, email: demoEmail, name: demoName || '' });
-    } catch (err) {
-      onError?.(err);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  function submitAnother(e) {
-    e.preventDefault();
-    const value = email.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
-      onError?.({ message: t('auth.googleInvalidEmail') });
-      return;
-    }
-    signInWith(value, name.trim());
-  }
-
-  if (clientId) {
-    return <div className="google-gis-wrap" ref={gisRef} />;
-  }
+  if (!clientId) return (
+    <div className="google-signin-block">
+      <button type="button" className="google-btn" disabled aria-describedby="google-setup-note"><GoogleG /><span>{t('auth.googleButton')}</span><small>{t('auth.setupNeeded')}</small></button>
+      <p className="auth-small-note" id="google-setup-note">{t('auth.googleUnavailable')}</p>
+    </div>
+  );
 
   return (
-    <>
-      <button
-        type="button"
-        className="google-btn"
-        disabled={disabled || busy}
-        onClick={() => {
-          setChooserOpen(true);
-          setAnotherOpen(false);
-          setEmail('');
-          setName('');
-        }}
-      >
-        <GoogleG size={18} />
-        <span>{busy ? t('auth.googleBusy') : t('auth.googleButton')}</span>
-      </button>
-
-      {chooserOpen && (
-        <div className="gac-overlay" role="dialog" aria-modal="true" aria-label={t('auth.googleChooserTitle')} onClick={() => !busy && setChooserOpen(false)}>
-          <div className="gac-card" onClick={(e) => e.stopPropagation()}>
-            <div className="gac-head">
-              <GoogleG size={26} />
-              <h2>{t('auth.googleChooserTitle')}</h2>
-              <p>{t('auth.googleChooserSub')}</p>
-            </div>
-
-            <div className="gac-list">
-              {DEMO_GOOGLE_ACCOUNTS[role]?.map((a) => (
-                <button key={a.email} type="button" className="gac-row" disabled={busy} onClick={() => signInWith(a.email, a.name)}>
-                  <AccountAvatar name={a.name} email={a.email} />
-                  <span className="gac-row-text">
-                    <strong>{a.name}</strong>
-                    <span>{a.email}</span>
-                  </span>
-                  {busy ? <span className="gac-spinner" aria-hidden="true" /> : <Icon name="chevronDown" size={16} className="gac-row-caret" />}
-                </button>
-              ))}
-
-              {!anotherOpen ? (
-                <button type="button" className="gac-row gac-another" disabled={busy} onClick={() => setAnotherOpen(true)}>
-                  <span className="gac-avatar gac-avatar-plain" aria-hidden="true">
-                    <Icon name="plus" size={17} />
-                  </span>
-                  <span className="gac-row-text">
-                    <strong>{t('auth.googleAnother')}</strong>
-                  </span>
-                </button>
-              ) : (
-                <form className="gac-form" onSubmit={submitAnother}>
-                  <div className="field">
-                    <label htmlFor="gemail">{t('auth.googleEmail')}</label>
-                    <input
-                      id="gemail"
-                      className="input"
-                      type="email"
-                      inputMode="email"
-                      autoComplete="email"
-                      placeholder="you@gmail.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      autoFocus
-                    />
-                  </div>
-                  <div className="field">
-                    <label htmlFor="gname">{t('auth.googleName')}</label>
-                    <input id="gname" className="input" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
-                  </div>
-                  <button className="btn btn-primary btn-block" type="submit" disabled={busy}>
-                    {busy ? t('auth.googleBusy') : t('auth.googleContinue')}
-                  </button>
-                </form>
-              )}
-            </div>
-
-            <p className="gac-note">{t('auth.googleDemoNote')}</p>
-          </div>
-        </div>
-      )}
-    </>
+    <div className="google-signin-block">
+      {!ready && !error && <div className="google-btn google-loading" role="status"><GoogleG />{t('auth.loadingGoogle')}</div>}
+      <div ref={container} className={`google-gis-wrap${disabled ? ' is-disabled' : ''}`} aria-busy={disabled} inert={disabled ? '' : undefined} />
+      {error && <div className="auth-provider-note" role="alert">{authErrorMessage(error, t)} <button type="button" className="text-button" disabled={disabled} onClick={() => setAttempt((n) => n + 1)}>{t('common.retry')}</button></div>}
+    </div>
   );
 }

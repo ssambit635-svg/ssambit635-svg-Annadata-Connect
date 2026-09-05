@@ -1,3 +1,5 @@
+import { authTranslations } from './auth.js';
+
 // Complete UI dictionary. Technical identifiers (token numbers, API statuses)
 // stay untouched; everything user-facing is translated.
 export const translations = {
@@ -17,32 +19,7 @@ export const translations = {
       noCrops: 'Not booked yet', qrAlt: 'QR code for farmer verification', qrCaption: 'Scan to verify',
       issued: 'Issued:', printNote: 'Print tip: landscape, scale 100%. The QR carries your ID, name, mobile and village for counter verification.',
     },
-    auth: {
-      loginTitle: 'Sign in to Annadata Connect', phone: 'Mobile number', password: 'Password',
-      login: 'Login', loggingIn: 'Signing in…', noAccount: "Don't have an account?", register: 'Register',
-      haveAccount: 'Already registered?', registerTitle: 'Farmer Registration', name: 'Full name',
-      village: 'Your village', chooseVillage: 'Choose your village', registering: 'Registering…',
-      demoTitle: 'Demo accounts', demoFarmer: 'Farmer', demoOfficer: 'Officer', demoAuthority: 'Authority', useDemo: 'Use',
-      phonePlaceholder: '10-digit mobile number', passwordHint: 'At least 8 characters',
-      invalidLogin: 'Incorrect mobile number or password.',
-      // Quick login (phone / Google)
-      tabFarmer: 'Farmer', tabOfficer: 'Officer', tabAuthority: 'Authority',
-      loginAs: 'I am signing in as',
-      farmerTabHint: 'Use your mobile number — any 10-digit number works, no password needed.',
-      officerTabHint: 'Procurement officers sign in with their Google (Gmail) account.',
-      authorityTabHint: 'District authorities sign in with their Google (Gmail) account.',
-      phoneContinue: 'Continue', checkingPhone: 'Checking…',
-      newFarmerTitle: 'Almost done!', newFarmerHint: 'This number is new. Tell us your name and village to create your farmer account.',
-      createAccount: 'Create account & continue', creatingAccount: 'Creating account…',
-      changeNumber: 'Change number',
-      googleButton: 'Sign in with Google', googleBusy: 'Signing in…',
-      googleChooserTitle: 'Choose an account', googleChooserSub: 'to continue to Annadata Connect',
-      googleAnother: 'Use another account', googleEmail: 'Email address', googleName: 'Name (optional)',
-      googleContinue: 'Continue', googleDemoNote: 'Demo mode — any Google address works.',
-      googleInvalidEmail: 'Please enter a valid email address.',
-      usePassword: 'Use password instead', useQuickLogin: 'Back to quick login',
-      quickOnly: 'This account signs in with its mobile number or Google. Please use quick login.',
-    },
+    auth: authTranslations.en,
     common: {
       loading: 'Loading…', retry: 'Retry', refresh: 'Refresh', save: 'Save', cancel: 'Cancel',
       confirm: 'Confirm', back: 'Back', next: 'Continue', submit: 'Submit Request', close: 'Close',
@@ -304,32 +281,7 @@ export const translations = {
       noCrops: 'अभी बुकिंग नहीं', qrAlt: 'किसान सत्यापन के लिए QR कोड', qrCaption: 'सत्यापन हेतु स्कैन करें',
       issued: 'जारी तिथि:', printNote: 'प्रिंट टिप: लैंडस्केप, स्केल 100%। QR में आपकी आईडी, नाम, मोबाइल और गाँव होते हैं — काउंटर सत्यापन के लिए।',
     },
-    auth: {
-      loginTitle: 'अन्नदाता कनेक्ट में लॉगिन करें', phone: 'मोबाइल नंबर', password: 'पासवर्ड',
-      login: 'लॉगिन', loggingIn: 'लॉगिन हो रहा है…', noAccount: 'खाता नहीं है?', register: 'रजिस्टर करें',
-      haveAccount: 'पहले से रजिस्टर हैं?', registerTitle: 'किसान पंजीकरण', name: 'पूरा नाम',
-      village: 'आपका गाँव', chooseVillage: 'अपना गाँव चुनें', registering: 'पंजीकरण हो रहा है…',
-      demoTitle: 'डेमो खाते', demoFarmer: 'किसान', demoOfficer: 'अधिकारी', demoAuthority: 'प्राधिकारी', useDemo: 'भरें',
-      phonePlaceholder: '10 अंकों का मोबाइल नंबर', passwordHint: 'कम से कम 8 अक्षर',
-      invalidLogin: 'मोबाइल नंबर या पासवर्ड गलत है।',
-      // त्वरित लॉगिन (फ़ोन / Google)
-      tabFarmer: 'किसान', tabOfficer: 'अधिकारी', tabAuthority: 'प्राधिकारी',
-      loginAs: 'मैं इस रूप में लॉगिन कर रहा हूँ',
-      farmerTabHint: 'अपना मोबाइल नंबर डालें — कोई भी 10 अंकों का नंबर चलेगा, पासवर्ड की ज़रूरत नहीं।',
-      officerTabHint: 'खरीद केंद्र के अधिकारी अपने Google (Gmail) खाते से लॉगिन करें।',
-      authorityTabHint: 'ज़िला प्राधिकारी अपने Google (Gmail) खाते से लॉगिन करें।',
-      phoneContinue: 'आगे बढ़ें', checkingPhone: 'जाँच हो रही है…',
-      newFarmerTitle: 'बस थोड़ा और!', newFarmerHint: 'यह नंबर नया है। किसान खाता बनाने के लिए अपना नाम और गाँव बताएं।',
-      createAccount: 'खाता बनाएं और आगे बढ़ें', creatingAccount: 'खाता बन रहा है…',
-      changeNumber: 'नंबर बदलें',
-      googleButton: 'Google से साइन इन करें', googleBusy: 'साइन इन हो रहा है…',
-      googleChooserTitle: 'खाता चुनें', googleChooserSub: 'अन्नदाता कनेक्ट में जारी रखने के लिए',
-      googleAnother: 'दूसरा खाता उपयोग करें', googleEmail: 'ईमेल पता', googleName: 'नाम (वैकल्पिक)',
-      googleContinue: 'जारी रखें', googleDemoNote: 'डेमो मोड — कोई भी Google पता चलेगा।',
-      googleInvalidEmail: 'कृपया मान्य ईमेल पता डालें।',
-      usePassword: 'पासवर्ड से लॉगिन करें', useQuickLogin: 'त्वरित लॉगिन पर वापस जाएं',
-      quickOnly: 'यह खाता मोबाइल नंबर या Google से लॉगिन होता है। कृपया त्वरित लॉगिन का उपयोग करें।',
-    },
+    auth: authTranslations.hi,
     common: {
       loading: 'लोड हो रहा है…', retry: 'पुनः प्रयास करें', refresh: 'रिफ्रेश', save: 'सहेजें', cancel: 'रद्द करें',
       confirm: 'पुष्टि करें', back: 'वापस', next: 'आगे बढ़ें', submit: 'अनुरोध भेजें', close: 'बंद करें',

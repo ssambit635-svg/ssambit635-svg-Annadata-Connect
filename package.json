@@ -12,6 +12,11 @@
     "seed": "npm --prefix backend run seed",
     "data:agmarknet": "node scripts/build-agmarknet-sample.mjs",
     "data:agmarknet:levels": "node scripts/build-agmarknet-levels.mjs",
-    "data:agmarknet:all": "node scripts/build-agmarknet-sample.mjs && node scripts/build-agmarknet-levels.mjs"
+    "data:agmarknet:all": "node scripts/build-agmarknet-sample.mjs && node scripts/build-agmarknet-levels.mjs",
+    "test": "npm --prefix backend test",
+    "test:e2e": "npm --prefix frontend run test:e2e"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

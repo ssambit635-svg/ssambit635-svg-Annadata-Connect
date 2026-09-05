@@ -47,7 +47,7 @@ export default function IdCardPage() {
             <div className="idc-fields">
               <div className="idc-name">{card.name}</div>
               <div className="idc-row"><span>{t('idCard.farmerId')}</span><strong className="mono">{card.farmerId}</strong></div>
-              <div className="idc-row"><span>{t('idCard.mobile')}</span><strong>{card.phone}</strong></div>
+              <div className="idc-row"><span>{t('idCard.mobile')}</span><strong>{card.phone || t('auth.notLinked')}</strong></div>
               <div className="idc-row">
                 <span>{t('idCard.village')}</span>
                 <strong>{card.village ? cropName(card.village) : '—'} · {card.district}</strong>

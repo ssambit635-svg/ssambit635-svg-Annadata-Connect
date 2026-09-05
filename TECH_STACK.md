@@ -1,7 +1,7 @@
 # Annadata Connect — Tech Stack (Serial List)
 
 ## 1. Runtime & Language
-- **Node.js 20** — JavaScript runtime for the backend (ES Modules mode)
+- **Node.js 22+** — JavaScript runtime for the backend (ES Modules mode)
 - **JavaScript (ES2023)** — one language for both frontend and backend
 
 ## 2. Frontend (React App)
@@ -10,7 +10,7 @@
 3. **React Router 6** — page routing (public landing → role dashboards)
 4. **Fetch API** — HTTP calls to the backend via a central `api()` wrapper (auto-attaches JWT)
 5. **Custom i18n Context** — English + हिंदी translations (no external library)
-6. **Hand-written CSS design system** (`global.css`) — CSS variables, cards, shadows, hover effects; no UI library, keeps the app light (~80 KB gzipped)
+6. **Hand-written CSS design system** (`global.css`) — CSS variables, cards, shadows, hover effects; no UI library
 7. **Custom SVG icon system** (`components/Icon.jsx`) — 30 stroke icons, no emoji dependence
 
 ## 3. Backend (API Server)
@@ -21,6 +21,9 @@
 5. **morgan** — request logging
 6. **cors** — cross-origin control
 7. **Custom middleware** — auth guard, role guard, input validation, error handler
+8. **google-auth-library / Google Identity Services** — signed Google ID tokens and official account chooser
+9. **Twilio Verify / Nodemailer SMTP** — real SMS/email verification, never the notification simulator
+10. **express-rate-limit** — IP throttling alongside contact-level OTP limits
 
 ## 4. Database
 - **JSON file store** (`backend/data/db.json`) — zero-install demo database with seeded data
@@ -36,12 +39,15 @@
 - bcrypt password hashing
 - JWT expiry + role middleware on every protected route
 - Input validation on all write endpoints
-- Secrets only in `.env` (never in code)
+- Secrets only in backend environment settings (never in frontend code)
+- One-use Google nonces; expiring, attempt-limited OTPs; administrator-provisioned staff roles
+- Provider activation and single-process limitations: [AUTH_SETUP.md](AUTH_SETUP.md)
 
 ## 7. Testing & Tooling
 1. **Playwright (headless Chromium)** — end-to-end browser tests with screenshots
 2. **npm workspaces-style scripts** — `npm run setup` → `npm run build` → `npm run start`
 3. **Seed CLI** — `npm run seed` resets demo data
+4. **Node test runner + Supertest** — auth security, provider contracts, migrations, provisioning tests
 
 ## 8. Packaging
 - Single zip, single Node process — clone → setup → build → start → open `http://localhost:5000`
