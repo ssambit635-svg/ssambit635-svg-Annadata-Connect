@@ -1137,6 +1137,9 @@ table.data tbody tr:hover { background: #f4f8f5; }
 }
 .card.filters .field { margin-bottom: 0; }
 
+.card.level-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.card.level-tabs .btn .small { font-weight: 400; opacity: 0.75; }
+
 .price-chart { width: 100%; }
 .price-chart svg { width: 100%; height: auto; display: block; touch-action: pan-y; }
 .price-chart-readout {

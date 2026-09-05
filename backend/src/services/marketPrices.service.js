@@ -1,16 +1,19 @@
-// Filter + aggregate layer over the historical Agmarknet extract.
+// Filter + aggregate layer over the historical Agmarknet extracts (multilevel).
 //
-//   Historical CSV -> loadMarketPrices() -> (this file) -> routes -> frontend
+//   Historical CSVs -> loadMarketPrices() -> (this file) -> routes -> frontend
 //
-// Everything here is a pure read over the in-memory rows: filtering by
-// commodity / state / market / year, then rolling the monthly observations up
-// into the shapes the UI needs (trend line, seasonality, market comparison,
-// price benchmark). No ML, no forecasting - plain descriptive statistics on
-// observed mandi data, so every number on screen can be traced to a CSV row.
+// Everything here is a pure read over the in-memory rows: filtering by level /
+// commodity / state / district / market / year, then rolling the monthly
+// observations up into the shapes the UI needs (trend line, seasonality,
+// mandi/district/state comparison, price benchmark). No ML, no forecasting -
+// plain descriptive statistics on observed mandi data, so every number on
+// screen can be traced to a CSV row.
 
 import {
   loadMarketPrices,
+  rowsForLevel,
   commodityLabel,
+  levelLabel,
   MONTH_LABELS,
   CROP_COMMODITY,
 } from '../data/marketPrices.js';
@@ -47,30 +50,45 @@ function weightedPrice(rows) {
   return mean(rows.map((r) => r.modalPrice));
 }
 
+const finiteVals = (xs) => xs.filter((v) => Number.isFinite(v));
+const minOf = (xs) => {
+  const f = finiteVals(xs);
+  return f.length ? Math.min(...f) : null;
+};
+const maxOf = (xs) => {
+  const f = finiteVals(xs);
+  return f.length ? Math.max(...f) : null;
+};
+
 // ---------------------------------------------------------------------------
 // Filtering
 // ---------------------------------------------------------------------------
 
 /**
  * @param {object} q
+ * @param {string} [q.level]      'market' | 'district' | 'state' (default 'market')
  * @param {string} [q.commodity]  commodity slug, e.g. 'wheat'
  * @param {string} [q.cropId]     app crop id, e.g. 'crop-wheat' (mapped to a commodity)
  * @param {string} [q.state]      state name
- * @param {string} [q.market]     market/mandi name
+ * @param {string} [q.district]   district name
+ * @param {string} [q.market]     market/mandi name (market level only)
  * @param {number} [q.fromYear]
  * @param {number} [q.toYear]
  */
 export function filterRows(q = {}) {
-  const { rows } = loadMarketPrices();
+  const level = q.level || 'market';
+  const pool = rowsForLevel(level);
   const commodity = q.commodity || (q.cropId ? CROP_COMMODITY[q.cropId] : null);
   const state = q.state || null;
+  const district = q.district || null;
   const market = q.market || null;
   const fromYear = Number.isFinite(q.fromYear) ? q.fromYear : null;
   const toYear = Number.isFinite(q.toYear) ? q.toYear : null;
 
-  return rows.filter((r) => {
+  return pool.filter((r) => {
     if (commodity && r.commodity !== commodity) return false;
     if (state && r.stateName !== state) return false;
+    if (district && r.district !== district) return false;
     if (market && r.marketName !== market) return false;
     if (fromYear && r.year < fromYear) return false;
     if (toYear && r.year > toYear) return false;
@@ -87,24 +105,43 @@ export function catalogue() {
   const commodities = data.commodities.map((c) => {
     const rows = data.rows.filter((r) => r.commodity === c);
     const label = commodityLabel(c);
+    const years = rows.map((r) => r.year);
     return {
       commodity: c,
       nameEn: label.en,
       nameHi: label.hi,
+      // Mandi-level lists (kept for backward compatibility).
       states: [...new Set(rows.map((r) => r.stateName))].sort(),
       markets: [...new Set(rows.map((r) => r.marketName))].sort(),
       months: rows.length,
-      fromYear: Math.min(...rows.map((r) => r.year)),
-      toYear: Math.max(...rows.map((r) => r.year)),
+      fromYear: years.length ? Math.min(...years) : null,
+      toYear: years.length ? Math.max(...years) : null,
+      // Per-level coverage so clients can offer valid state/district options.
+      statesByLevel: {
+        market: [...new Set(data.rows.filter((r) => r.commodity === c).map((r) => r.stateName))].sort(),
+        district: [...new Set(data.districtRows.filter((r) => r.commodity === c).map((r) => r.stateName))].sort(),
+        state: [...new Set(data.stateRows.filter((r) => r.commodity === c).map((r) => r.stateName))].sort(),
+      },
+      districtCount: new Set(data.districtRows.filter((r) => r.commodity === c).map((r) => r.districtKey)).size,
     };
   });
 
   return {
     source: data.meta,
+    sources: { market: data.meta, levels: data.levelsMeta },
     coverage: data.coverage,
+    levels: data.levels,
+    levelNames: {
+      market: levelLabel('market'),
+      district: levelLabel('district'),
+      state: levelLabel('state'),
+    },
     commodities,
     states: data.states,
+    statesByLevel: data.statesByLevel,
     markets: data.markets,
+    districts: data.districts,
+    stateSeries: data.stateSeries,
     cropCommodityMap: CROP_COMMODITY,
     months: MONTH_LABELS.map((m, i) => ({ month: i + 1, nameEn: m.en, nameHi: m.hi })),
   };
@@ -116,8 +153,9 @@ export function catalogue() {
 
 /**
  * Monthly modal-price series for the selected slice. When more than one market
- * matches, the months are combined with an arrival-weighted average so the
- * caller always gets one clean line to plot.
+ * / district / state matches, the months are combined with an
+ * arrival-weighted average (plain mean where the level carries no arrivals)
+ * so the caller always gets one clean line to plot.
  */
 export function priceSeries(q = {}) {
   const rows = filterRows(q);
@@ -133,6 +171,8 @@ export function priceSeries(q = {}) {
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([period, group]) => {
       const [year, month] = period.split('-').map(Number);
+      const lo = minOf(group.map((r) => r.minPrice));
+      const hi = maxOf(group.map((r) => r.maxPrice));
       return {
         period,
         year,
@@ -140,8 +180,14 @@ export function priceSeries(q = {}) {
         monthEn: monthName(month).en,
         monthHi: monthName(month).hi,
         modalPrice: round(weightedPrice(group), 2),
-        minPrice: round(Math.min(...group.map((r) => r.minPrice)), 2),
-        maxPrice: round(Math.max(...group.map((r) => r.maxPrice)), 2),
+        minPrice: lo === null ? null : round(lo, 2),
+        maxPrice: hi === null ? null : round(hi, 2),
+        // A cross-mandi spread only means something for a single
+        // district/state; pooled months report no sd rather than a bogus one.
+        sdPrice: group.length === 1 && Number.isFinite(group[0].sdPrice) ? round(group[0].sdPrice, 2) : null,
+        nMandis: group.some((r) => Number.isFinite(r.nMandis))
+          ? group.reduce((a, r) => a + (r.nMandis || 0), 0)
+          : null,
         arrivalsMt: round(group.reduce((a, r) => a + r.arrivalsMt, 0), 2),
         nObs: group.reduce((a, r) => a + r.nObs, 0),
         markets: group.length,
@@ -161,6 +207,9 @@ export function priceSeries(q = {}) {
     summary: {
       months: points.length,
       dailyObservations: points.reduce((a, p) => a + p.nObs, 0),
+      mandiMonths: points.some((p) => Number.isFinite(p.nMandis))
+        ? points.reduce((a, p) => a + (p.nMandis || 0), 0)
+        : null,
       totalArrivalsMt: round(points.reduce((a, p) => a + p.arrivalsMt, 0), 2),
       averagePrice: round(mean(prices), 2),
       medianPrice: round(median(prices), 2),
@@ -180,13 +229,16 @@ export function priceSeries(q = {}) {
 }
 
 function normalisedQuery(q, rows) {
+  const level = q.level || 'market';
   const commodity = q.commodity || (q.cropId ? CROP_COMMODITY[q.cropId] : null) || rows[0]?.commodity || null;
   const label = commodity ? commodityLabel(commodity) : null;
   return {
+    level,
     commodity,
     commodityEn: label ? label.en : null,
     commodityHi: label ? label.hi : null,
     state: q.state || null,
+    district: q.district || null,
     market: q.market || null,
     fromYear: Number.isFinite(q.fromYear) ? q.fromYear : rows.length ? Math.min(...rows.map((r) => r.year)) : null,
     toYear: Number.isFinite(q.toYear) ? q.toYear : rows.length ? Math.max(...rows.map((r) => r.year)) : null,
@@ -237,12 +289,12 @@ export function seasonality(q = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// Market comparison: same commodity across the mandis in the extract
+// Market / district / state comparison
 // ---------------------------------------------------------------------------
 
 export function marketComparison(q = {}) {
-  const rows = filterRows(q);
-  if (!rows.length) return { query: normalisedQuery(q, []), markets: [] };
+  const rows = filterRows({ ...q, level: 'market' });
+  if (!rows.length) return { query: normalisedQuery({ ...q, level: 'market' }, []), markets: [] };
 
   const byMarket = new Map();
   for (const r of rows) {
@@ -274,7 +326,70 @@ export function marketComparison(q = {}) {
     })
     .sort((a, b) => b.last12MonthAverage - a.last12MonthAverage || a.marketName.localeCompare(b.marketName));
 
-  return { query: normalisedQuery(q, rows), markets };
+  return { query: normalisedQuery({ ...q, level: 'market' }, rows), markets };
+}
+
+function aggregateComparison(rows, keyFn, labelFn) {
+  const byKey = new Map();
+  for (const r of rows) {
+    const key = keyFn(r);
+    if (!byKey.has(key)) byKey.set(key, []);
+    byKey.get(key).push(r);
+  }
+
+  return [...byKey.entries()]
+    .map(([key, group]) => {
+      const sorted = [...group].sort((a, b) => a.period.localeCompare(b.period));
+      const latest = sorted[sorted.length - 1];
+      const prices = sorted.map((r) => r.modalPrice);
+      const last12 = sorted.slice(-12).map((r) => r.modalPrice);
+      const mandiCounts = finiteVals(sorted.map((r) => r.nMandis));
+      return {
+        key,
+        ...labelFn(latest),
+        months: sorted.length,
+        averagePrice: round(mean(prices), 2),
+        last12MonthAverage: round(mean(last12), 2),
+        minPrice: round(Math.min(...prices), 2),
+        maxPrice: round(Math.max(...prices), 2),
+        latestPrice: latest.modalPrice,
+        latestPeriod: latest.period,
+        latestSd: Number.isFinite(latest.sdPrice) ? round(latest.sdPrice, 2) : null,
+        latestMandis: Number.isFinite(latest.nMandis) ? latest.nMandis : null,
+        avgMandis: mandiCounts.length ? round(mean(mandiCounts), 1) : null,
+      };
+    })
+    .sort((a, b) => b.last12MonthAverage - a.last12MonthAverage || String(a.key).localeCompare(String(b.key)));
+}
+
+/** District-by-district comparison for one commodity (district level). */
+export function districtComparison(q = {}) {
+  const levelled = { ...q, level: 'district' };
+  const rows = filterRows(levelled);
+  if (!rows.length) return { query: normalisedQuery(levelled, []), districts: [] };
+  return {
+    query: normalisedQuery(levelled, rows),
+    districts: aggregateComparison(
+      rows,
+      (r) => r.districtKey,
+      (r) => ({ district: r.district, stateName: r.stateName })
+    ),
+  };
+}
+
+/** State-by-state comparison for one commodity (state level). */
+export function stateComparison(q = {}) {
+  const levelled = { ...q, level: 'state' };
+  const rows = filterRows(levelled);
+  if (!rows.length) return { query: normalisedQuery(levelled, []), states: [] };
+  return {
+    query: normalisedQuery(levelled, rows),
+    states: aggregateComparison(
+      rows,
+      (r) => r.stateName,
+      (r) => ({ stateName: r.stateName })
+    ),
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -290,15 +405,22 @@ export function yearlySummary(q = {}) {
   }
   const years = [...byYear.entries()]
     .sort((a, b) => a[0] - b[0])
-    .map(([year, group]) => ({
-      year,
-      averagePrice: round(weightedPrice(group), 2),
-      minPrice: round(Math.min(...group.map((r) => r.minPrice)), 2),
-      maxPrice: round(Math.max(...group.map((r) => r.maxPrice)), 2),
-      arrivalsMt: round(group.reduce((a, r) => a + r.arrivalsMt, 0), 2),
-      months: new Set(group.map((r) => r.period)).size,
-      dailyObservations: group.reduce((a, r) => a + r.nObs, 0),
-    }));
+    .map(([year, group]) => {
+      const lo = minOf(group.map((r) => r.minPrice));
+      const hi = maxOf(group.map((r) => r.maxPrice));
+      return {
+        year,
+        averagePrice: round(weightedPrice(group), 2),
+        minPrice: lo === null ? null : round(lo, 2),
+        maxPrice: hi === null ? null : round(hi, 2),
+        arrivalsMt: round(group.reduce((a, r) => a + r.arrivalsMt, 0), 2),
+        mandiMonths: group.some((r) => Number.isFinite(r.nMandis))
+          ? group.reduce((a, r) => a + (r.nMandis || 0), 0)
+          : null,
+        months: new Set(group.map((r) => r.period)).size,
+        dailyObservations: group.reduce((a, r) => a + r.nObs, 0),
+      };
+    });
   return { query: normalisedQuery(q, rows), years };
 }
 
@@ -331,7 +453,9 @@ export function benchmark(q = {}) {
   else if (pct <= 25) verdict = 'WEAK';
 
   const label = normalisedQuery(q, rows);
-  const scope = [label.market, label.state].filter(Boolean).join(', ') || 'the mandis in this dataset';
+  const scope =
+    [label.market, label.district, label.state].filter(Boolean).join(', ') ||
+    `the ${levelLabel(label.level).en.toLowerCase()}s in this dataset`;
 
   return {
     available: true,

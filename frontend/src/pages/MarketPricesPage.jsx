@@ -6,21 +6,30 @@ import { PriceTrendChart, SeasonalityBars } from '../components/PriceTrendChart.
 import { Loading, ErrorState, EmptyState } from '../components/States.jsx';
 import { formatInr } from '../utils/format.js';
 
-// Historical mandi prices: Agmarknet monthly panel (2021-2025) served by
+const FALLBACK_LEVEL_NAMES = {
+  market: { en: 'Mandi', hi: 'मंडी' },
+  district: { en: 'District', hi: 'ज़िला' },
+  state: { en: 'State', hi: 'राज्य' },
+};
+
+// Historical mandi prices: multilevel Agmarknet panel (2021-2025) served by
 // /api/market-prices. Every figure on this page is computed by the backend
-// from the CSV extract in backend/src/data/agmarknet - nothing is simulated.
+// from the CSV extracts in backend/src/data/agmarknet - nothing is simulated.
 export default function MarketPricesPage() {
   const { t, lang } = useI18n();
 
   const [meta, setMeta] = useState(null);
   const [metaError, setMetaError] = useState(null);
-  const [filters, setFilters] = useState({ commodity: '', state: '', market: '', fromYear: '', toYear: '' });
+  const [filters, setFilters] = useState({ level: 'market', commodity: '', state: '', district: '', market: '', fromYear: '', toYear: '' });
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showRows, setShowRows] = useState(false);
 
-  // 1. Load the catalogue (commodities/states/markets + provenance).
+  const level = filters.level || 'market';
+  const levelNames = meta?.levelNames || FALLBACK_LEVEL_NAMES;
+
+  // 1. Load the catalogue (commodities/states/districts/markets + provenance).
   useEffect(() => {
     marketPriceService
       .meta()
@@ -42,6 +51,26 @@ export default function MarketPricesPage() {
     [meta, filters.commodity]
   );
 
+  const stateOptions = useMemo(() => {
+    if (!meta) return [];
+    return (
+      commodityInfo?.statesByLevel?.[level] ||
+      meta.statesByLevel?.[level] ||
+      commodityInfo?.states ||
+      meta.states ||
+      []
+    );
+  }, [meta, commodityInfo, level]);
+
+  const districtOptions = useMemo(() => {
+    if (!meta?.districts) return [];
+    return meta.districts
+      .filter((d) => (!filters.commodity || d.commodity === filters.commodity) && (!filters.state || d.stateName === filters.state))
+      .map((d) => d.district)
+      .filter((v, i, arr) => arr.indexOf(v) === i)
+      .sort();
+  }, [meta, filters.commodity, filters.state]);
+
   const marketOptions = useMemo(() => {
     if (!meta) return [];
     return meta.markets
@@ -55,59 +84,82 @@ export default function MarketPricesPage() {
   useEffect(() => {
     if (!filters.commodity) return;
     const query = {
+      level,
       commodity: filters.commodity,
       state: filters.state || undefined,
-      market: filters.market || undefined,
+      district: level === 'district' ? filters.district || undefined : undefined,
+      market: level === 'market' ? filters.market || undefined : undefined,
       fromYear: filters.fromYear || undefined,
       toYear: filters.toYear || undefined,
     };
+    const compareQuery = { commodity: query.commodity, fromYear: query.fromYear, toYear: query.toYear };
+    const compareCall =
+      level === 'district'
+        ? marketPriceService.districts(compareQuery)
+        : level === 'state'
+          ? marketPriceService.states(compareQuery)
+          : marketPriceService.markets(compareQuery);
     let cancelled = false;
     setLoading(true);
     setError(null);
     Promise.all([
       marketPriceService.series(query),
       marketPriceService.seasonality(query),
-      marketPriceService.markets({ commodity: query.commodity, fromYear: query.fromYear, toYear: query.toYear }),
+      compareCall,
       marketPriceService.yearly(query),
-      marketPriceService.rows({ ...query, limit: 600 }),
+      marketPriceService.rows({ ...query, limit: 1000 }),
     ])
-      .then(([series, season, markets, yearly, rows]) => {
-        if (!cancelled) setData({ series, season, markets, yearly, rows });
+      .then(([series, season, compare, yearly, rows]) => {
+        if (!cancelled) setData({ series, season, compare: { level, payload: compare }, yearly, rows });
       })
       .catch((e) => !cancelled && setError(e))
       .finally(() => !cancelled && setLoading(false));
     return () => {
       cancelled = true;
     };
-  }, [filters.commodity, filters.state, filters.market, filters.fromYear, filters.toYear]);
+  }, [level, filters.commodity, filters.state, filters.district, filters.market, filters.fromYear, filters.toYear]);
 
   function update(patch) {
     setFilters((f) => {
       const next = { ...f, ...patch };
-      // Changing commodity/state can invalidate the chosen market.
-      if (patch.commodity !== undefined || patch.state !== undefined) next.market = '';
+      // Changing level/commodity/state can invalidate the chosen area.
+      if (patch.level !== undefined) {
+        next.state = '';
+        next.district = '';
+        next.market = '';
+      } else if (patch.commodity !== undefined || patch.state !== undefined) {
+        next.district = '';
+        next.market = '';
+      }
       return next;
     });
   }
 
   function downloadCsv() {
     if (!data?.rows?.rows?.length) return;
-    const header = [
-      'state_name', 'market_name', 'district', 'commodity', 'year', 'month',
-      'arrivals_mt', 'modal_price_avg', 'min_price_avg', 'max_price_avg', 'n_obs', 'mandi_id',
-    ];
+    const header =
+      level === 'district'
+        ? ['state_name', 'district', 'commodity', 'year', 'month', 'price_mean', 'price_sd', 'n_mandis']
+        : level === 'state'
+          ? ['state_name', 'commodity', 'year', 'month', 'price_mean', 'price_sd', 'n_mandis']
+          : ['state_name', 'market_name', 'district', 'commodity', 'year', 'month',
+            'arrivals_mt', 'modal_price_avg', 'min_price_avg', 'max_price_avg', 'n_obs', 'mandi_id'];
     const lines = [header.join(',')];
     for (const r of data.rows.rows) {
-      lines.push([
-        r.stateName, `"${r.marketName}"`, r.district, r.commodity, r.year, r.month,
-        r.arrivalsMt, r.modalPriceAvg, r.minPriceAvg, r.maxPriceAvg, r.nObs, r.mandiId,
-      ].join(','));
+      const row =
+        level === 'district'
+          ? [r.stateName, `"${r.district}"`, r.commodity, r.year, r.month, r.modalPriceAvg, r.priceSd ?? '', r.nMandis ?? '']
+          : level === 'state'
+            ? [r.stateName, r.commodity, r.year, r.month, r.modalPriceAvg, r.priceSd ?? '', r.nMandis ?? '']
+            : [r.stateName, `"${r.marketName}"`, r.district, r.commodity, r.year, r.month,
+              r.arrivalsMt, r.modalPriceAvg, r.minPriceAvg, r.maxPriceAvg, r.nObs, r.mandiId];
+      lines.push(row.join(','));
     }
     const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `agmarknet_${filters.commodity}_${filters.fromYear}_${filters.toYear}.csv`;
+    a.download = `agmarknet_${level}_${filters.commodity}_${filters.fromYear}_${filters.toYear}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -116,8 +168,18 @@ export default function MarketPricesPage() {
   if (!meta) return <Loading />;
 
   const src = meta.source?.source;
+  const levelsMeta = meta.sources?.levels;
   const summary = data?.series?.summary;
   const season = data?.season;
+  const compareEntries =
+    data?.compare?.level === 'district'
+      ? data.compare.payload.districts || []
+      : data?.compare?.level === 'state'
+        ? data.compare.payload.states || []
+        : data?.compare?.payload.markets || [];
+  const totalRows = meta.levels
+    ? meta.levels.market.rowCount + meta.levels.district.rowCount + meta.levels.state.rowCount
+    : meta.coverage.rowCount;
 
   return (
     <>
@@ -135,13 +197,22 @@ export default function MarketPricesPage() {
       <div className="card source-note">
         <p style={{ margin: 0 }}>
           <Icon name="info" size={15} />{' '}
-          {t('prices.sourceLine', {
-            rows: meta.coverage.rowCount,
-            markets: meta.coverage.seriesCount,
-            from: meta.coverage.fromPeriod,
-            to: meta.coverage.toPeriod,
-            obs: meta.coverage.dailyObservations.toLocaleString('en-IN'),
-          })}
+          {meta.levels
+            ? t('prices.sourceLineMulti', {
+              rows: totalRows.toLocaleString('en-IN'),
+              mandiRows: meta.levels.market.rowCount.toLocaleString('en-IN'),
+              districtRows: meta.levels.district.rowCount.toLocaleString('en-IN'),
+              stateRows: meta.levels.state.rowCount.toLocaleString('en-IN'),
+              from: meta.coverage.fromPeriod,
+              to: meta.coverage.toPeriod,
+            })
+            : t('prices.sourceLine', {
+              rows: meta.coverage.rowCount,
+              markets: meta.coverage.seriesCount,
+              from: meta.coverage.fromPeriod,
+              to: meta.coverage.toPeriod,
+              obs: meta.coverage.dailyObservations.toLocaleString('en-IN'),
+            })}
         </p>
         {src && (
           <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: 'var(--c-text-soft)' }}>
@@ -149,9 +220,37 @@ export default function MarketPricesPage() {
             <a href={src.repository} target="_blank" rel="noreferrer">
               {src.repository.replace('https://github.com/', '')}
             </a>{' '}
-            · <code>{src.file}</code> · {t('prices.sourceUpstream', { n: src.upstreamRows.toLocaleString('en-IN') })}
+            · <code>{src.file}</code>
+            {levelsMeta && (
+              <>
+                {' '}· <code>{levelsMeta.extract.district.file}</code> · <code>{levelsMeta.extract.state.file}</code>
+              </>
+            )}{' '}
+            · {t('prices.sourceUpstream', { n: src.upstreamRows.toLocaleString('en-IN') })}
           </p>
         )}
+      </div>
+
+      {/* Level switch: mandi detail, district means, or state means. */}
+      <div className="card level-tabs" role="tablist" aria-label={t('prices.level')}>
+        {['market', 'district', 'state'].map((lv) => (
+          <button
+            key={lv}
+            role="tab"
+            aria-selected={level === lv}
+            type="button"
+            className={`btn btn-sm ${level === lv ? '' : 'btn-outline'}`}
+            onClick={() => update({ level: lv })}
+          >
+            {lang === 'hi' ? levelNames[lv]?.hi : levelNames[lv]?.en}
+            {meta.levels && (
+              <span className="soft small" style={{ marginLeft: '0.35rem' }}>
+                {meta.levels[lv].seriesCount}
+              </span>
+            )}
+          </button>
+        ))}
+        <span className="soft small" style={{ marginLeft: '0.4rem' }}>{t(`prices.levelHint${level[0].toUpperCase()}${level.slice(1)}`)}</span>
       </div>
 
       {/* Filter -> aggregate -> API -> chart */}
@@ -170,20 +269,33 @@ export default function MarketPricesPage() {
           <label htmlFor="f-state">{t('prices.state')}</label>
           <select id="f-state" className="select" value={filters.state} onChange={(e) => update({ state: e.target.value })}>
             <option value="">{t('prices.allStates')}</option>
-            {(commodityInfo?.states || meta.states).map((s) => (
+            {stateOptions.map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
         </div>
-        <div className="field">
-          <label htmlFor="f-market">{t('prices.market')}</label>
-          <select id="f-market" className="select" value={filters.market} onChange={(e) => update({ market: e.target.value })}>
-            <option value="">{t('prices.allMarkets')}</option>
-            {marketOptions.map((m) => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
-        </div>
+        {level === 'district' && (
+          <div className="field">
+            <label htmlFor="f-district">{t('prices.district')}</label>
+            <select id="f-district" className="select" value={filters.district} onChange={(e) => update({ district: e.target.value })}>
+              <option value="">{t('prices.allDistricts')}</option>
+              {districtOptions.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          </div>
+        )}
+        {level === 'market' && (
+          <div className="field">
+            <label htmlFor="f-market">{t('prices.market')}</label>
+            <select id="f-market" className="select" value={filters.market} onChange={(e) => update({ market: e.target.value })}>
+              <option value="">{t('prices.allMarkets')}</option>
+              {marketOptions.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="field">
           <label htmlFor="f-from">{t('prices.fromYear')}</label>
           <select id="f-from" className="select" value={filters.fromYear} onChange={(e) => update({ fromYear: e.target.value })}>
@@ -234,7 +346,11 @@ export default function MarketPricesPage() {
             </div>
             <div className="stat">
               <div className="num">{summary.months}</div>
-              <div className="lbl">{t('prices.monthsCovered', { obs: summary.dailyObservations })}</div>
+              <div className="lbl">
+                {level === 'market'
+                  ? t('prices.monthsCovered', { obs: summary.dailyObservations })
+                  : t('prices.monthsCoveredAgg', { m: (summary.mandiMonths ?? 0).toLocaleString('en-IN') })}
+              </div>
             </div>
           </div>
 
@@ -242,12 +358,21 @@ export default function MarketPricesPage() {
             <h2 style={{ marginTop: 0, fontSize: '1.05rem' }}>
               {t('prices.trendTitle')}
               <span className="chart-legend">
-                <span className="k line" /> {t('prices.legendModal')}
-                <span className="k band" /> {t('prices.legendBand')}
-                <span className="k bar" /> {t('prices.legendArrivals')}
+                <span className="k line" /> {level === 'market' ? t('prices.legendModal') : t('prices.legendMean')}
+                {level === 'market' && (
+                  <>
+                    <span className="k band" /> {t('prices.legendBand')}
+                    <span className="k bar" /> {t('prices.legendArrivals')}
+                  </>
+                )}
               </span>
             </h2>
-            <PriceTrendChart points={data.series.points} ariaLabel={t('prices.trendAria')} />
+            <PriceTrendChart
+              points={data.series.points}
+              showBand={level === 'market'}
+              showArrivals={level === 'market'}
+              ariaLabel={t(level === 'market' ? 'prices.trendAria' : 'prices.trendAriaAgg')}
+            />
           </div>
 
           <div className="grid two">
@@ -277,7 +402,7 @@ export default function MarketPricesPage() {
                       <th>{t('prices.year')}</th>
                       <th>{t('prices.avgPrice')}</th>
                       <th>{t('prices.range')}</th>
-                      <th>{t('prices.arrivals')}</th>
+                      <th>{level === 'market' ? t('prices.arrivals') : t('prices.mandiMonths')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -286,55 +411,90 @@ export default function MarketPricesPage() {
                         <td>{y.year}</td>
                         <td className="mono">{formatInr(Math.round(y.averagePrice))}</td>
                         <td className="mono soft">
-                          {Math.round(y.minPrice).toLocaleString('en-IN')}–{Math.round(y.maxPrice).toLocaleString('en-IN')}
+                          {y.minPrice === null || y.maxPrice === null
+                            ? '—'
+                            : `${Math.round(y.minPrice).toLocaleString('en-IN')}–${Math.round(y.maxPrice).toLocaleString('en-IN')}`}
                         </td>
-                        <td className="mono">{Math.round(y.arrivalsMt).toLocaleString('en-IN')}</td>
+                        <td className="mono">
+                          {level === 'market'
+                            ? Math.round(y.arrivalsMt).toLocaleString('en-IN')
+                            : (y.mandiMonths ?? 0).toLocaleString('en-IN')}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <p className="foot-note">{t('prices.yearNote')}</p>
+              <p className="foot-note">{t(level === 'market' ? 'prices.yearNote' : 'prices.yearNoteAgg')}</p>
             </div>
           </div>
 
           <div className="card">
-            <h2 style={{ marginTop: 0, fontSize: '1.05rem' }}>{t('prices.compareTitle')}</h2>
+            <h2 style={{ marginTop: 0, fontSize: '1.05rem' }}>
+              {level === 'district' ? t('prices.compareTitleDistrict') : level === 'state' ? t('prices.compareTitleState') : t('prices.compareTitle')}
+            </h2>
             <div className="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th>{t('prices.market')}</th>
-                    <th>{t('prices.state')}</th>
+                    <th>{level === 'district' ? t('prices.district') : level === 'state' ? t('prices.state') : t('prices.market')}</th>
+                    {level === 'district' && <th>{t('prices.state')}</th>}
                     <th>{t('prices.avg12')}</th>
                     <th>{t('prices.periodAvg')}</th>
                     <th>{t('prices.latest')}</th>
                     <th>{t('prices.months')}</th>
+                    {level !== 'market' && <th>{t('prices.mandis')}</th>}
                   </tr>
                 </thead>
                 <tbody>
-                  {data.markets.markets.map((m, i) => (
-                    <tr key={`${m.stateName}-${m.marketName}`} className={filters.market === m.marketName ? 'row-active' : ''}>
+                  {compareEntries.map((m, i) => (
+                    <tr
+                      key={level === 'market' ? `${m.stateName}-${m.marketName}` : m.key}
+                      className={
+                        (level === 'market' && filters.market === m.marketName) ||
+                        (level === 'district' && filters.district === m.district && filters.state === m.stateName) ||
+                        (level === 'state' && filters.state === m.stateName)
+                          ? 'row-active'
+                          : ''
+                      }
+                    >
                       <td>
                         {i === 0 && <span className="badge success" style={{ marginRight: '0.4rem' }}>{t('prices.topPaying')}</span>}
-                        <button className="linkish" type="button" onClick={() => update({ state: m.stateName, market: m.marketName })}>
-                          {m.marketName}
+                        <button
+                          className="linkish"
+                          type="button"
+                          onClick={() =>
+                            level === 'district'
+                              ? update({ state: m.stateName, district: m.district })
+                              : level === 'state'
+                                ? update({ state: m.stateName })
+                                : update({ state: m.stateName, market: m.marketName })
+                          }
+                        >
+                          {level === 'district' ? m.district : level === 'state' ? m.stateName : m.marketName}
                         </button>
-                        {m.district && <div className="soft small">{m.district}</div>}
+                        {level === 'market' && m.district && <div className="soft small">{m.district}</div>}
                       </td>
-                      <td>{m.stateName}</td>
+                      {level === 'district' && <td>{m.stateName}</td>}
                       <td className="mono">{formatInr(Math.round(m.last12MonthAverage))}</td>
                       <td className="mono">{formatInr(Math.round(m.averagePrice))}</td>
                       <td className="mono">
                         {formatInr(Math.round(m.latestPrice))} <span className="soft small">{m.latestPeriod}</span>
                       </td>
                       <td className="mono">{m.months}</td>
+                      {level !== 'market' && <td className="mono soft">~{m.avgMandis}</td>}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <p className="foot-note">{t('prices.compareNote')}</p>
+            <p className="foot-note">
+              {level === 'district'
+                ? t('prices.compareNoteDistrict')
+                : level === 'state'
+                  ? t('prices.compareNoteState')
+                  : t('prices.compareNote')}
+            </p>
           </div>
 
           <div className="card">
@@ -352,33 +512,61 @@ export default function MarketPricesPage() {
                   <thead>
                     <tr>
                       <th>state_name</th>
-                      <th>market_name</th>
+                      {level === 'market' && <th>market_name</th>}
+                      {level === 'district' && <th>district</th>}
                       <th>commodity</th>
                       <th>year</th>
                       <th>month</th>
-                      <th>arrivals_mt</th>
-                      <th>modal_price_avg</th>
-                      <th>n_obs</th>
+                      {level === 'market' ? (
+                        <>
+                          <th>arrivals_mt</th>
+                          <th>modal_price_avg</th>
+                          <th>n_obs</th>
+                        </>
+                      ) : (
+                        <>
+                          <th>price_mean</th>
+                          <th>price_sd</th>
+                          <th>n_mandis</th>
+                        </>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
                     {data.rows.rows.map((r) => (
-                      <tr key={`${r.marketName}-${r.commodity}-${r.year}-${r.month}`}>
+                      <tr key={level === 'market' ? `${r.marketName}-${r.commodity}-${r.year}-${r.month}` : `${r.stateName}-${r.district}-${r.commodity}-${r.year}-${r.month}`}>
                         <td>{r.stateName}</td>
-                        <td>{r.marketName}</td>
+                        {level === 'market' && <td>{r.marketName}</td>}
+                        {level === 'district' && <td>{r.district}</td>}
                         <td>{r.commodity}</td>
                         <td className="mono">{r.year}</td>
                         <td className="mono">{r.month}</td>
-                        <td className="mono">{r.arrivalsMt.toLocaleString('en-IN')}</td>
-                        <td className="mono">{r.modalPriceAvg.toLocaleString('en-IN')}</td>
-                        <td className="mono">{r.nObs}</td>
+                        {level === 'market' ? (
+                          <>
+                            <td className="mono">{r.arrivalsMt.toLocaleString('en-IN')}</td>
+                            <td className="mono">{r.modalPriceAvg.toLocaleString('en-IN')}</td>
+                            <td className="mono">{r.nObs}</td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="mono">{r.modalPriceAvg.toLocaleString('en-IN')}</td>
+                            <td className="mono">{r.priceSd ?? '—'}</td>
+                            <td className="mono">{r.nMandis ?? '—'}</td>
+                          </>
+                        )}
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             )}
-            <p className="foot-note">{t('prices.rowsNote')}</p>
+            <p className="foot-note">
+              {level === 'district'
+                ? t('prices.rowsNoteDistrict')
+                : level === 'state'
+                  ? t('prices.rowsNoteState')
+                  : t('prices.rowsNote')}
+            </p>
           </div>
         </>
       )}

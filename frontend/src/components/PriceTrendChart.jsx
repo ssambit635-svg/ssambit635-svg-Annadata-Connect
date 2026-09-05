@@ -138,11 +138,23 @@ export function PriceTrendChart({ points, showBand = true, showArrivals = true, 
           <>
             <strong>{fmtX(points[hover])}</strong>
             <span>₹{points[hover].modalPrice.toLocaleString('en-IN')}/q</span>
-            <span className="soft">
-              ₹{points[hover].minPrice?.toLocaleString('en-IN')}–₹{points[hover].maxPrice?.toLocaleString('en-IN')}
-            </span>
-            <span className="soft">{points[hover].arrivalsMt?.toLocaleString('en-IN')} MT</span>
-            <span className="soft">n={points[hover].nObs}</span>
+            {points[hover].minPrice !== null && points[hover].minPrice !== undefined && (
+              <span className="soft">
+                ₹{points[hover].minPrice?.toLocaleString('en-IN')}–₹{points[hover].maxPrice?.toLocaleString('en-IN')}
+              </span>
+            )}
+            {points[hover].sdPrice !== null && points[hover].sdPrice !== undefined && (
+              <span className="soft">±₹{Number(points[hover].sdPrice).toLocaleString('en-IN')}</span>
+            )}
+            {(points[hover].arrivalsMt > 0 || points[hover].nObs > 0) && (
+              <span className="soft">{points[hover].arrivalsMt?.toLocaleString('en-IN')} MT</span>
+            )}
+            {points[hover].nObs > 0 && <span className="soft">n={points[hover].nObs}</span>}
+            {points[hover].nMandis > 0 && (
+              <span className="soft">
+                {points[hover].nMandis} mandi{points[hover].nMandis === 1 ? '' : 's'}
+              </span>
+            )}
           </>
         ) : (
           <span className="soft">{ariaLabel}</span>

@@ -43,19 +43,21 @@ layer (`frontend/src/services/api/*`) implements exactly these endpoints — not
 
 ## Historical mandi prices (public, read-only)
 
-Real Agmarknet monthly panel — see [HISTORICAL_DATA.md](HISTORICAL_DATA.md) for provenance.
-Common query params: `commodity` **or** `cropId` (`crop-paddy|crop-wheat|crop-maize|crop-mustard|crop-cotton`),
-`state`, `market`, `fromYear`, `toYear`.
+Real multilevel Agmarknet panel (mandi / district / state) — see [HISTORICAL_DATA.md](HISTORICAL_DATA.md) for provenance.
+Common query params: `level` (`market` default · `district` · `state`), `commodity` **or** `cropId`
+(`crop-paddy|crop-wheat|crop-maize|crop-mustard|crop-cotton`), `state`, `district`, `market`, `fromYear`, `toYear`.
 
 | Method | Endpoint                            | Extra params        | Response                                                                 |
 | ------ | ----------------------------------- | ------------------- | ------------------------------------------------------------------------ |
-| GET    | `/api/market-prices/meta`           | –                   | `{source, coverage, commodities[], states[], markets[], cropCommodityMap, months[]}` |
-| GET    | `/api/market-prices/series`         | –                   | `{query, points:[{period,year,month,modalPrice,minPrice,maxPrice,arrivalsMt,nObs}], summary}` |
+| GET    | `/api/market-prices/meta`           | –                   | `{source, sources, coverage, levels, levelNames, commodities[], states[], statesByLevel, markets[], districts[], stateSeries[], cropCommodityMap, months[]}` |
+| GET    | `/api/market-prices/series`         | –                   | `{query{level,…}, points:[{period,modalPrice,minPrice,maxPrice,sdPrice,nMandis,arrivalsMt,nObs}], summary}` |
 | GET    | `/api/market-prices/seasonality`    | –                   | `{query, overallAveragePrice, months:[{month,averagePrice,index,arrivalsMt}], best, worst, spreadPercent}` |
-| GET    | `/api/market-prices/markets`        | –                   | `{query, markets:[{marketName,stateName,averagePrice,last12MonthAverage,latestPrice,months}]}` |
-| GET    | `/api/market-prices/yearly`         | –                   | `{query, years:[{year,averagePrice,minPrice,maxPrice,arrivalsMt,months}]}` |
+| GET    | `/api/market-prices/markets`        | –                   | `{query, markets:[{marketName,stateName,averagePrice,last12MonthAverage,latestPrice,months}]}` (mandi level) |
+| GET    | `/api/market-prices/districts`      | –                   | `{query, districts:[{district,stateName,averagePrice,last12MonthAverage,latestPrice,avgMandis,months}]}` (district level) |
+| GET    | `/api/market-prices/states`         | –                   | `{query, states:[{stateName,averagePrice,last12MonthAverage,latestPrice,avgMandis,months}]}` (state level) |
+| GET    | `/api/market-prices/yearly`         | –                   | `{query, years:[{year,averagePrice,minPrice,maxPrice,arrivalsMt,mandiMonths,months}]}` |
 | GET    | `/api/market-prices/benchmark`      | `pricePerQuintal`   | `{available, percentile, verdict:'STRONG'\|'TYPICAL'\|'WEAK', historicalAverage, last12MonthAverage, messageEn, messageHi}` |
-| GET    | `/api/market-prices/rows`           | `limit` (≤1000)     | `{total, limit, rows:[…raw CSV fields]}` |
+| GET    | `/api/market-prices/rows`           | `limit` (≤1000)     | `{total, limit, rows:[…raw CSV fields + level]}` |
 
 Additional error code: `NO_HISTORY_FOR_CROP` (400) — the crop has no counterpart in the dataset.
 

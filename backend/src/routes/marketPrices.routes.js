@@ -1,27 +1,33 @@
 import { Router } from 'express';
 import { ApiError } from '../middleware/error.js';
-import { CROP_COMMODITY, loadMarketPrices } from '../data/marketPrices.js';
+import { CROP_COMMODITY, PRICE_LEVELS, loadMarketPrices } from '../data/marketPrices.js';
 import {
   catalogue,
   filterRows,
   priceSeries,
   seasonality,
   marketComparison,
+  districtComparison,
+  stateComparison,
   yearlySummary,
   benchmark,
 } from '../services/marketPrices.service.js';
 
-// Public read-only API over the historical Agmarknet mandi panel.
-//   Historical CSV -> data/marketPrices.js -> services/marketPrices.service.js
-//                  -> these routes -> frontend
+// Public read-only API over the historical Agmarknet panels (mandi, district
+// and state levels).
+//   Historical CSVs -> data/marketPrices.js -> services/marketPrices.service.js
+//                   -> these routes -> frontend
 // Open like /api/reference: it is published government market data and the
 // landing page shows it before a farmer signs in.
 const router = Router();
 
 function parseQuery(req) {
-  const { commodity, cropId, state, market, fromYear, toYear } = req.query;
+  const { level, commodity, cropId, state, district, market, fromYear, toYear } = req.query;
   const data = loadMarketPrices();
 
+  if (level && !PRICE_LEVELS.includes(String(level))) {
+    throw new ApiError(400, 'VALIDATION_ERROR', `Unknown level '${level}'. Known: ${PRICE_LEVELS.join(', ')}.`);
+  }
   if (commodity && !data.commodities.includes(String(commodity))) {
     throw new ApiError(400, 'VALIDATION_ERROR', `Unknown commodity '${commodity}'. Known: ${data.commodities.join(', ')}.`);
   }
@@ -41,9 +47,11 @@ function parseQuery(req) {
   };
 
   return {
+    level: level ? String(level) : undefined,
     commodity: commodity ? String(commodity) : undefined,
     cropId: cropId ? String(cropId) : undefined,
     state: state ? String(state) : undefined,
+    district: district ? String(district) : undefined,
     market: market ? String(market) : undefined,
     fromYear: yr(fromYear, 'fromYear'),
     toYear: yr(toYear, 'toYear'),
@@ -63,7 +71,7 @@ function wrap(handler) {
 // GET /api/market-prices/meta — dataset provenance, coverage and filter options.
 router.get('/meta', wrap((req, res) => res.json(catalogue())));
 
-// GET /api/market-prices/series?commodity=&state=&market=&fromYear=&toYear=
+// GET /api/market-prices/series?level=&commodity=&state=&district=&market=&fromYear=&toYear=
 // Monthly modal price + arrivals trend for the selected slice.
 router.get('/series', wrap((req, res) => res.json(priceSeries(parseQuery(req)))));
 
@@ -72,6 +80,14 @@ router.get('/seasonality', wrap((req, res) => res.json(seasonality(parseQuery(re
 
 // GET /api/market-prices/markets?... — mandi-by-mandi comparison for a commodity.
 router.get('/markets', wrap((req, res) => res.json(marketComparison(parseQuery(req)))));
+
+// GET /api/market-prices/districts?... — district-by-district comparison.
+// Always reads the district level; other filters narrow the pool.
+router.get('/districts', wrap((req, res) => res.json(districtComparison(parseQuery(req)))));
+
+// GET /api/market-prices/states?... — state-by-state comparison.
+// Always reads the state level; other filters narrow the pool.
+router.get('/states', wrap((req, res) => res.json(stateComparison(parseQuery(req)))));
 
 // GET /api/market-prices/yearly?... — year-by-year roll-up.
 router.get('/yearly', wrap((req, res) => res.json(yearlySummary(parseQuery(req)))));
@@ -97,6 +113,7 @@ router.get('/rows', wrap((req, res) => {
     total: rows.length,
     limit,
     rows: rows.slice(0, limit).map((r) => ({
+      level: r.level,
       stateName: r.stateName,
       marketName: r.marketName,
       district: r.district,
@@ -107,6 +124,8 @@ router.get('/rows', wrap((req, res) => {
       modalPriceAvg: r.modalPrice,
       minPriceAvg: r.minPrice,
       maxPriceAvg: r.maxPrice,
+      priceSd: r.sdPrice,
+      nMandis: r.nMandis,
       nObs: r.nObs,
       mandiId: r.mandiId,
     })),
