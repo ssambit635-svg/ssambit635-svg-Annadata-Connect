@@ -1,0 +1,237 @@
+/* ============================================================================
+   ANNADATA CONNECT — v4 MOBILE HARDENING & DE-CONGESTION LAYER (loaded last)
+   ----------------------------------------------------------------------------
+   What this layer does:
+   • Fixes layout breakdowns on small phones (≈320–390 px wide) that make the
+     app look crowded and, on low-end devices, sluggish/crashy:
+       - bottom tab bar rebuilt as flexbox (equal, non-overflowing tabs even
+         with 5 tabs + long Hindi/Odia labels at 320 px)
+       - stat grids never collapse into one endless column
+       - quick-action tiles get room to breathe on narrow screens
+       - tables, cards, headings, inputs tuned for phone density
+   • Prevents the classic Android/iOS WebView annoyances:
+       - iOS auto-zoom on focus (inputs kept at 16 px)
+       - accidental pull-to-refresh / swipe-back that looks like a crash
+       - layout viewport jumps from missing dvh fallbacks
+   • Script-aware fonts (Odia/Devanagari first) so glyphs never fall back to
+     boxy system fonts and lines never clip.
+   ========================================================================= */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Keep pull-to-refresh / overscroll glow from restarting the app mid-scroll
+   (a "crash" that is actually a refresh gesture). Buttons exist for refresh. */
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* ---------- Script-aware typography: put the active script's font first ----
+   Fontsource registers these families; placing them first means Odia and
+   Devanagari glyphs always render from the bundled font (no tofu boxes) and
+   Latin text inside them stays crisp too. */
+html[data-lang='or'] body { font-family: 'Noto Sans Oriya', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+html[data-lang='hi'] body { font-family: 'Noto Sans Devanagari', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+html[data-lang='or'] .app-header, html[data-lang='hi'] .app-header { font-family: inherit; }
+
+/* ---------- Assistant panel: dvh fallback for older WebViews ---------- */
+.assistant-panel {
+  max-height: min(560px, calc(100vh - 2rem));
+  max-height: min(560px, calc(100dvh - 2rem));
+}
+@media (max-width: 860px) {
+  .assistant-panel { max-height: 100vh; max-height: 100dvh; }
+}
+
+/* ---------- Mobile bottom tab bar: flexbox, never overflows ---------- */
+.bottom-tabs {
+  display: none;
+  grid-template-columns: none;
+}
+.bottom-tabs .tab {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bottom-tabs .tab > span {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 100%;
+  word-break: break-word;
+}
+@media (max-width: 860px) {
+  .bottom-tabs { display: flex; flex-direction: row; }
+  .bottom-tabs .tab { flex: 1 1 0; }
+  /* Cap labels at two short lines so Hindi/Odia never push the bar taller
+     than ~64 px on small screens. */
+  .bottom-tabs .tab { min-height: 58px; padding-top: 0.42rem; }
+}
+
+/* ---------- Inputs never below 16 px on phones (prevents iOS focus zoom,
+   which makes a page suddenly look broken/congested on tap) ---------- */
+@media (max-width: 860px) {
+  input, select, textarea { font-size: 16px; }
+}
+
+/* ---------- Phone de-congestion: roomier rhythm, tighter-but-clearer cards */
+@media (max-width: 640px) {
+  .page { padding: 0.9rem 0.85rem calc(7.6rem + env(safe-area-inset-bottom)); }
+  .page-head { gap: 0.6rem 0.85rem; }
+  .page-head h1 { font-size: 1.38rem; line-height: 1.25; }
+  .card { padding: 1rem 0.95rem; border-radius: 12px; }
+  .card h2 { font-size: 1.04rem; }
+  /* Stat grids: keep two per row even on 320 px phones — one-per-row stacks
+     of six cards is what made the prices page feel endless/crowded. */
+  .grid.stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.7rem;
+  }
+  .stat { padding: 0.75rem 0.85rem; }
+  .stat .num { font-size: 1.45rem; }
+  .stat .lbl { font-size: 0.8rem; }
+  .reco-factors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Compact but readable data tables on phones. */
+  .table-wrap { border-radius: 10px; }
+  .table-wrap table { font-size: 0.88rem; }
+  .table-wrap th, .table-wrap td { padding: 0.55rem 0.6rem; }
+  .token-card { padding: 1.05rem 0.85rem; }
+  .token-card .rows { gap: 0.5rem; }
+  .token-card .rows .cell { padding: 0.45rem 0.6rem; }
+  .journey li { padding-bottom: 1.1rem; }
+  .assistant-fab { min-height: 48px; padding: 0 1rem; font-size: 0.92rem; }
+  .net-banner { bottom: calc(5.6rem + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 380px) {
+  /* Mandi-price filters: two selects per row even at 320 px, not a long
+     single-column wall of dropdowns. */
+  .card.filters { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 0.55rem 0.7rem; }
+  .season-row { grid-template-columns: max-content 1fr max-content; gap: 0.45rem; }
+  .page { padding-inline: 0.7rem; }
+  .card { padding: 0.9rem 0.8rem; }
+  .stat .num { font-size: 1.32rem; }
+  .stat { padding: 0.65rem 0.7rem; }
+  /* Quick actions: two big tiles per row instead of three cramped ones. */
+  .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .quick-tile { font-size: 0.8rem; padding: 0.8rem 0.5rem 0.7rem; }
+}
+
+/* Small screens: drop the language pill's per-button min width so the header
+   never wraps into a second row on 320 px phones. */
+@media (max-width: 360px) {
+  .lang-toggle button, .home-language button { min-width: 38px; padding-inline: 0.5rem; }
+  .bottom-tabs .tab { font-size: 0.58rem; }
+  .bottom-tabs .tab .icon { width: 21px; height: 21px; }
+}
+
+/* Offline / waking banner on phones sits below the header, clear of the tab
+   bar and the assistant FAB. */
+@media (max-width: 860px) {
+  .net-banner { left: 0.6rem; right: 0.6rem; bottom: auto; top: calc(0.55rem + env(safe-area-inset-top)); transform: none; max-width: none; }
+}
+
+/* ============================================================================
+   PUBLIC LANDING — "Get the free app" band (#app)
+   ========================================================================= */
+.home-app-band {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  padding: 2.6rem clamp(1.4rem, 4vw, 3.2rem);
+  background:
+    radial-gradient(560px 260px at 88% -40px, rgba(242, 182, 50, 0.22), transparent 62%),
+    radial-gradient(640px 300px at -6% 112%, rgba(120, 211, 145, 0.16), transparent 60%),
+    linear-gradient(135deg, #052c22 0%, #07382a 52%, #0e5b3b 100%);
+  color: #fff;
+  box-shadow: var(--shadow-xl, 0 14px 34px rgba(9, 48, 32, 0.22));
+}
+.home-app-band::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  opacity: 0.25;
+  pointer-events: none;
+}
+.home-app-band-head, .home-app-band-head h2, .home-app-options, .home-app-note { position: relative; }
+.home-app-band-head { max-width: 720px; }
+.home-app-band-head .home-overline { color: #f1c960; }
+.home-app-band-head h2 { margin: 0.4rem 0 0.55rem; color: #fff; font-size: clamp(1.6rem, 3.4vw, 2.3rem); line-height: 1.14; letter-spacing: -0.02em; }
+.home-app-band-head p { margin: 0; color: #c6ddcd; font-size: 0.98rem; line-height: 1.6; max-width: 62ch; }
+.home-app-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.95rem; margin-top: 1.7rem; }
+.home-app-option {
+  display: flex; align-items: center; gap: 0.95rem;
+  padding: 1.05rem 1.1rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff; text-decoration: none;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.home-app-option:hover { background: rgba(255, 255, 255, 0.13); border-color: rgba(255, 255, 255, 0.45); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22); }
+.home-app-ico {
+  width: 52px; height: 52px; border-radius: 15px; flex-shrink: 0;
+  display: grid; place-items: center;
+  background: linear-gradient(145deg, #ffd670, #f2b632);
+  color: #2b220a;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 6px 16px rgba(0, 0, 0, 0.24);
+}
+.home-app-copy { min-width: 0; display: flex; flex-direction: column; gap: 0.2rem; }
+.home-app-copy strong { font-size: 1.04rem; line-height: 1.25; }
+.home-app-copy small { color: #bfd8c8; font-size: 0.8rem; line-height: 1.45; }
+.home-app-btn {
+  display: inline-flex; align-items: center; gap: 0.45rem; flex-shrink: 0;
+  min-height: 44px; padding: 0.55rem 1rem; border-radius: 999px;
+  background: #f2b632; color: #2b220a; font-weight: 800; font-size: 0.88rem; white-space: nowrap;
+}
+.home-app-option:hover .home-app-btn { background: #ffd15f; }
+.home-app-btn-quiet {
+  background: rgba(255, 255, 255, 0.14); color: #fff; border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.home-app-note {
+  display: flex; align-items: flex-start; gap: 0.5rem; margin: 1.25rem 0 0;
+  color: #a9c8b4; font-size: 0.82rem; line-height: 1.55; max-width: 74ch;
+}
+.home-app-note .icon { color: #77d391; flex-shrink: 0; margin-top: 0.1rem; }
+
+@media (max-width: 820px) {
+  .home-app-options { grid-template-columns: 1fr; }
+  .home-app-band { border-radius: 22px; }
+}
+@media (max-width: 420px) {
+  .home-app-option { align-items: flex-start; flex-wrap: wrap; padding: 0.95rem 0.9rem; }
+  .home-app-btn { width: 100%; justify-content: center; }
+  .home-app-copy small { font-size: 0.78rem; }
+}
+
+/* ============================================================================
+   Small portal-quality touches (still cheap on low-end phones)
+   ========================================================================= */
+/* Section headings inside cards never hyphen-cram next to an inline badge. */
+.dash-section-title, .page-head { align-items: center; }
+
+/* Buttons inside page heads stay on one line on phones. */
+@media (max-width: 480px) {
+  .page-head .btn { white-space: nowrap; }
+  /* Chart legend: never floats/overlaps a wrapped card title on small screens. */
+  .chart-legend { float: none; display: flex; flex-wrap: wrap; gap: 0.2rem 0.5rem; margin-top: 0.4rem; }
+}
+
+/* Tabular numbers for queue/token data stay aligned and non-jumpy. */
+.mono { font-variant-numeric: tabular-nums; }
+
+/* Gold active tab indicator spans the full pill on touch screens. */
+@media (max-width: 860px) {
+  .bottom-tabs .tab.active::before { left: 18%; right: 18%; }
+}
+
+/* Reduced motion also silences the ticker/GSAP glows (already handled by
+   home-polish; belt-and-braces for older WebViews). */
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track, .home-token-float, .home-payment-float,
+  .home-hero-glow-one, .home-hero-glow-two { animation: none !important; }
+}

@@ -48,6 +48,12 @@ export class ApiError extends Error {
   }
 }
 
+// Hard ceiling for a single API call. Free-tier backends wake slowly (the UI
+// says so via ks:api-slow at 4 s), but a hung socket must never leave the app
+// stuck on a spinner forever — that reads as a crash on a phone. After this
+// the request settles into a friendly NETWORK_ERROR with a Retry button.
+const API_TIMEOUT_MS = 35000;
+
 export async function api(path, { method = 'GET', body, token } = {}) {
   const auth = getStoredAuth();
   const headers = { Accept: 'application/json' };
@@ -58,17 +64,23 @@ export async function api(path, { method = 'GET', body, token } = {}) {
   let res;
   // If the API takes > 4 s (typical Render free-tier cold start) tell the UI.
   const slowTimer = setTimeout(() => window.dispatchEvent(new Event('ks:api-slow')), 4000);
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutTimer = setTimeout(() => controller?.abort(), API_TIMEOUT_MS);
   try {
     res = await fetch(`${BASE}${path}`, {
       method,
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,
+      signal: controller ? controller.signal : undefined,
     });
   } catch {
     clearTimeout(slowTimer);
+    clearTimeout(timeoutTimer);
+    window.dispatchEvent(new Event('ks:api-ok')); // the request settled (failed); drop the "waking" banner
     throw new ApiError(0, 'NETWORK_ERROR', 'NETWORK_ERROR');
   } finally {
     clearTimeout(slowTimer);
+    clearTimeout(timeoutTimer);
   }
   window.dispatchEvent(new Event('ks:api-ok'));
 

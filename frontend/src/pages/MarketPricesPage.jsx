@@ -12,6 +12,14 @@ const FALLBACK_LEVEL_NAMES = {
   state: { en: 'State', hi: 'राज्य' },
 };
 
+// Format a number for the raw-data tables. CSV extracts occasionally carry a
+// missing cell — render a dash instead of crashing (toLocaleString on null)
+// or printing a fake "0".
+function num(v) {
+  if (v === null || v === undefined || Number.isNaN(Number(v))) return '—';
+  return Number(v).toLocaleString('en-IN');
+}
+
 // Historical mandi prices: multilevel Agmarknet panel (2021-2025) served by
 // /api/market-prices. Every figure on this page is computed by the backend
 // from the CSV extracts in backend/src/data/agmarknet - nothing is simulated.
@@ -416,9 +424,7 @@ export default function MarketPricesPage() {
                             : `${Math.round(y.minPrice).toLocaleString('en-IN')}–${Math.round(y.maxPrice).toLocaleString('en-IN')}`}
                         </td>
                         <td className="mono">
-                          {level === 'market'
-                            ? Math.round(y.arrivalsMt).toLocaleString('en-IN')
-                            : (y.mandiMonths ?? 0).toLocaleString('en-IN')}
+                          {level === 'market' ? num(y.arrivalsMt) : num(y.mandiMonths)}
                         </td>
                       </tr>
                     ))}
@@ -506,7 +512,7 @@ export default function MarketPricesPage() {
                 <Icon name="fileText" size={15} /> {t('prices.downloadCsv')}
               </button>
             </div>
-            {showRows && (
+            {showRows && (data.rows?.rows?.length || 0) > 0 && (
               <div className="table-wrap" style={{ marginTop: '0.8rem', maxHeight: '340px', overflowY: 'auto' }}>
                 <table>
                   <thead>
@@ -543,15 +549,15 @@ export default function MarketPricesPage() {
                         <td className="mono">{r.month}</td>
                         {level === 'market' ? (
                           <>
-                            <td className="mono">{r.arrivalsMt.toLocaleString('en-IN')}</td>
-                            <td className="mono">{r.modalPriceAvg.toLocaleString('en-IN')}</td>
-                            <td className="mono">{r.nObs}</td>
+                            <td className="mono">{num(r.arrivalsMt)}</td>
+                            <td className="mono">{num(r.modalPriceAvg)}</td>
+                            <td className="mono">{num(r.nObs)}</td>
                           </>
                         ) : (
                           <>
-                            <td className="mono">{r.modalPriceAvg.toLocaleString('en-IN')}</td>
-                            <td className="mono">{r.priceSd ?? '—'}</td>
-                            <td className="mono">{r.nMandis ?? '—'}</td>
+                            <td className="mono">{num(r.modalPriceAvg)}</td>
+                            <td className="mono">{num(r.priceSd)}</td>
+                            <td className="mono">{num(r.nMandis)}</td>
                           </>
                         )}
                       </tr>

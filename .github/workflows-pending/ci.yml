@@ -13,4 +13,5 @@ jobs:
       - run: npm --prefix backend ci --no-audit --no-fund
       - run: npm --prefix frontend ci --no-audit --no-fund
       - run: npm --prefix backend test
+      - run: node scripts/check-i18n-parity.mjs
       - run: npm --prefix frontend run build
