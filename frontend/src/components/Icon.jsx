@@ -299,6 +299,32 @@ const ICONS = {
       <path d="M21 12H9" />
     </>
   ),
+  download: (
+    <>
+      <path d="M12 3v12" />
+      <path d="m7 10 5 5 5-5" />
+      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+    </>
+  ),
+  smartphone: (
+    <>
+      <rect x="6" y="2.5" width="12" height="19" rx="2.5" />
+      <path d="M10.5 18.5h3" />
+    </>
+  ),
+  monitor: (
+    <>
+      <rect x="2.5" y="4" width="19" height="13" rx="2" />
+      <path d="M8 21h8" />
+      <path d="M12 17v4" />
+    </>
+  ),
+  shield: (
+    <>
+      <path d="M12 2.8 4.5 5.6v5.6c0 4.9 3.3 8.2 7.5 9.9 4.2-1.7 7.5-5 7.5-9.9V5.6z" />
+      <path d="m9 11.6 2.2 2.2L15.4 9.4" />
+    </>
+  ),
 };
 
 export default function Icon({ name, size = 18, strokeWidth = 1.8, label, className = '' }) {

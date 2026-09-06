@@ -2,8 +2,9 @@
 
 | Layer | Free service | Why |
 | --- | --- | --- |
-| **APK build** | GitHub Actions (`.github/workflows-pending/android-apk.yml` → enable with `npm run enable:workflows`) — `ubuntu-24.04` has JDK + Android SDK 36 preinstalled | Unlimited minutes on a public repo, 2 000 min/mo on private; one build ≈ 5–10 min |
-| **Install** | Sideload the debug APK | $0 forever. Play Store ($25 + 12 testers × 14 days) is explicitly *out of scope* |
+| **APK build** | GitHub Actions (`.github/workflows-pending/android-apk.yml` → enable once with `npm run enable:workflows`) — `ubuntu-24.04` has JDK + Android SDK 36 preinstalled | Unlimited minutes on a public repo, 2 000 min/mo on private; one build ≈ 5–10 min |
+| **APK download** | Automatic rolling **GitHub Release** (`latest-apk`) updated on every `main` build | Stable public URL, no login: `…/releases/latest/download/annadata-connect-latest.apk` — the same URL the landing-page **Download APK (free)** button uses |
+| **Install** | Sideload the APK (or install the PWA) | $0 forever. Play Store ($25 + 12 testers × 14 days) is explicitly *out of scope* |
 | **Backend** | Render free web service (`render.yaml`) | No card. Sleeps after 15 min, 750 instance-hrs/month |
 | **Data** | JSON store re-seeded on boot (`SEED_ON_BOOT=true`) | Data resets on each restart — accepted for the MVP. (Turso/libSQL is the free upgrade path later.) |
 | **Frontend (optional)** | Netlify / Cloudflare Pages (`netlify.toml`, `frontend/public/_redirects`) | Static, never sleeps. Not required — Render serves the UI too |
@@ -34,14 +35,19 @@ so a cold start never looks like a crash.
 
 ## 3. Build the APK on GitHub Actions ($0)
 
-0. **One-time:** the workflow files live in `.github/workflows-pending/` (the Arena
-   integration cannot write to `.github/workflows/`). Enable them once:
+0. **One-time (owner, ~2 min):** the workflow files live in `.github/workflows-pending/`
+   because the Arena integration cannot write to `.github/workflows/`. Enable them from
+   your own machine once:
    `npm run enable:workflows && git commit -am "Enable workflows" && git push`
 1. GitHub → repo **Settings → Secrets and variables → Actions → Variables** →
    `New repository variable`: **`API_BASE_URL`** = `https://<app>.onrender.com`.
-2. **Actions → Android APK → Run workflow** (or just push to `main`).
-3. ~6 min later: open the run → **Artifacts → `annadata-connect-debug-apk`** → download.
-   Pushing a tag like `v1.0.0` also attaches the APK to a GitHub Release with a public link.
+2. Push to `main` (or **Actions → Android APK → Run workflow**).
+3. ~6 min later the APK is **already downloadable for free** from the rolling release:
+   `https://github.com/<you>/<repo>/releases/latest/download/annadata-connect-latest.apk`
+   — that stable link is what the landing page's **Download APK (free)** button opens,
+   and it always points at the newest build (no login, no 30-day expiry). Every run also
+   keeps the `annadata-connect-debug-apk` **artifact** (Actions → run → Artifacts), and
+   pushing a tag like `v1.0.0` creates a permanent numbered release.
 
 Sideload: copy the `.apk` to the phone → tap it → allow *Install unknown apps* → open
 **Annadata Connect**. The app is a Capacitor WebView of the same React frontend,

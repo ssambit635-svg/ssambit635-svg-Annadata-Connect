@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import { useAuth, homeFor } from '../auth/AuthContext.jsx';
@@ -40,6 +40,14 @@ const STATS = [
   { value: '₹52 Cr+', key: 'stat4', icon: 'rupee' },
 ];
 
+// Free Android APK download — a rolling "latest" release asset published by the
+// Android APK GitHub Action (see .github/workflows/android-apk.yml). Keep this
+// URL in sync if the repository is renamed or the app is hosted elsewhere.
+const ANDROID_APK_URL =
+  'https://github.com/ssambit635-svg/ssambit635-svg-Annadata-Connect/releases/latest/download/annadata-connect-latest.apk';
+const ANDROID_RELEASES_URL =
+  'https://github.com/ssambit635-svg/ssambit635-svg-Annadata-Connect/releases';
+
 export default function LandingPage() {
   const { t, lang, pick } = useI18n();
   const { user } = useAuth();
@@ -48,6 +56,22 @@ export default function LandingPage() {
   const closeMenu = () => setMenuOpen(false);
   const pageRef = useRef(null);
   useHomeAnimations(pageRef);
+
+  // Check once whether the free APK has been published to the rolling GitHub
+  // Release yet (it is built automatically by GitHub Actions after the owner
+  // enables the parked workflow). Until then the tile links to the Releases
+  // page instead of a 404 file.
+  const [apkState, setApkState] = useState('checking'); // checking | ready | pending | unknown
+  useEffect(() => {
+    let cancelled = false;
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = setTimeout(() => ctrl?.abort(), 8000);
+    fetch(ANDROID_APK_URL, { method: 'HEAD', cache: 'no-store', signal: ctrl?.signal })
+      .then((r) => { if (!cancelled) setApkState(r.ok ? 'ready' : 'pending'); })
+      .catch(() => { if (!cancelled) setApkState('unknown'); })
+      .finally(() => clearTimeout(timer));
+    return () => { cancelled = true; clearTimeout(timer); ctrl?.abort(); };
+  }, []);
 
   return (
     <div className="landing landing-v2" ref={pageRef}>
@@ -101,6 +125,7 @@ export default function LandingPage() {
             <a href="#how" onClick={closeMenu}>{t('landing.navHow')}</a>
             <a href="#msp" onClick={closeMenu}>{t('landing.navMsp')}</a>
             <a href="#centres" onClick={closeMenu}>{t('landing.navCentres')}</a>
+            <a href="#app" onClick={closeMenu}>{t('landing.navApp')}</a>
           </nav>
 
           <div className="home-header-actions">
@@ -317,6 +342,45 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <section id="app" className="home-section home-app-section">
+          <div className="home-container">
+            <div className="home-app-band">
+              <div className="home-app-band-head">
+                <span className="home-overline">{t('landing.downloadEyebrow')}</span>
+                <h2>{t('landing.downloadTitle')}</h2>
+                <p>{t('landing.downloadSub')}</p>
+              </div>
+              <div className="home-app-options">
+                <a
+                  className="home-app-option"
+                  href={apkState === 'ready' ? ANDROID_APK_URL : ANDROID_RELEASES_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span className="home-app-ico"><Icon name="smartphone" size={25} /></span>
+                  <span className="home-app-copy">
+                    <strong>{t('landing.downloadAndroidTitle')}</strong>
+                    <small>{apkState === 'ready' ? t('landing.downloadAndroidSub') : t('landing.downloadPending')}</small>
+                  </span>
+                  <span className="home-app-btn">
+                    <Icon name="download" size={16} />
+                    {apkState === 'ready' ? t('landing.downloadAndroidBtn') : t('landing.downloadPendingBtn')}
+                  </span>
+                </a>
+                <Link className="home-app-option" to={user ? home : '/login'}>
+                  <span className="home-app-ico"><Icon name="monitor" size={25} /></span>
+                  <span className="home-app-copy">
+                    <strong>{t('landing.downloadBrowserTitle')}</strong>
+                    <small>{t('landing.downloadBrowserSub')}</small>
+                  </span>
+                  <span className="home-app-btn home-app-btn-quiet"><Icon name="arrowUpRight" size={16} /> {t('landing.downloadBrowserBtn')}</span>
+                </Link>
+              </div>
+              <p className="home-app-note"><Icon name="shield" size={15} /> {t('landing.downloadNote')}</p>
+            </div>
+          </div>
+        </section>
+
         <section id="help" className="home-section home-assist-section">
           <div className="home-container">
             <div className="home-assist-card">
@@ -361,6 +425,7 @@ export default function LandingPage() {
             <Link to="/register">{t('landing.register')}</Link>
             {user && <Link to={home}>{t('landing.openDashboard')}</Link>}
             <a href="#how">{t('landing.navHow')}</a>
+            <a href="#app">{t('landing.navApp')}</a>
           </div>
           <div className="home-footer-column">
             <h3>{t('landing.fPortal')}</h3>

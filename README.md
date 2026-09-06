@@ -4,6 +4,12 @@ A real, locally-runnable crop-procurement platform connecting **Farmers**, **Pro
 (English · हिन्दी · ଓଡ଼ିଆ) UI, an installable PWA + sideloadable **Android APK** built for free on GitHub Actions, and a controlled rule-based farmer assistant.
 
 > **Deploy for $0** — Render free backend, GitHub Actions APK, cron-job.org keep-awake: see **[FREE_STACK.md](FREE_STACK.md)**.
+>
+> **Get the app free** — the landing page has a *Get the App* section: the Android APK
+> button downloads `annadata-connect-latest.apk` from the rolling GitHub Release
+> (`…/releases/latest/download/annadata-connect-latest.apk`, rebuilt automatically on
+> every `main` push by the Android APK workflow), and the laptop/other-phone option
+> opens the same app in any browser — no install. Trilingual UI; mobile-first shell.
 
 ```
 kis an sathi/

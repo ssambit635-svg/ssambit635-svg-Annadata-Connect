@@ -6,6 +6,7 @@ import './styles/home-polish.css';
 import './styles/portal-theme.css';
 import './styles/auth.css';
 import './styles/polish-v3.css';
+import './styles/polish-v4.css';
 import '@fontsource/noto-sans-devanagari/devanagari-400.css';
 import '@fontsource/noto-sans-devanagari/devanagari-600.css';
 import '@fontsource/noto-sans-oriya/400.css';
