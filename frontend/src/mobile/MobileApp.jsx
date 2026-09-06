@@ -31,6 +31,7 @@ import OfficerRequests from './pages/OfficerRequests.jsx';
 import OfficerAssisted from './pages/OfficerAssisted.jsx';
 import AuthorityHome from './pages/AuthorityHome.jsx';
 import AuthorityCentre from './pages/AuthorityCentre.jsx';
+import AuthoritySimulator from './pages/AuthoritySimulator.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 /* ── Route guard with the app's own loading art ─────────────────── */
@@ -151,6 +152,7 @@ function headerTitle(pathname, t) {
   if (pathname === '/officer/queue') return t('nav.queue');
   if (pathname === '/officer/requests') return t('nav.requests');
   if (pathname === '/officer/assisted') return t('nav.assisted');
+  if (pathname === '/authority/simulator') return t('simulator.title');
   if (/^\/authority\/centres\//.test(pathname)) return t('authority.centreDetails');
   return t('nav.dashboard');
 }
@@ -289,6 +291,7 @@ export function MobileApp() {
                   <Route path="/officer/assisted" element={<MProtected roles={['officer']}><OfficerAssisted /></MProtected>} />
                   {/* Authority */}
                   <Route path="/authority" element={<MProtected roles={['authority']}><AuthorityHome /></MProtected>} />
+                  <Route path="/authority/simulator" element={<MProtected roles={['authority']}><AuthoritySimulator /></MProtected>} />
                   <Route path="/authority/centres/:id" element={<MProtected roles={['authority']}><AuthorityCentre /></MProtected>} />
                   <Route path="/unauthorized" element={<NotFound />} />
                   <Route path="*" element={<NotFound />} />

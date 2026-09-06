@@ -334,6 +334,11 @@ const ICONS = {
       <path d="m9 11.6 2.2 2.2L15.4 9.4" />
     </>
   ),
+  activity: (
+    <>
+      <path d="M3 12h4l2.5-6.5L14 18l2.5-6H21" />
+    </>
+  ),
 };
 
 export default function Icon({ name, size = 18, strokeWidth = 1.8, label, className = '' }) {
