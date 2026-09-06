@@ -381,32 +381,13 @@ table.data tr:last-child td { border-bottom: none; }
 .section-sub { color: var(--c-text-soft); margin-bottom: 1.4rem; }
 .fine-print { font-size: 0.8rem; color: var(--c-text-soft); margin-top: 0.6rem; }
 
-.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-.feature-card { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 1.1rem; box-shadow: var(--shadow); }
-.landing-section.alt .feature-card { box-shadow: none; }
-.feature-icon { font-size: 1.7rem; margin-bottom: 0.35rem; }
-.feature-card h3 { margin-bottom: 0.2rem; color: var(--c-primary-dark); }
-.feature-card p { margin: 0; font-size: 0.9rem; color: var(--c-text-soft); }
-
-.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; counter-reset: step; }
-.step { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 1rem; position: relative; }
-.step-num { width: 34px; height: 34px; border-radius: 50%; background: var(--c-primary); color: #fff; display: grid; place-items: center; font-weight: 700; margin-bottom: 0.5rem; }
-.step h3 { font-size: 1rem; margin-bottom: 0.2rem; color: var(--c-primary-dark); }
-.step p { margin: 0; font-size: 0.88rem; color: var(--c-text-soft); }
-
-.msp-table-wrap { padding: 0; overflow: hidden; }
-.msp-table { width: 100%; border-collapse: collapse; }
-.msp-table th { text-align: left; background: var(--c-primary-dark); color: #fff; padding: 0.6rem 0.9rem; font-size: 0.9rem; }
-.msp-table td { padding: 0.55rem 0.9rem; border-top: 1px solid var(--c-border); }
-.msp-table tbody tr:nth-child(odd) { background: var(--c-neutral-bg); }
-
-.centre-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-.centre-tile { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 1rem; display: flex; flex-direction: column; gap: 0.2rem; }
-.centre-tile strong { color: var(--c-primary-dark); font-size: 0.98rem; }
-.centre-tile span { font-size: 0.82rem; color: var(--c-text-soft); }
-
-.assist-banner { background: var(--c-primary-dark); color: #fff; border-radius: 12px; padding: 1.6rem 1.8rem; display: flex; align-items: center; justify-content: space-between; gap: 1.2rem; flex-wrap: wrap; }
-.assist-banner p { color: #cfe4d3; }
+/* These legacy pre-redesign landing classes (.feature-grid, .centre-grid,
+   .msp-table, .step-num, the grid-card .steps/.step) are no longer used by the
+   current .landing-v2 homepage (which uses home-* classes). They were removed
+   because the unscoped .steps/.step grid rules here were overriding the
+   light flex stepper used by the New Request wizard (NewRequestPage), turning
+   it into boxy cards. The wizard's own .steps/.step flex rules earlier in
+   this file are now the only definition. */
 
 .landing-footer { background: var(--c-primary-darker); color: #cfe4d3; }
 .footer-in { display: flex; justify-content: space-between; gap: 1.5rem; padding: 1.6rem 1rem 1rem; flex-wrap: wrap; }
@@ -420,11 +401,9 @@ table.data tr:last-child td { border-bottom: none; }
 @media (max-width: 800px) {
   .hero-in { grid-template-columns: 1fr; }
   .hero h1 { font-size: 1.6rem; }
-  .feature-grid, .steps, .centre-grid { grid-template-columns: 1fr; }
   .landing-nav { order: 3; width: 100%; justify-content: flex-start; }
   .hero-stats { grid-template-columns: 1fr 1fr; }
 }
-.hero .btn-outline.light-outline, .assist-banner .btn-outline.light-outline { background: transparent; }
 
 /* ================= UI POLISH (UX / government-portal refinement) =================
    Same color palette; better typography, spacing, elevation and interactions. */
@@ -536,25 +515,11 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .hero-stat:hover { transform: translateY(-3px); background: rgba(255,255,255,0.16); }
 .hero-note .icon { vertical-align: -0.15em; margin-right: 0.15rem; }
 
-.feature-card { transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), border-color 0.18s var(--ease); }
-.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: #bcd3c2; }
-.feature-icon { width: 46px; height: 46px; border-radius: 11px; background: var(--c-success-bg); color: var(--c-primary); display: grid; place-items: center; margin-bottom: 0.65rem; transition: background 0.18s var(--ease), color 0.18s var(--ease); }
-.feature-card:hover .feature-icon { background: var(--c-primary); color: #fff; }
-
-.step { transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), border-color 0.18s var(--ease); }
-.step:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: #bcd3c2; }
-.step-num { transition: transform 0.18s var(--ease); }
-.step:hover .step-num { transform: scale(1.08); }
-:where(.landing-section) h2.section-title { display: block; }
-
-.centre-tile { transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), border-color 0.18s var(--ease); }
-.centre-tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: #bcd3c2; background: #fff; }
-.centre-ico { width: 42px; height: 42px; border-radius: 10px; background: var(--c-success-bg); color: var(--c-primary); display: grid; place-items: center; margin-bottom: 0.4rem; }
-
-.msp-table tbody tr { transition: background 0.15s var(--ease); }
-.msp-table tbody tr:hover { background: var(--c-success-bg); }
-
-.assist-banner { box-shadow: var(--shadow-lg); }
+/* The old pre-redesign landing polish below (.feature-card, .feature-icon,
+   .step, .step-num, .centre-tile, .centre-ico, .msp-table, .assist-banner)
+   was dead code that leaked onto the New Request wizard's .step elements
+   (adding hover transforms/box-shadows) — removed. The current homepage is
+   scoped to .landing-v2 / .home-* classes. */
 .footer-links a { opacity: 0.9; }
 .footer-links a:hover { opacity: 1; }
 .footer-base .icon { vertical-align: -0.12em; }
