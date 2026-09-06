@@ -137,7 +137,7 @@ export function createAuthRouter({ db = getDb, save = saveDb, settings = config,
       [identity.channel === 'sms' ? 'phoneVerified' : 'emailVerified']: true,
       ...(identity.googleSub ? { googleSub: identity.googleSub } : {}),
       passwordHash, villageId: village.id, district: 'Khordha',
-      preferredLanguage: req.body.preferredLanguage === 'hi' ? 'hi' : 'en',
+      preferredLanguage: ['hi', 'or'].includes(req.body.preferredLanguage) ? req.body.preferredLanguage : 'en',
       createdAt: new Date().toISOString(), registeredBy: `self:verified-${identity.channel}`,
     };
     verification.consumeRegistration(req.body.registrationToken);

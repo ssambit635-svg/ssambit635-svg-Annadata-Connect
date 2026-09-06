@@ -42,30 +42,30 @@ export const CROP_COMMODITY = {
 };
 
 export const COMMODITY_LABELS = {
-  paddy: { en: 'Paddy', hi: 'धान' },
-  wheat: { en: 'Wheat', hi: 'गेहूं' },
-  maize: { en: 'Maize', hi: 'मक्का' },
-  mustard: { en: 'Mustard', hi: 'सरसों' },
-  cotton: { en: 'Cotton', hi: 'कपास' },
-  rice: { en: 'Rice', hi: 'चावल' },
-  onion: { en: 'Onion', hi: 'प्याज' },
-  potato: { en: 'Potato', hi: 'आलू' },
-  tomato: { en: 'Tomato', hi: 'टमाटर' },
-  chana: { en: 'Gram (Chana)', hi: 'चना' },
-  soybean: { en: 'Soybean', hi: 'सोयाबीन' },
+  paddy: { en: 'Paddy', hi: 'धान', or: 'ଧାନ' },
+  wheat: { en: 'Wheat', hi: 'गेहूं', or: 'ଗହମ' },
+  maize: { en: 'Maize', hi: 'मक्का', or: 'ମକା' },
+  mustard: { en: 'Mustard', hi: 'सरसों', or: 'ସୋରିଷ' },
+  cotton: { en: 'Cotton', hi: 'कपास', or: 'କପା' },
+  rice: { en: 'Rice', hi: 'चावल', or: 'ଚାଉଳ' },
+  onion: { en: 'Onion', hi: 'प्याज', or: 'ପିଆଜ' },
+  potato: { en: 'Potato', hi: 'आलू', or: 'ଆଳୁ' },
+  tomato: { en: 'Tomato', hi: 'टमाटर', or: 'ଟମାଟୋ' },
+  chana: { en: 'Gram (Chana)', hi: 'चना', or: 'ବୁଟ' },
+  soybean: { en: 'Soybean', hi: 'सोयाबीन', or: 'ସୋୟାବିନ୍' },
 };
 
 export const LEVEL_LABELS = {
-  market: { en: 'Mandi', hi: 'मंडी' },
-  district: { en: 'District', hi: 'ज़िला' },
-  state: { en: 'State', hi: 'राज्य' },
+  market: { en: 'Mandi', hi: 'मंडी', or: 'ମଣ୍ଡି' },
+  district: { en: 'District', hi: 'ज़िला', or: 'ଜିଲ୍ଲା' },
+  state: { en: 'State', hi: 'राज्य', or: 'ରାଜ୍ୟ' },
 };
 
 export const MONTH_LABELS = [
-  { en: 'Jan', hi: 'जन' }, { en: 'Feb', hi: 'फ़र' }, { en: 'Mar', hi: 'मार्च' },
-  { en: 'Apr', hi: 'अप्रै' }, { en: 'May', hi: 'मई' }, { en: 'Jun', hi: 'जून' },
-  { en: 'Jul', hi: 'जुल' }, { en: 'Aug', hi: 'अग' }, { en: 'Sep', hi: 'सित' },
-  { en: 'Oct', hi: 'अक्तू' }, { en: 'Nov', hi: 'नव' }, { en: 'Dec', hi: 'दिस' },
+  { en: 'Jan', hi: 'जन', or: 'ଜାନୁ' }, { en: 'Feb', hi: 'फ़र', or: 'ଫେବୃ' }, { en: 'Mar', hi: 'मार्च', or: 'ମାର୍ଚ୍ଚ' },
+  { en: 'Apr', hi: 'अप्रै', or: 'ଏପ୍ରି' }, { en: 'May', hi: 'मई', or: 'ମେ' }, { en: 'Jun', hi: 'जून', or: 'ଜୁନ' },
+  { en: 'Jul', hi: 'जुल', or: 'ଜୁଲା' }, { en: 'Aug', hi: 'अग', or: 'ଅଗ' }, { en: 'Sep', hi: 'सित', or: 'ସେପ୍ଟ' },
+  { en: 'Oct', hi: 'अक्तू', or: 'ଅକ୍ଟୋ' }, { en: 'Nov', hi: 'नव', or: 'ନଭେ' }, { en: 'Dec', hi: 'दिस', or: 'ଡିସେ' },
 ];
 
 function splitCsvLine(line) {
@@ -329,9 +329,9 @@ export function rowsForLevel(level) {
 }
 
 export function commodityLabel(commodity) {
-  return COMMODITY_LABELS[commodity] || { en: commodity, hi: commodity };
+  return COMMODITY_LABELS[commodity] || { en: commodity, hi: commodity, or: commodity };
 }
 
 export function levelLabel(level) {
-  return LEVEL_LABELS[level] || { en: level, hi: level };
+  return LEVEL_LABELS[level] || { en: level, hi: level, or: level };
 }

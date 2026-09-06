@@ -1,0 +1,20 @@
+{
+  "appId": "in.annadata.connect",
+  "appName": "Annadata Connect",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#fbfaf5"
+  },
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "backgroundColor": "#07382a",
+      "showSpinner": false
+    }
+  }
+}

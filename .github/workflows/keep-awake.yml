@@ -1,0 +1,15 @@
+# Optional $0 keep-awake using GitHub's own scheduler (public repo = unlimited).
+# cron-job.org / UptimeRobot are still recommended (they run every 5-10 min
+# reliably; GitHub cron can lag 10-30 min under load). Set repo variable
+# API_BASE_URL first, otherwise this workflow does nothing.
+name: Keep backend awake
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+jobs:
+  ping:
+    if: vars.API_BASE_URL != ''
+    runs-on: ubuntu-24.04
+    steps:
+      - run: curl -fsS --max-time 60 "${{ vars.API_BASE_URL }}/api/health" || echo "backend still waking"

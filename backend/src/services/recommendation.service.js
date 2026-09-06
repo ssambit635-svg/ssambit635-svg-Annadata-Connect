@@ -46,6 +46,7 @@ export function recommendCentres(db, { farmer, cropId, quantityQuintals }) {
       centreId: centre.id,
       nameEn: centre.nameEn,
       nameHi: centre.nameHi,
+      nameOr: centre.nameOr,
       distanceKm: Math.round(distance * 10) / 10,
       queueCount,
       capacityPct,

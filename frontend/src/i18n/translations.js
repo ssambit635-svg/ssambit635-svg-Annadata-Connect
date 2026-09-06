@@ -1,4 +1,5 @@
 import { authTranslations } from './auth.js';
+import { orTranslations, orAssistantAnswers } from './or.js';
 
 // Complete UI dictionary. Technical identifiers (token numbers, API statuses)
 // stay untouched; everything user-facing is translated.
@@ -12,7 +13,7 @@ export const translations = {
       more: 'More', accountMenu: 'Account menu',
     },
     idCard: {
-      title: 'My Farmer ID Card', print: 'Print / Save as PDF',
+      title: 'My Farmer ID Card', cardLabel: 'Farmer ID Card', print: 'Print / Save as PDF',
       hint: 'Show this digital ID at the procurement centre, or print a copy for your records.',
       govLine: 'Government of Odisha · Khordha District (Pilot)',
       farmerId: 'Farmer ID', mobile: 'Mobile', village: 'Village', crops: 'Registered crops',
@@ -30,6 +31,8 @@ export const translations = {
       offlineHint: 'Public pages still work — portal pages need a connection to the server.',
       crashTitle: 'Something went wrong', crashBody: 'The app hit an unexpected problem. Nothing was lost — reload to continue.',
       reload: 'Reload app',
+      offlineBanner: 'You are offline — showing the last saved data.',
+      wakingBanner: 'Waking up the server… this can take up to a minute on the free tier.',
       sessionExpired: 'Your session has expired. Please log in again.',
       notAllowed: 'You are not allowed to access this page.', notFoundTitle: 'Page not found',
       goHome: 'Go to dashboard', officer: 'Officer', farmer: 'Farmer', authority: 'Authority',
@@ -274,7 +277,7 @@ export const translations = {
       more: 'और', accountMenu: 'खाता मेन्यू',
     },
     idCard: {
-      title: 'मेरा किसान पहचान पत्र', print: 'प्रिंट करें / PDF सेव करें',
+      title: 'मेरा किसान पहचान पत्र', cardLabel: 'किसान पहचान पत्र', print: 'प्रिंट करें / PDF सेव करें',
       hint: 'खरीद केंद्र पर यह डिजिटल पहचान पत्र दिखाएँ या रिकॉर्ड के लिए प्रिंट कर लें।',
       govLine: 'ओडिशा सरकार · खोर्धा जिला (पायलट)',
       farmerId: 'किसान आईडी', mobile: 'मोबाइल', village: 'गाँव', crops: 'पंजीकृत फसलें',
@@ -292,6 +295,8 @@ export const translations = {
       offlineHint: 'पब्लिक पेज चलते रहेंगे — पोर्टल पेज के लिए सर्वर कनेक्शन ज़रूरी है।',
       crashTitle: 'कुछ गड़बड़ हो गई', crashBody: 'एप्लिकेशन में अपेक्षित समस्या आई। कुछ नहीं खोया गया — जारी रखने के लिए रीलोड करें।',
       reload: 'एप्लिकेशन रीलोड करें',
+      offlineBanner: 'आप ऑफ़लाइन हैं — अंतिम सहेजा गया डेटा दिखाया जा रहा है।',
+      wakingBanner: 'सर्वर जाग रहा है… मुफ़्त टियर पर इसमें एक मिनट तक लग सकता है।',
       sessionExpired: 'आपका सत्र समाप्त हो गया है। कृपया फिर लॉगिन करें।',
       notAllowed: 'आपको इस पेज की अनुमति नहीं है।', notFoundTitle: 'पेज नहीं मिला',
       goHome: 'डैशबोर्ड पर जाएँ', officer: 'अधिकारी', farmer: 'किसान', authority: 'प्राधिकारी',
@@ -526,25 +531,27 @@ export const translations = {
       poweredBy: 'निर्मित', backToTop: 'ऊपर जाएँ',
     },
   },
+
+  or: orTranslations,
 };
 
 // Rule-based assistant answers (approved FAQ only — local, deterministic).
 export const assistantAnswers = {
   en: {
     generate_token:
-      'Procurement Request खोलें, अपनी crop और quantity दर्ज करें, recommended centre चुनें और request confirm करें. Successful submission के बाद आपका token generate होगा.',
-    where_token: 'Dashboard में My Token खोलकर अपना current token देखें.',
-    queue_position: 'Dashboard में Queue Status या My Token खोलें. वहाँ आपकी current position और estimated wait दिखेगा.',
-    check_status: 'Procurement Status section खोलकर अपना current status देखें.',
+      'Open New Request, enter your crop and quantity, pick the recommended centre and confirm. Your token is generated as soon as the request is submitted.',
+    where_token: 'Open Your Token on the dashboard to see your current token.',
+    queue_position: 'Open Queue Status or Your Token on the dashboard — it shows your current position and estimated wait.',
+    check_status: 'Open the Procurement Status section to see your current status.',
     centre_choice:
-      'Annadata Connect आपके गाँव की दूरी, केंद्र की कतार और खाली भंडारण देखकर सबसे अच्छा centre सुझाता है. आप चाहें तो दूसरा खुला केंद्र भी चुन सकते हैं.',
-    register: 'Login पेज पर Register दबाएँ और अपना नाम, mobile number, गाँव और password दर्ज करें.',
-    change_language: 'ऊपर header में EN | हिन्दी पर tap करके भाषा बदलें.',
-    assisted: 'अगर आपके पास smartphone नहीं है, तो किसी भी procurement centre के counter पर जाएँ — वहाँ के staff आपके लिए token बना सकते हैं.',
-    what_is: 'Annadata Connect सरकारी crop procurement के लिए token और queue प्रबंधन की सेवा है — ताकि आपको केंद्र पर घंटों इंतज़ार न करना पड़े.',
+      'Annadata Connect looks at the distance from your village, the queue at each centre and free storage to suggest the best centre. You can still pick any other open centre.',
+    register: 'Tap Register on the login page and enter your name, mobile number, village and password.',
+    change_language: 'Tap EN | हिंदी | ଓଡ଼ିଆ in the header to change the language.',
+    assisted: 'If you do not have a smartphone, visit the counter at any procurement centre — the staff there can create a token for you.',
+    what_is: 'Annadata Connect is the token and queue service for government crop procurement — so you do not wait for hours at the centre.',
     market_price:
-      'Mandi Prices पेज खोलें — वहाँ 2021 से 2025 तक के असली Agmarknet मंडी भाव, हर महीने का trend, सबसे अच्छा बिक्री महीना और मंडियों की तुलना दिखती है.',
-    thanks: 'धन्यवाद! शुभ खरीद!',
+      'Open the Mandi Prices page — it shows real Agmarknet mandi prices from 2021 to 2025, the monthly trend, the best month to sell and a comparison of mandis.',
+    thanks: 'Thank you! Happy selling!',
   },
   hi: {
     generate_token:
@@ -555,11 +562,12 @@ export const assistantAnswers = {
     centre_choice:
       'Annadata Connect आपके गाँव की दूरी, केंद्र की कतार और खाली भंडारण देखकर सबसे अच्छा centre सुझाता है. आप चाहें तो दूसरा खुला केंद्र भी चुन सकते हैं.',
     register: 'Login पेज पर Register दबाएँ और अपना नाम, mobile number, गाँव और password दर्ज करें.',
-    change_language: 'ऊपर header में EN | हिन्दी पर tap करके भाषा बदलें.',
+    change_language: 'ऊपर header में EN | हिंदी | ଓଡ଼ିଆ पर tap करके भाषा बदलें.',
     assisted: 'अगर आपके पास smartphone नहीं है, तो किसी भी procurement centre के counter पर जाएँ — वहाँ के staff आपके लिए token बना सकते हैं.',
     what_is: 'Annadata Connect सरकारी crop procurement के लिए token और queue प्रबंधन की सेवा है — ताकि आपको केंद्र पर घंटों इंतज़ार न करना पड़े.',
     market_price:
       'Mandi Prices पेज खोलें — वहाँ 2021 से 2025 तक के असली Agmarknet मंडी भाव, हर महीने का trend, सबसे अच्छा बिक्री महीना और मंडियों की तुलना दिखती है.',
     thanks: 'धन्यवाद! शुभ खरीद!',
   },
+  or: orAssistantAnswers,
 };

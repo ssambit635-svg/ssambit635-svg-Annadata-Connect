@@ -1,0 +1,16 @@
+name: CI
+on:
+  push:
+    branches: [main, 'arena/**']
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm --prefix backend ci --no-audit --no-fund
+      - run: npm --prefix frontend ci --no-audit --no-fund
+      - run: npm --prefix backend test
+      - run: npm --prefix frontend run build

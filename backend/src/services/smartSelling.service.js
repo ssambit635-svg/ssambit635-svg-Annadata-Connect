@@ -35,8 +35,10 @@ function buildMspOptions(db, { crop, quantityQuintal, origin }) {
       buyerId: centre.id,
       nameEn: centre.nameEn,
       nameHi: centre.nameHi,
+      nameOr: centre.nameOr,
       categoryEn: 'Government Procurement Centre',
       categoryHi: 'सरकारी खरीद केंद्र',
+      categoryOr: 'ସରକାରୀ କ୍ରୟ କେନ୍ଦ୍ର',
       address: centre.address,
       distanceKm: Math.round(distance * 10) / 10,
       ratePerQuintal: rate,
@@ -49,6 +51,7 @@ function buildMspOptions(db, { crop, quantityQuintal, origin }) {
       remainingQuintal: Math.max(remaining, 0),
       paymentEn: 'MSP — paid to bank account after grading & completion',
       paymentHi: 'MSP — ग्रेडिंग और पूर्णता के बाद बैंक खाते में भुगतान',
+      paymentOr: 'MSP — ଗ୍ରେଡିଂ ଓ ସମାପ୍ତି ପରେ ବ୍ୟାଙ୍କ ଖାତାରେ ଦେୟ',
       eligible,
       ineligibilityReasons: reasons,
       flags: [],
@@ -83,8 +86,10 @@ function buildMarketOptions(db, { crop, quantityQuintal, origin }) {
         buyerId: buyer.id,
         nameEn: buyer.nameEn,
         nameHi: buyer.nameHi,
+        nameOr: buyer.nameOr,
         categoryEn: buyer.categoryEn,
         categoryHi: buyer.categoryHi,
+        categoryOr: buyer.categoryOr,
         address: buyer.address,
         distanceKm: Math.round(distance * 10) / 10,
         ratePerQuintal: rate,
@@ -95,8 +100,10 @@ function buildMarketOptions(db, { crop, quantityQuintal, origin }) {
         operatingHours: buyer.operatingHours,
         settlementEn: buyer.settlementEn,
         settlementHi: buyer.settlementHi,
+        settlementOr: buyer.settlementOr,
         noteEn: buyer.noteEn || '',
         noteHi: buyer.noteHi || '',
+        noteOr: buyer.noteOr || '',
         eligible,
         ineligibilityReasons: reasons,
         flags: [],
@@ -168,6 +175,9 @@ export function sellingOptions(db, { farmer, cropId, quantityQuintal }) {
   const basisHi =
     `विकल्पों की तुलना अनुमानित परिवहन लागत ₹${TRANSPORT_COST_PER_KM_PER_QUINTAL} प्रति किमी प्रति क्विंटल घटाकर की गई। ` +
     'सर्वोच्च शुद्ध राशि के अनुसार क्रम, दूरी से टाई-ब्रेक। सरकारी MSP केंद्र ग्रेडिंग के बाद तय MSP देते हैं; बाज़ार खरीददार तुरंत ऊपरी दर देते हैं।';
+  const basisOr =
+    `ପ୍ରତି କି.ମି. ପ୍ରତି କ୍ୱିଣ୍ଟାଲ ₹${TRANSPORT_COST_PER_KM_PER_QUINTAL} ଆନୁମାନିକ ପରିବହନ ଖର୍ଚ୍ଚ ବାଦ୍ ଦେଇ ବିକଳ୍ପ ତୁଳନା କରାଯାଇଛି। ` +
+    'ସର୍ବାଧିକ ନିଟ୍ ରାଶି ଅନୁସାରେ କ୍ରମ, ସମାନ ହେଲେ କମ୍ ଦୂରତା। ସରକାରୀ MSP କେନ୍ଦ୍ର ଗ୍ରେଡିଂ ପରେ ନିଶ୍ଚିତ MSP ଦିଅନ୍ତି; ବଜାର କ୍ରେତା ତତ୍‌କ୍ଷଣାତ୍ ଅଧିକ ଦର ଦିଅନ୍ତି।';
 
   return {
     mspRatePerQuintal: crop.mspPerQuintal,
@@ -177,8 +187,10 @@ export function sellingOptions(db, { farmer, cropId, quantityQuintal }) {
     bestValueInr: best ? best.netValueInr : 0,
     basisEn,
     basisHi,
+    basisOr,
     summaryEn: makeSummaryEn(crop, quantityQuintal, best),
     summaryHi: makeSummaryHi(crop, quantityQuintal, best),
+    summaryOr: makeSummaryOr(crop, quantityQuintal, best),
   };
 }
 
@@ -196,6 +208,14 @@ function makeSummaryHi(crop, qty, best) {
   if (!best) return `अभी ${qty} क्विंटल ${crop.nameHi} कोई खरीददार स्वीकार नहीं कर सकता। कम मात्रा आज़माएँ।`;
   const label = best.channel === 'MARKET' ? `${best.nameHi} (${best.categoryHi})` : best.nameHi;
   return `सर्वोत्तम: ${label} — ₹${best.ratePerQuintal}/क्वि, परिवहन के बाद ${qty} क्विंटल के लिए अनुमानित ₹${formatLakhish(best.netValueInr)} प्राप्त।`;
+}
+
+function makeSummaryOr(crop, qty, best) {
+  const cropName = crop.nameOr || crop.nameEn;
+  if (!best) return `ଏବେ ${qty} କ୍ୱିଣ୍ଟାଲ ${cropName} କୌଣସି କ୍ରେତା ନେଇପାରିବେ ନାହିଁ। କମ୍ ପରିମାଣ ଚେଷ୍ଟା କରନ୍ତୁ।`;
+  const name = best.nameOr || best.nameEn;
+  const label = best.channel === 'MARKET' ? `${name} (${best.categoryOr || best.categoryEn})` : name;
+  return `ସର୍ବୋତ୍ତମ ବିକଳ୍ପ: ${label} — ₹${best.ratePerQuintal}/କ୍ୱି, ପରିବହନ ପରେ ${qty} କ୍ୱିଣ୍ଟାଲ ପାଇଁ ଆନୁମାନିକ ₹${formatLakhish(best.netValueInr)} ହାତରେ।`;
 }
 
 // Is this farmer free to commit a new sale right now (no active MSP request and

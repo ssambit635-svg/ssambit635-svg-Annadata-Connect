@@ -1,3 +1,5 @@
+import { localeFor } from '../i18n/I18nContext.jsx';
+
 // Presentation helpers. Backend statuses are translated to farmer-friendly text here.
 
 export const STATUS_TONE = {
@@ -13,12 +15,12 @@ export function formatInr(n) {
 
 export function formatTime(iso, lang) {
   const d = new Date(iso);
-  return d.toLocaleTimeString(lang === 'hi' ? 'hi-IN' : 'en-IN', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleTimeString(localeFor(lang), { hour: '2-digit', minute: '2-digit' });
 }
 
 export function formatDate(iso, lang) {
   const d = new Date(iso);
-  return d.toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleString(localeFor(lang), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
 export function waitText(minutes, t) {

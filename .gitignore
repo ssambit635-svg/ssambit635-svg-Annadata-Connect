@@ -12,3 +12,12 @@ backend/data/db.json
 test-results/
 playwright-report/
 .cache/
+
+# Android (Capacitor) build outputs — the APK comes from GitHub Actions
+frontend/android/app/build/
+frontend/android/.gradle/
+frontend/android/build/
+frontend/android/local.properties
+frontend/android/app/src/main/assets/public/
+frontend/android/app/src/main/assets/capacitor.config.json
+frontend/android/app/src/main/assets/capacitor.plugins.json

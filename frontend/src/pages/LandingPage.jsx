@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import { useAuth, homeFor } from '../auth/AuthContext.jsx';
 import { useI18n } from '../i18n/I18nContext.jsx';
+import { LanguageToggle } from '../components/LanguageToggle.jsx';
 import useHomeAnimations from '../hooks/useHomeAnimations.js';
 
 const MSP_ROWS = [
@@ -40,7 +41,7 @@ const STATS = [
 ];
 
 export default function LandingPage() {
-  const { t, lang, setLang } = useI18n();
+  const { t, lang, pick } = useI18n();
   const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const home = user ? homeFor(user.role) : '/login';
@@ -67,10 +68,7 @@ export default function LandingPage() {
           <div className="home-utility-actions">
             <span className="home-utility-label">{t('landing.portalLabel')}</span>
             <span className="home-utility-divider" aria-hidden="true" />
-            <div className="home-language" role="group" aria-label={t('landing.languageLabel')}>
-              <button type="button" className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
-              <button type="button" className={lang === 'hi' ? 'active' : ''} onClick={() => setLang('hi')}>हिंदी</button>
-            </div>
+            <LanguageToggle className="home-language" />
           </div>
         </div>
       </div>
@@ -270,7 +268,7 @@ export default function LandingPage() {
               <div className="home-rate-highlights">
                 {MSP_ROWS.slice(0, 3).map((crop) => (
                   <div className="home-rate-highlight" key={crop.en}>
-                    <span>{lang === 'hi' ? crop.hi : crop.en}</span>
+                    <span>{crop[lang] || crop.en}</span>
                     <strong>₹{crop.msp.toLocaleString('en-IN')}</strong><small>/ {t('landing.perQuintal')}</small>
                   </div>
                 ))}
@@ -285,7 +283,7 @@ export default function LandingPage() {
               <div className="home-rate-table" role="table" aria-label={t('landing.mspTitle')}>
                 {MSP_ROWS.map((crop) => (
                   <div className="home-rate-row" role="row" key={crop.en}>
-                    <span role="cell">{lang === 'hi' ? crop.hi : crop.en}</span>
+                    <span role="cell">{crop[lang] || crop.en}</span>
                     <strong role="cell">₹{crop.msp.toLocaleString('en-IN')}</strong>
                     <small role="cell">/ {t('landing.perQuintal')}</small>
                   </div>
@@ -311,7 +309,7 @@ export default function LandingPage() {
                 <article className="home-centre-card" key={centre.nameEn}>
                   <div className="home-centre-top"><span className="home-centre-number">0{index + 1}</span><span className="home-open-badge"><span /> {t('landing.openNow')}</span></div>
                   <span className="home-centre-icon"><Icon name="store" size={20} /></span>
-                  <h3>{lang === 'hi' ? centre.nameHi : centre.nameEn}</h3>
+                  <h3>{pick(centre, 'name')}</h3>
                   <div className="home-centre-meta"><span><Icon name="pin" size={14} /> {centre.area}</span><span>{t('landing.capacityCol')}: {centre.capacity.toLocaleString('en-IN')} q</span></div>
                 </article>
               ))}

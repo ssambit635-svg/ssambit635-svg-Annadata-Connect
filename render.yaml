@@ -1,25 +1,33 @@
-# One-click Render.com blueprint (Docker web service).
+# One-click Render.com blueprint — FREE plan, no card.
 # Push this repo to GitHub → Render → "New +" → "Blueprint" → pick the repo.
+#
+# Free-tier facts (2026): sleeps after 15 min idle, ~750 instance-hours/month,
+# no persistent disk → the JSON store resets on every deploy/restart. That's
+# acceptable for this MVP (SEED_ON_BOOT re-creates demo data every boot).
+# Keep it awake during demos with cron-job.org / UptimeRobot pinging
+#   https://<your-app>.onrender.com/api/health   every 10 minutes.
 services:
   - type: web
     name: annadata-connect
     runtime: docker
-    plan: free          # free plan works, but has no persistent disk (data resets on deploy)
+    plan: free
+    region: singapore          # closest free region to Odisha
     healthCheckPath: /api/health
+    autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
-        generateValue: true   # Render generates a strong secret automatically
+        generateValue: true
       - key: SEED_ON_BOOT
         value: "true"
       - key: ALLOW_DEMO_LOGIN
-        value: "true"      # sample accounts are the mock data; set "false" to disable their password logins
-      # Sign-in is mocked (no Google/Twilio/SMTP secrets needed); see AUTH_SETUP.md.
-      # Set TRUST_PROXY to match the trusted proxy chain for your host.
-      # CORS_ORIGIN is not needed: API + UI are same-origin in this image.
-    # Paid plans: uncomment for a persistent disk so the JSON store survives deploys.
-    # disk:
-    #   name: annadata-connect-data
-    #   mountPath: /app/backend/data
-    #   sizeGB: 1
+        value: "true"
+      - key: TRUST_PROXY
+        value: "1"
+      # The Android APK and any separately hosted frontend (Netlify / Cloudflare
+      # Pages) call this API cross-origin. Empty = allow all (fine for the MVP);
+      # tighten to a comma-separated list once you know your frontend URL, e.g.
+      #   https://annadata-connect.pages.dev,https://localhost,capacitor://localhost
+      - key: CORS_ORIGIN
+        value: ""

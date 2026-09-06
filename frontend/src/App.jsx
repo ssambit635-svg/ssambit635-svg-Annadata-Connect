@@ -4,6 +4,7 @@ import { I18nProvider } from './i18n/I18nContext.jsx';
 import { AppShell } from './components/AppShell.jsx';
 import { ProtectedRoute } from './components/ProtectedRoute.jsx';
 import { ErrorBoundary } from './components/ErrorBoundary.jsx';
+import { NetworkBanner } from './components/NetworkBanner.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import AccountPage from './pages/AccountPage.jsx';
@@ -39,6 +40,7 @@ export default function App() {
       <AuthProvider>
         <ErrorBoundary>
         <BrowserRouter>
+          <NetworkBanner />
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />

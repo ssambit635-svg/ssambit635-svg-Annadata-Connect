@@ -15,7 +15,7 @@ const LABEL = { STRONG: 'prices.benchStrong', TYPICAL: 'prices.benchTypical', WE
  * Silently renders nothing while loading or when the crop has no history.
  */
 export function PriceBenchmarkCard({ cropId, pricePerQuintal, compact = false }) {
-  const { t, lang } = useI18n();
+  const { t, pick } = useI18n();
   const [state, setState] = useState({ loading: true, bench: null, series: null, unsupported: false });
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export function PriceBenchmarkCard({ cropId, pricePerQuintal, compact = false })
         <span className={`badge ${tone} verdict`}>{t(LABEL[bench.verdict] || 'prices.benchTypical')}</span>
       </div>
 
-      <p style={{ margin: '0.5rem 0 0.4rem' }}>{lang === 'hi' ? bench.messageHi : bench.messageEn}</p>
+      <p style={{ margin: '0.5rem 0 0.4rem' }}>{pick(bench, 'message')}</p>
 
       <div className="grid stats" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))' }}>
         <div className="stat">

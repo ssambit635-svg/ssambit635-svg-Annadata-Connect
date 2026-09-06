@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth, homeFor } from '../auth/AuthContext.jsx';
 import { useI18n } from '../i18n/I18nContext.jsx';
+import { ServerSettings } from '../components/ServerSettings.jsx';
 import { LanguageToggle } from '../components/LanguageToggle.jsx';
 import { GoogleSignIn } from '../components/GoogleSignIn.jsx';
 import { OtpVerification } from '../components/OtpVerification.jsx';
@@ -23,7 +24,7 @@ const DEMO = [
 ];
 
 export default function LoginPage({ registration = false }) {
-  const { t, lang } = useI18n();
+  const { t, pick } = useI18n();
   const { login, loginWithGoogle, register } = useAuth();
   const navigate = useNavigate();
   const { options, error: optionsError, retry } = useAuthOptions();
@@ -129,7 +130,7 @@ export default function LoginPage({ registration = false }) {
             <form onSubmit={completeProfile} className="signin-profile" aria-busy={busy}>
               <div className="auth-verified-contact"><Icon name="checkCircle" size={18} /><span>{profileTicket.profile.phone ? `+91 ${profileTicket.profile.phone}` : profileTicket.profile.email}<small>{t('auth.contactVerified')}</small></span></div>
               <div className="field"><label htmlFor="profile-name">{t('auth.name')}</label><input id="profile-name" className="input" autoComplete="name" minLength={2} maxLength={100} required autoFocus value={profile.name} onChange={(event) => setProfile({ ...profile, name: event.target.value })} disabled={busy} /></div>
-              <div className="field"><label htmlFor="profile-village">{t('auth.village')}</label><select id="profile-village" className="select" required value={profile.villageId} onChange={(event) => setProfile({ ...profile, villageId: event.target.value })} disabled={busy || !villages.length}><option value="">{t('auth.chooseVillage')}</option>{villages.map((village) => <option key={village.id} value={village.id}>{lang === 'hi' ? village.nameHi : village.nameEn}</option>)}</select>{villagesError && <div className="auth-provider-note" role="alert">{t('common.errorNetwork')} <button type="button" className="text-button" onClick={() => setVillageAttempt((n) => n + 1)}>{t('common.retry')}</button></div>}</div>
+              <div className="field"><label htmlFor="profile-village">{t('auth.village')}</label><select id="profile-village" className="select" required value={profile.villageId} onChange={(event) => setProfile({ ...profile, villageId: event.target.value })} disabled={busy || !villages.length}><option value="">{t('auth.chooseVillage')}</option>{villages.map((village) => <option key={village.id} value={village.id}>{pick(village, 'name')}</option>)}</select>{villagesError && <div className="auth-provider-note" role="alert">{t('common.errorNetwork')} <button type="button" className="text-button" onClick={() => setVillageAttempt((n) => n + 1)}>{t('common.retry')}</button></div>}</div>
               <div className="field"><label htmlFor="profile-password">{t('auth.optionalPassword')}</label><input id="profile-password" className="input" type="password" autoComplete="new-password" minLength={8} maxLength={72} value={profile.password} onChange={(event) => setProfile({ ...profile, password: event.target.value })} disabled={busy} /><div className="hint">{t('auth.optionalPasswordHint')}</div></div>
               <button className="btn btn-primary btn-block" disabled={busy || !villages.length}>{busy ? t('auth.creatingAccount') : t('auth.createAccount')} <Icon name="arrowUpRight" size={17} /></button>
               <button type="button" className="auth-alt-link" disabled={busy} onClick={() => { setProfileTicket(null); setError(null); }}>{t('auth.startAgain')}</button>
@@ -155,6 +156,7 @@ export default function LoginPage({ registration = false }) {
         </section>
       </main>
       <footer className="signin-footer"><span>{t('app.tagline')}</span><span>{t('auth.footerNote')}</span></footer>
+      <ServerSettings />
     </div>
   );
 }

@@ -16,7 +16,7 @@ const FALLBACK_LEVEL_NAMES = {
 // /api/market-prices. Every figure on this page is computed by the backend
 // from the CSV extracts in backend/src/data/agmarknet - nothing is simulated.
 export default function MarketPricesPage() {
-  const { t, lang } = useI18n();
+  const { t, lang, pick } = useI18n();
 
   const [meta, setMeta] = useState(null);
   const [metaError, setMetaError] = useState(null);
@@ -242,7 +242,7 @@ export default function MarketPricesPage() {
             className={`btn btn-sm ${level === lv ? '' : 'btn-outline'}`}
             onClick={() => update({ level: lv })}
           >
-            {lang === 'hi' ? levelNames[lv]?.hi : levelNames[lv]?.en}
+            {levelNames[lv]?.[lang] || levelNames[lv]?.en}
             {meta.levels && (
               <span className="soft small" style={{ marginLeft: '0.35rem' }}>
                 {meta.levels[lv].seriesCount}
@@ -260,7 +260,7 @@ export default function MarketPricesPage() {
           <select id="f-commodity" className="select" value={filters.commodity} onChange={(e) => update({ commodity: e.target.value })}>
             {meta.commodities.map((c) => (
               <option key={c.commodity} value={c.commodity}>
-                {lang === 'hi' ? c.nameHi : c.nameEn}
+                {pick(c, 'name')}
               </option>
             ))}
           </select>
@@ -382,9 +382,9 @@ export default function MarketPricesPage() {
                 <p className="callout">
                   <Icon name="star" size={15} />{' '}
                   {t('prices.seasonBest', {
-                    month: lang === 'hi' ? season.best.nameHi : season.best.nameEn,
+                    month: pick(season.best, 'name'),
                     price: formatInr(Math.round(season.best.averagePrice)),
-                    worst: lang === 'hi' ? season.worst.nameHi : season.worst.nameEn,
+                    worst: pick(season.worst, 'name'),
                     spread: season.spreadPercent,
                   })}
                 </p>
