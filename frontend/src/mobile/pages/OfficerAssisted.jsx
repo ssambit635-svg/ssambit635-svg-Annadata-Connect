@@ -48,7 +48,7 @@ export default function OfficerAssisted() {
     <div className="m-stagger">
       <MCard plain className="gold">
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <ArtFarmer size={84} className="m-anim-bob" />
+          <ArtFarmer size={84} className="m-anim-pop" />
           <div>
             <h2 style={{ fontSize: 18, fontFamily: 'var(--m-f-display)' }}>{t('officer.assistedTitle')}</h2>
             <p style={{ fontSize: 13, color: 'var(--m-ink-soft)' }}>{t('officer.assistedHint')}</p>

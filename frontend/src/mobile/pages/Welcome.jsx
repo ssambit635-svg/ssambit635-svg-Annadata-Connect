@@ -11,7 +11,7 @@ import { GoogleG } from '../../components/GoogleSignIn.jsx';
 import { authErrorMessage, normalizeMobileInput } from '../../utils/auth.js';
 import { referenceService } from '../../services/api/farmerService.js';
 import Icon from '../../components/Icon.jsx';
-import { ArtSun, ArtFarmer, ArtField, ArtBirds, ArtLogo } from '../art.jsx';
+import { ArtFarmer, ArtField, ArtDivider, ArtLogo } from '../art.jsx';
 import { MBtn, MCard, MField, MInput, MSelect, Sheet, MLangPills, MLoader } from '../ui.jsx';
 
 const ROLES = [
@@ -133,12 +133,11 @@ export default function Welcome({ registration = false }) {
         </h1>
         <p className="m-welcome-tag">{t('saathi.tagline')} · {t('app.tagline')}</p>
         <div className="m-welcome-art">
-          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-            <ArtSun size={54} className="m-anim-bob" style={{ position: 'absolute', left: '12%', top: '-4px' }} />
-            <ArtBirds size={90} style={{ position: 'absolute', right: '10%', top: '0' }} />
-            <ArtFarmer size={104} className="m-anim-bob" />
+          <div className="m-emblem-stack">
+            <ArtFarmer size={96} className="m-anim-pop" />
+            <ArtDivider className="m-emblem-rule" />
           </div>
-          <ArtField size={230} style={{ marginTop: '-6px' }} />
+          <ArtField size={240} className="m-emblem-field" />
         </div>
       </div>
 

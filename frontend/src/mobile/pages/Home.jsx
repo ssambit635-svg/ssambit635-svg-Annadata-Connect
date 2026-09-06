@@ -6,7 +6,7 @@ import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
 import { farmerService, notificationService, requestService } from '../../services/api/farmerService.js';
 import Icon from '../../components/Icon.jsx';
-import { ArtSun, ArtBirds, ArtFarmer, ArtField, ArtWheat } from '../art.jsx';
+import { ArtSun, ArtFarmer, ArtField, ArtWheat, ArtLeafPair } from '../art.jsx';
 import { MCard, MBtn, MLoader, MError, MEmpty, TicketCard, SectionH, MConfirm, greetingKey } from '../ui.jsx';
 
 const ACTIONS = [
@@ -58,11 +58,10 @@ export default function Home() {
     <div className="m-stagger">
       {/* ── greeting hero ── */}
       <div className="m-hero">
-        <ArtSun size={72} className="m-hero-art m-anim-bob" />
-        <ArtBirds size={70} className="m-hero-birds" />
+        <ArtSun size={72} className="m-hero-art" />
         <div className="m-hero-eyebrow">{t('app.name')}</div>
         <h1 className="m-hero-title">
-          {t(greetingKey())}, {profile.name.split(' ')[0]} 👋
+          {t(greetingKey())}, {profile.name.split(' ')[0]}
         </h1>
         <p className="m-hero-sub">
           {profile.village ? pick(profile.village, 'name') : ''} · {dateStr}
@@ -95,7 +94,7 @@ export default function Home() {
           </>
         ) : (
           <MCard className="gold" style={{ textAlign: 'center' }}>
-            <ArtFarmer size={92} className="m-anim-bob" style={{ margin: '0 auto' }} />
+            <ArtFarmer size={92} className="m-anim-pop" style={{ margin: '0 auto' }} />
             <div className="m-state-title" style={{ marginTop: 6 }}>{t('farmer.noActive')}</div>
             <p style={{ color: 'var(--m-ink-soft)', fontSize: 14.5, margin: '4px 0 14px' }}>{t('farmer.noActiveHint')}</p>
             <MBtn to="/requests/new" variant="primary" icon={<Icon name="plus" size={18} />}>{t('farmer.createRequest')}</MBtn>
@@ -154,7 +153,7 @@ export default function Home() {
       {/* ── saathi tip ── */}
       <MCard className="leaf">
         <div className="m-card-h">
-          <ArtSun size={22} /> {t('saathi.tipTitle')}
+          <ArtLeafPair size={18} /> {t('saathi.tipTitle')}
         </div>
         <p style={{ fontSize: 14.5, color: 'var(--m-ink)' }}>{t(tip)}</p>
       </MCard>

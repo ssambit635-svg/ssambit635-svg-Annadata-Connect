@@ -1,0 +1,334 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ANNADATA SAATHI — institutional refinement layer.
+
+   Loaded after mobile.css. Its job is to take the app from "friendly
+   folk poster" to "government service of record":
+
+     · flat, low-radius surfaces with hairline rules instead of
+       drop-shadowed rounded cards
+     · a restrained deep-green / slate / muted-gold palette
+     · tabular, monospaced numerics for tokens, quantities and amounts
+     · uppercase micro-labels with generous tracking
+     · motion reserved for state changes and live data only
+
+   Everything stays scoped under .m-root.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.m-root {
+  --m-rule: #dfe4da;
+  --m-rule-strong: #c3cdbe;
+  --m-surface-sunk: #f4f6f1;
+  --m-focus: #1d4ed8;
+  background: #f7f8f4;
+}
+
+/* ── Type scale ─────────────────────────────────────────────────── */
+
+.m-root h1,
+.m-root h2,
+.m-root h3,
+.m-root .m-display {
+  font-family: var(--m-f-display);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.m-root .m-page-title {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--m-green-forest);
+}
+.m-root .m-page-sub { font-size: 13.5px; color: var(--m-ink-soft); }
+
+/* uppercase micro-label — the workhorse of official layouts */
+.m-root .m-eyebrow,
+.m-root .m-hero-eyebrow,
+.m-root .m-factors .m-k,
+.m-root .m-gov-line,
+.m-root .m-divider-with-text {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* numerals: tabular + monospace wherever a value is being reported */
+.m-root .m-ticket-num,
+.m-root .m-stat .m-stat-num,
+.m-root .m-stat strong,
+.m-root .m-factors .m-v,
+.m-root .m-amount,
+.m-root .m-otp-input,
+.m-root .m-kv-num {
+  font-family: var(--m-f-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* ── Surfaces ───────────────────────────────────────────────────── */
+
+.m-root .m-card {
+  border: 1px solid var(--m-rule);
+  border-radius: var(--m-r-md);
+  box-shadow: none;
+  padding: 16px;
+}
+.m-root .m-card.gold {
+  background: var(--m-paper);
+  border-color: var(--m-rule);
+  border-left: 3px solid var(--m-gold);
+}
+.m-root .m-card-h {
+  font-family: var(--m-f-display);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  color: var(--m-green-forest);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--m-rule);
+}
+
+.m-root .m-stat {
+  border: 1px solid var(--m-rule);
+  border-radius: var(--m-r-sm);
+  box-shadow: none;
+  background: var(--m-paper);
+}
+.m-root .m-stat.gold { background: var(--m-paper); border-top: 2px solid var(--m-gold); }
+
+/* ── Header / hero ──────────────────────────────────────────────── */
+
+.m-root .m-hero {
+  background: var(--m-green-forest);
+  border-radius: var(--m-r-md);
+  box-shadow: none;
+  border: 1px solid #0b2e19;
+  padding: 18px 18px 16px;
+}
+.m-root .m-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 28px 100%;
+  opacity: 0.5;
+}
+.m-root .m-hero .m-hero-art { right: 10px; top: 8px; opacity: 0.5; }
+.m-root .m-hero .m-hero-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.m-root .m-hero .m-hero-eyebrow { color: var(--m-gold); opacity: 0.95; }
+.m-root .m-hero .m-hero-sub {
+  font-size: 12.5px;
+  color: #b9cbbd;
+  font-variant-numeric: tabular-nums;
+}
+.m-root .m-hero .m-hero-bottom { margin-top: 12px; }
+
+.m-root .m-appbar {
+  border-bottom: 1px solid var(--m-rule);
+  box-shadow: none;
+  background: var(--m-paper);
+}
+.m-root .m-appbar .m-back { border-radius: var(--m-r-sm); box-shadow: none; }
+
+/* ── Controls ───────────────────────────────────────────────────── */
+
+.m-root .m-btn {
+  border-radius: var(--m-r-sm);
+  font-family: var(--m-f-display);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  box-shadow: none;
+  transition: background 0.15s var(--m-ease), border-color 0.15s var(--m-ease);
+}
+.m-root .m-btn.primary { background: var(--m-green-deep); border: 1px solid var(--m-green-forest); }
+.m-root .m-btn.primary:active { background: var(--m-green-forest); }
+.m-root .m-btn.gold {
+  background: var(--m-gold);
+  color: var(--m-green-forest);
+  border: 1px solid var(--m-gold-deep);
+}
+.m-root .m-btn:active { transform: none; }
+
+.m-root .m-chip,
+.m-root .m-icon-btn,
+.m-root .m-seg,
+.m-root .m-seg button,
+.m-root .m-google-btn,
+.m-root .m-lang-pill {
+  border-radius: var(--m-r-sm);
+  box-shadow: none;
+}
+.m-root .m-seg { background: var(--m-surface-sunk); border: 1px solid var(--m-rule); padding: 3px; }
+.m-root .m-seg button.active { background: var(--m-paper); border: 1px solid var(--m-rule); box-shadow: none; }
+
+.m-root .m-input,
+.m-root .m-select {
+  border-radius: var(--m-r-sm);
+  border: 1px solid var(--m-rule-strong);
+  background: var(--m-paper);
+}
+.m-root .m-input:focus,
+.m-root .m-select:focus {
+  outline: 2px solid var(--m-focus);
+  outline-offset: 1px;
+  border-color: var(--m-focus);
+}
+
+.m-root .m-role { border-radius: var(--m-r-sm); border-width: 1px; }
+.m-root .m-role.active { box-shadow: inset 0 0 0 1px var(--m-green); }
+
+/* ── Status badges — flat, legible, no candy ────────────────────── */
+
+.m-root .m-badge {
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  background: transparent;
+}
+.m-root .m-badge .m-dot { width: 6px; height: 6px; border-radius: 1px; }
+.m-root .m-badge.success { color: #15653a; background: #eff6f1; }
+.m-root .m-badge.warning { color: #8a5b06; background: #fdf6e7; }
+.m-root .m-badge.info { color: #1d4ed8; background: #eef2fd; }
+.m-root .m-badge.danger { color: #a5271c; background: #fdefee; }
+.m-root .m-badge.neutral { color: var(--m-ink-soft); background: var(--m-surface-sunk); }
+.m-root .m-badge.gold { color: var(--m-amber); background: var(--m-gold-soft); }
+
+/* ── Token ticket — reads like an issued document ───────────────── */
+
+.m-root .m-ticket {
+  border: 1px solid var(--m-green-forest);
+  border-radius: var(--m-r-md);
+  box-shadow: none;
+}
+.m-root .m-ticket .m-ticket-top {
+  background: var(--m-green-forest);
+  border-bottom: 2px solid var(--m-gold);
+}
+.m-root .m-ticket .m-ticket-top .m-ticket-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.m-root .m-ticket .m-ticket-num {
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ── Lists & rows ───────────────────────────────────────────────── */
+
+.m-root .m-row {
+  border-radius: var(--m-r-sm);
+  border: 1px solid var(--m-rule);
+  box-shadow: none;
+}
+.m-root .m-row .m-row-ico {
+  border-radius: var(--m-r-sm);
+  background: var(--m-surface-sunk);
+  color: var(--m-green-deep);
+}
+.m-root .m-note-row { border-bottom-style: solid; border-bottom-color: var(--m-rule); }
+.m-root .m-note-row .m-note-ico { border-radius: var(--m-r-sm); background: var(--m-surface-sunk); }
+.m-root .m-note-row.unread .m-note-ico { background: var(--m-gold-soft); }
+.m-root .m-note-row.unread .m-note-title::after { border-radius: 1px; width: 6px; height: 6px; }
+
+.m-root .m-action {
+  border: 1px solid var(--m-rule);
+  border-radius: var(--m-r-sm);
+  box-shadow: none;
+  font-weight: 500;
+  font-size: 12.5px;
+}
+.m-root .m-action .m-action-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--m-r-sm);
+  background: var(--m-surface-sunk);
+}
+.m-root .m-action.gold .m-action-ico { background: var(--m-gold-soft); }
+
+/* ── Tab bar ────────────────────────────────────────────────────── */
+
+.m-root .m-tabbar { box-shadow: none; border-top: 1px solid var(--m-rule); }
+.m-root .m-tab { border-radius: 0; font-size: 10.5px; font-weight: 500; letter-spacing: 0.01em; }
+.m-root .m-tab.active {
+  background: transparent;
+  color: var(--m-green-forest);
+  font-weight: 600;
+  box-shadow: inset 0 2px 0 var(--m-green-deep);
+}
+.m-root .m-tab-add { border-radius: var(--m-r-sm); }
+
+/* ── Banners, sheets, empty states ──────────────────────────────── */
+
+.m-root .m-banner {
+  border-radius: var(--m-r-sm);
+  border-left: 3px solid currentColor;
+  font-size: 13.5px;
+}
+.m-root .m-sheet { border-radius: var(--m-r-md) var(--m-r-md) 0 0; }
+.m-root .m-state-title { font-family: var(--m-f-display); font-weight: 600; font-size: 16px; }
+.m-root .m-empty svg,
+.m-root .m-state svg { opacity: 0.85; }
+
+/* ── Welcome screen ─────────────────────────────────────────────── */
+
+.m-root .m-welcome-hero {
+  background: var(--m-green-forest);
+  border-radius: 0;
+  border-bottom: 2px solid var(--m-gold);
+}
+.m-root .m-welcome-hero .m-welcome-title { font-size: 28px; font-weight: 600; letter-spacing: -0.025em; }
+.m-root .m-welcome-hero .m-welcome-tag { font-size: 13.5px; color: #b9cbbd; }
+.m-root .m-gov-line {
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  background: rgba(199, 154, 46, 0.12);
+}
+.m-root .m-emblem-stack { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.m-root .m-emblem-rule { opacity: 0.7; }
+.m-root .m-emblem-field { opacity: 0.55; margin-top: -4px; }
+
+/* ── Live-data affordances (the only looping motion) ────────────── */
+
+.m-root .m-live { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+.m-root .m-live::before { border-radius: 1px; }
+
+.m-root .m-skeleton {
+  background: linear-gradient(90deg, var(--m-surface-sunk) 25%, #e9ede4 50%, var(--m-surface-sunk) 75%);
+  background-size: 220% 100%;
+  animation: m-sweep 1.4s linear infinite;
+  border-radius: 3px;
+}
+
+/* refreshing values tick over rather than bounce */
+.m-root .m-value-update { animation: m-value-in 0.3s var(--m-ease) both; }
+@keyframes m-value-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Accessibility ──────────────────────────────────────────────── */
+
+.m-root :focus-visible {
+  outline: 2px solid var(--m-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m-root .m-skeleton,
+  .m-root .m-loader-brand .m-loader-word { animation: none; }
+}

@@ -34,7 +34,7 @@ export default function History() {
 
       {rows.length === 0 ? (
         <MEmpty
-          art={<ArtBasket size={100} className="m-anim-bob" />}
+          art={<ArtBasket size={100} className="m-anim-pop" />}
           title={t('farmer.noRecords')}
           hint={t('farmer.noActiveHint')}
           action={<MBtn to="/requests/new" variant="primary" size="sm" icon={<Icon name="plus" size={16} />}>{t('farmer.createRequest')}</MBtn>}

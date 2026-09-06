@@ -1,7 +1,7 @@
-// 404 / unauthorized — a friendly lost-in-the-field screen.
+// 404 / unauthorized — a plain service notice with a route back.
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { useAuth, homeFor } from '../../auth/AuthContext.jsx';
-import { ArtCow, ArtBirds } from '../art.jsx';
+import { ArtWayfind } from '../art.jsx';
 import { MBtn } from '../ui.jsx';
 
 export default function NotFound() {
@@ -10,8 +10,7 @@ export default function NotFound() {
   const home = user ? homeFor(user.role) : '/login';
   return (
     <div className="m-state" style={{ padding: '70px 20px 40px' }}>
-      <ArtCow size={130} className="m-anim-bob" />
-      <ArtBirds size={110} />
+      <ArtWayfind size={104} className="m-anim-pop" />
       <div className="m-state-title" style={{ marginTop: 10 }}>{t('common.notFoundTitle')}</div>
       <MBtn to={home} variant="primary" style={{ marginTop: 8 }}>{t('common.goHome')}</MBtn>
     </div>

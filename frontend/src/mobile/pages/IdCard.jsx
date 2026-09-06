@@ -16,7 +16,7 @@ export default function IdCard() {
 
   return (
     <div className="m-stagger" style={{ textAlign: 'center' }}>
-      <ArtIdBadge size={80} className="m-anim-bob" style={{ margin: '4px auto' }} />
+      <ArtIdBadge size={80} className="m-anim-pop" style={{ margin: '4px auto' }} />
       <h2 style={{ fontSize: 22, fontWeight: 800 }}>{t('idCard.title')}</h2>
       <p style={{ color: 'var(--m-ink-soft)', fontSize: 14, marginBottom: 14 }}>{t('idCard.hint')}</p>
 

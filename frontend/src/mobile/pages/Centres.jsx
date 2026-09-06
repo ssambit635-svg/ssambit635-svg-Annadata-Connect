@@ -18,7 +18,7 @@ export default function Centres() {
       <SectionH title={t('farmer.centresTitle')} art={<ArtMandi size={34} />} />
 
       {data.centres.length === 0 ? (
-        <MEmpty art={<ArtCow size={90} className="m-anim-bob" />} title={t('farmer.noCentres')} />
+        <MEmpty art={<ArtCow size={90} className="m-anim-pop" />} title={t('farmer.noCentres')} />
       ) : (
         data.centres.map((c) => {
           const storageLeft = c.capacityQuintals - c.currentStockQuintals;
