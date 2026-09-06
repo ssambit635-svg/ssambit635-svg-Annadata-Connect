@@ -1,6 +1,6 @@
 {
   "appId": "in.annadata.connect",
-  "appName": "Annadata Connect",
+  "appName": "Annadata Saathi",
   "webDir": "dist",
   "bundledWebRuntime": false,
   "android": {
@@ -13,7 +13,7 @@
   "plugins": {
     "SplashScreen": {
       "launchAutoHide": true,
-      "backgroundColor": "#07382a",
+      "backgroundColor": "#0f3d22",
       "showSpinner": false
     }
   }

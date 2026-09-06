@@ -6,6 +6,16 @@ import { orTranslations, orAssistantAnswers } from './or.js';
 export const translations = {
   en: {
     app: { name: 'Annadata Connect', tagline: 'Crop procurement made simple' },
+    // "Annadata Saathi" — the bespoke Android app frontend (same product, its own
+    // friendlier design language). Keys here must stay in en/hi/or parity.
+    saathi: {
+      name: 'Annadata Saathi', tagline: 'Harvest Companion',
+      greetMorning: 'Suprabhat', greetEvening: 'Shubh sandhya', greetDay: 'Namaste',
+      heroTitle: 'Farming, made gentle', heroBody: 'Tokens, queues and payments — with a friend by your side at every step.',
+      madeWith: 'Made with care for our annadaas', getStarted: 'Get started',
+      liveToken: 'Live token', tipTitle: 'Saathi says',
+      previewBanner: 'Previewing the Android app UI — open with ?app=0 to return to the website.',
+    },
     nav: {
       dashboard: 'Dashboard', newRequest: 'New Request', smartSell: 'Smart Sell',
       queue: 'Queue', requests: 'Requests', assisted: 'Assisted Entry', overview: 'District Overview', logout: 'Logout',
@@ -279,6 +289,14 @@ export const translations = {
 
   hi: {
     app: { name: 'अन्नदाता कनेक्ट', tagline: 'फसल खरीद अब आसान' },
+    saathi: {
+      name: 'अन्नदाता साथी', tagline: 'फसल का साथी',
+      greetMorning: 'सुप्रभात', greetEvening: 'शुभ संध्या', greetDay: 'नमस्ते',
+      heroTitle: 'खेती, अब और आसान', heroBody: 'टोकन, कतार और भुगतान — हर कदम पर आपके साथ एक साथी।',
+      madeWith: 'हमारे अन्नदाताओं के लिए प्यार से बना', getStarted: 'शुरू करें',
+      liveToken: 'लाइव टोकन', tipTitle: 'साथी कहते हैं',
+      previewBanner: 'एंड्रॉइड ऐप यूआई देख रहे हैं — वेबसाइट के लिए ?app=0 खोलें।',
+    },
     nav: {
       dashboard: 'डैशबोर्ड', newRequest: 'नया अनुरोध', smartSell: 'स्मार्ट बिक्री',
       queue: 'कतार', requests: 'अनुरोध', assisted: 'सहायक प्रविष्टि', overview: 'जिला सारांश', logout: 'लॉग आउट',

@@ -80,6 +80,14 @@ export const orAuth = {
 
 export const orTranslations = {
   app: { name: 'ଅନ୍ନଦାତା କନେକ୍ଟ', tagline: 'ଫସଲ କ୍ରୟ ଏବେ ସହଜ' },
+  saathi: {
+    name: 'ଅନ୍ନଦାତା ସାଥୀ', tagline: 'ଫସଲର ସାଥୀ',
+    greetMorning: 'ଶୁଭ ପ୍ରଭାତ', greetEvening: 'ଶୁଭ ସନ୍ଧ୍ୟା', greetDay: 'ନମସ୍କାର',
+    heroTitle: 'ଚାଷ, ଏବେ ସହଜ', heroBody: 'ଟୋକନ, ଧାଡ଼ି ଓ ଦେୟ — ପ୍ରତି ପାଦରେ ଆପଣଙ୍କ ପାଖରେ ଜଣେ ସାଥୀ।',
+    madeWith: 'ଆମ ଅନ୍ନଦାତାମାନଙ୍କ ପାଇଁ ଯତ୍ନରେ ନିର୍ମିତ', getStarted: 'ଆରମ୍ଭ କରନ୍ତୁ',
+    liveToken: 'ଲାଇଭ୍ ଟୋକନ', tipTitle: 'ସାଥୀ କହନ୍ତି',
+    previewBanner: 'ଆଣ୍ଡ୍ରଏଡ୍ ଆପ୍ ୟୁଆଇ ଦେଖୁଛନ୍ତି — ୱେବସାଇଟ୍ ପାଇଁ ?app=0 ଖୋଲନ୍ତୁ।',
+  },
   nav: {
     dashboard: 'ଡ୍ୟାସବୋର୍ଡ', newRequest: 'ନୂଆ ଅନୁରୋଧ', smartSell: 'ସ୍ମାର୍ଟ ବିକ୍ରି',
     queue: 'ଧାଡ଼ି', requests: 'ଅନୁରୋଧ', assisted: 'ସହାୟକ ପ୍ରବିଷ୍ଟି', overview: 'ଜିଲ୍ଲା ସାରାଂଶ', logout: 'ଲଗ୍ ଆଉଟ୍',
