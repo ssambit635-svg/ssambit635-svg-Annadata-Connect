@@ -180,12 +180,40 @@ Every completed procurement carries a `payment` object on its request:
 
 Non-completed requests have `"payment": null`.
 
-## Authority (read-only oversight)
+## Authority (oversight + planning)
 
 | Method | Endpoint                      | Response                                                        |
 | ------ | ----------------------------- | --------------------------------------------------------------- |
 | GET    | `/api/authority/overview`     | `{district, totals, centres:[…+stats+procuredQuintals+alerts]}` |
 | GET    | `/api/authority/centres/:id`  | `{centre, stats, alerts, recentRequests}`                       |
+| POST   | `/api/authority/simulator`    | See below — Procurement Simulator projection (pure, no writes)  |
+
+### POST /api/authority/simulator — Procurement Simulator
+
+Deterministic what-if projection for district procurement. It reads current centre
+state (capacity, storage, live queue, processing rate, operating hours) and recorded
+arrival history, applies the authority's scenario and never writes to the store.
+
+Body (all optional unless noted; at least one positive value expected):
+
+| Field                     | Type   | Notes                                                    |
+| ------------------------- | ------ | -------------------------------------------------------- |
+| `additionalFarmers`       | number | ≥0, ≤100000 — extra farmers district-wide (default 0)    |
+| `additionalQuantityQuintal` | number | ≥0, ≤100000000 — extra produce in quintals (default 0) |
+| `arrivalsPct`             | number | ≥0, ≤300 — % arrival increase for the simulated day      |
+| `cropId`                  | string?| Crop id for average lot sizing (must exist in reference) |
+| `simulationDate`          | string?| `YYYY-MM-DD` (2020–2100); defaults to today              |
+
+Response: `{ district, simulation:{date, simulatingToday, cropId, crop, additionalFarmers, additionalQuantityQuintal, arrivalsPct}, baseline:{historyDays, historyFrom, historyTo, avgDailyArrivalsDistrict, todayArrivalsDistrict}, totals:{farmersTodayDistrict, expectedArrivals, extraFarmersDistrict, currentStockQuintals, capacityQuintals, projectedStockQuintals, projectedUtilizationPct, overloadedCentres, criticalCentres, freeCapacityQuintals, recommendedRedirectQuintals, recommendedRedirectFarmers}, centres:[{centre, intake, avgQuintalPerFarmer, dailyServiceCapacityFarmers, current:{arrivals,queue,active,servedToday,stockQuintals,utilizationPct,waitMinutes}, simulated:{extraFarmers, extraQuantityQuintal, arrivals, queue, stockQuintals, utilizationPct, waitMinutes, level, overloaded, baselineSource}, suggested:[{toCentreId,toNameEn,toNameHi,quantityQuintal,farmers,code}], redirectedAfter:{stockQuintals,utilizationPct}}], recommendations:[…] }`
+
+`level` ∈ `OVERLOADED (>100%) | CRITICAL (90–100) | HIGH (75–89) | OK (<75) | INTAKE_OFF`.
+Extra farmers/quantity are spread over intake-open centres proportionally to their
+recorded demand (with a small floor so empty centres stay visible). Simulated queue
+is the expected waiting backlog at the close of the simulated day. When projected
+storage exceeds capacity, `recommendations` carry a greedy `REDIRECT` plan toward the
+open centre with the most free capacity (down to 90% utilization); if no centre has
+space, a `NO_SPARE_CAPACITY` warning is emitted instead. This is a planning estimate,
+not a prediction of real-world arrivals — the UI states that explicitly.
 
 ## Domain model
 

@@ -28,8 +28,17 @@ export default function AuthorityDashboard() {
           <h1 style={{ marginBottom: 0 }}>{t('authority.overview')}</h1>
           <p style={{ margin: 0, color: 'var(--c-text-soft)' }}>{t('authority.district')}: {district}</p>
         </div>
-        <button className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}><Icon name="refresh" size={14} /> {t('common.refresh')}</button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <Link className="btn btn-primary" to="/authority/simulator"><Icon name="activity" size={15} /> {t('simulator.title')}</Link>
+          <button className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}><Icon name="refresh" size={14} /> {t('common.refresh')}</button>
+        </div>
       </div>
+
+      <Link to="/authority/simulator" className="sim-hero sim-hero-link" style={{ textDecoration: 'none' }}>
+        <Icon name="activity" size={17} />
+        <span>{t('simulator.title')} — {t('simulator.blurb')}</span>
+        <Icon name="arrowUpRight" size={16} style={{ flexShrink: 0, color: 'var(--c-primary)' }} />
+      </Link>
 
       <div className="grid stats" style={{ marginBottom: '1rem' }}>
         <div className="stat"><div className="num">{totals.farmersToday}</div><div className="lbl">{t('authority.totalFarmersToday')}</div></div>

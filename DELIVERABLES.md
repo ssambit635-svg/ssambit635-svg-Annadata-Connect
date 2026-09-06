@@ -110,6 +110,34 @@
   `scripts/build-agmarknet-levels.mjs`), provenance and caveats committed in
   `backend/src/data/agmarknet/source.meta.json`, `levels.meta.json` and `HISTORICAL_DATA.md`.
 
+### Procurement Simulator — authority what-if planning
+- ✅ New **Procurement Simulator** module (nav + `/authority/simulator`, also in the Android app via a
+  module card on the authority dashboard). Authority enters an expected number of additional farmers,
+  optional crop, expected quantity increase (quintals), a simulation date and an optional % rise in
+  arrivals — the backend projects the district impact and never writes to the store.
+- ✅ Projection engine (`backend/src/services/simulator.service.js`, `POST /api/authority/simulator`)
+  reuses the existing data model: per-centre capacity & current storage, live queue
+  (WAITING/CALLED/PROCESSING), processing rate, operating hours and recorded arrival history. Extra
+  farmers/quantity are spread across intake-open centres by recorded demand share (largest-remainder,
+  so totals always match the inputs); average lot per farmer is derived from booked quantities
+  (crop-specific when a crop is chosen).
+- ✅ Per-centre outputs: expected arrivals, queue at close of the simulated day (arrivals + backlog −
+  daily service capacity), projected storage & utilization, estimated waiting time (queue × min/farmer,
+  same convention as live tokens) — with utilization bands aligned to the live alerts
+  (OVERLOADED >100% · CRITICAL 90–100% · HIGH 75–89% · OK <75%), and paused centres shown as
+  INTAKE_OFF with no projected intake.
+- ✅ When centres are projected over capacity the simulator recommends a redistribution: greedy
+  redirect of the excess load (quintals + ≈farmers) to the intake-open centre with the most free
+  capacity, down to 90% utilization, showing the state "after suggested redirect" for every centre;
+  if no centre has space a NO_SPARE_CAPACITY warning is shown.
+- ✅ UI (web + Saathi mobile, trilingual EN/हिंदी/ଓଡ଼ିଆ): scenario input panel with quick presets,
+  district KPI tiles, overload-warning and recommended-action cards, centre impact cards with
+  CURRENT vs SIMULATED storage bars, queue/arrival/wait comparisons, available-capacity list and a
+  centre-wise current-vs-simulated table. An explicit note states the simulator is a planning
+  estimate built on current centre data and recorded history — not a prediction of real arrivals.
+- ✅ Coverage: `backend/test/simulator.test.js` (role guards, no-op parity, overload + redistribution,
+  determinism/paused centres, input validation); backend suite 48/48 green.
+
 ## Backend-dependent feature notes
 
 The backend is **in-repo** and implements the whole contract in `API_INTEGRATION_MAP.md`, so there

@@ -25,6 +25,7 @@ const NAV = {
   ],
   authority: [
     { to: '/authority', key: 'nav.overview', icon: 'grid', end: true },
+    { to: '/authority/simulator', key: 'nav.simulator', icon: 'activity' },
     { to: '/centres', key: 'nav.centres', icon: 'store' },
     { to: '/market-prices', key: 'nav.marketPrices', icon: 'chart' },
   ],

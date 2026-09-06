@@ -3,10 +3,57 @@ import { getDb } from '../db/store.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { ApiError } from '../middleware/error.js';
 import { summary, centreAlerts } from '../services/queue.service.js';
+import { runScenario } from '../services/simulator.service.js';
+import { requireNumber } from '../middleware/validate.js';
 import { presentCentre, presentRequest } from '../utils/present.js';
 
 const router = Router();
 router.use(authenticate, authorize('authority'));
+
+// POST /api/authority/simulator — run a what-if procurement scenario.
+// Pure planning endpoint: it projects current centre state + scenario inputs
+// and never writes anything to the store.
+router.post('/simulator', (req, res, next) => {
+  try {
+    const db = getDb();
+    const body = req.body || {};
+    const additionalFarmers = Math.round(requireNumber(body.additionalFarmers ?? 0, 'additionalFarmers', { min: 0, max: 100000 }));
+    const additionalQuantityQuintal = Math.round(requireNumber(body.additionalQuantityQuintal ?? 0, 'additionalQuantityQuintal', { min: 0, max: 100000000 }));
+    const arrivalsPct = requireNumber(body.arrivalsPct ?? 0, 'arrivalsPct', { min: 0, max: 300 });
+    const cropId = body.cropId ? String(body.cropId) : null;
+    if (cropId && !db.crops.some((c) => c.id === cropId)) {
+      throw new ApiError(400, 'VALIDATION_ERROR', 'Unknown crop.');
+    }
+    let simulationDate = null;
+    if (body.simulationDate) {
+      const m = String(body.simulationDate).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      const probe = m ? new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]))) : null;
+      if (
+        !probe ||
+        Number.isNaN(probe.getTime()) ||
+        probe.getUTCFullYear() !== Number(m[1]) ||
+        probe.getUTCMonth() !== Number(m[2]) - 1 ||
+        probe.getUTCDate() !== Number(m[3]) ||
+        probe.getUTCFullYear() < 2020 ||
+        probe.getUTCFullYear() > 2100
+      ) {
+        throw new ApiError(400, 'VALIDATION_ERROR', 'simulationDate must be a valid YYYY-MM-DD date.');
+      }
+      simulationDate = String(body.simulationDate);
+    }
+    res.json(
+      runScenario(db, {
+        additionalFarmers,
+        additionalQuantityQuintal,
+        arrivalsPct,
+        cropId,
+        simulationDate,
+      })
+    );
+  } catch (e) {
+    next(e);
+  }
+});
 
 // GET /api/authority/overview — district-level view across all centres.
 router.get('/overview', (req, res) => {

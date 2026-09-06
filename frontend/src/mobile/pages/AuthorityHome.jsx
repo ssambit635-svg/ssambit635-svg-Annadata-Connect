@@ -43,6 +43,18 @@ export default function AuthorityHome() {
         <MStat num={`${totals.openCentres}/${totals.totalCentres}`} label={t('authority.centresOpen')} className="gold" />
       </div>
 
+      {/* Procurement Simulator module entry */}
+      <Link to="/authority/simulator" style={{ textDecoration: 'none' }}>
+        <div className="m-row" style={{ borderLeft: '3px solid var(--m-gold)', background: 'var(--m-paper)' }}>
+          <span className="m-row-ico" style={{ color: 'var(--m-green-deep)' }}><Icon name="activity" size={20} /></span>
+          <div className="m-row-main">
+            <div className="m-row-title">{t('simulator.title')}</div>
+            <div className="m-row-sub">{t('simulator.subtitle')}</div>
+          </div>
+          <Icon name="arrowUpRight" size={18} style={{ color: 'var(--m-ink-faint)' }} />
+        </div>
+      </Link>
+
       {/* ── congestion ── */}
       <MCard plain>
         <div className="m-card-h"><Icon name="users" size={19} /> {t('authority.queueCongestion')}</div>

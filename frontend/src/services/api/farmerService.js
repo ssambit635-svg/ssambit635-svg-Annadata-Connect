@@ -55,4 +55,6 @@ export const officerService = {
 export const authorityService = {
   overview: () => api('/api/authority/overview'),
   centre: (id) => api(`/api/authority/centres/${id}`),
+  // Procurement Simulator — POST a what-if scenario, get the projected impact.
+  simulate: (scenario) => api('/api/authority/simulator', { method: 'POST', body: scenario }),
 };
