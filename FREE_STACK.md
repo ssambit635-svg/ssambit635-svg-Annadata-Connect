@@ -2,7 +2,7 @@
 
 | Layer | Free service | Why |
 | --- | --- | --- |
-| **APK build** | GitHub Actions (`.github/workflows/android-apk.yml`) — `ubuntu-24.04` has JDK + Android SDK 36 preinstalled | Unlimited minutes on a public repo, 2 000 min/mo on private; one build ≈ 5–10 min |
+| **APK build** | GitHub Actions (`.github/workflows-pending/android-apk.yml` → enable with `npm run enable:workflows`) — `ubuntu-24.04` has JDK + Android SDK 36 preinstalled | Unlimited minutes on a public repo, 2 000 min/mo on private; one build ≈ 5–10 min |
 | **Install** | Sideload the debug APK | $0 forever. Play Store ($25 + 12 testers × 14 days) is explicitly *out of scope* |
 | **Backend** | Render free web service (`render.yaml`) | No card. Sleeps after 15 min, 750 instance-hrs/month |
 | **Data** | JSON store re-seeded on boot (`SEED_ON_BOOT=true`) | Data resets on each restart — accepted for the MVP. (Turso/libSQL is the free upgrade path later.) |
@@ -34,6 +34,9 @@ so a cold start never looks like a crash.
 
 ## 3. Build the APK on GitHub Actions ($0)
 
+0. **One-time:** the workflow files live in `.github/workflows-pending/` (the Arena
+   integration cannot write to `.github/workflows/`). Enable them once:
+   `npm run enable:workflows && git commit -am "Enable workflows" && git push`
 1. GitHub → repo **Settings → Secrets and variables → Actions → Variables** →
    `New repository variable`: **`API_BASE_URL`** = `https://<app>.onrender.com`.
 2. **Actions → Android APK → Run workflow** (or just push to `main`).

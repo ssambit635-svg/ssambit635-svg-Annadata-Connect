@@ -14,7 +14,8 @@
     "data:agmarknet:levels": "node scripts/build-agmarknet-levels.mjs",
     "data:agmarknet:all": "node scripts/build-agmarknet-sample.mjs && node scripts/build-agmarknet-levels.mjs",
     "test": "npm --prefix backend test",
-    "test:e2e": "npm --prefix frontend run test:e2e"
+    "test:e2e": "npm --prefix frontend run test:e2e",
+    "enable:workflows": "mkdir -p .github/workflows && git mv .github/workflows-pending/*.yml .github/workflows/ && echo 'Workflows enabled - commit and push'"
   },
   "engines": {
     "node": ">=22"
