@@ -39,9 +39,33 @@
 .signin-panel .google-btn small { font-size: .6rem; margin-left: auto; color: #687565; border: 1px solid #dadfce; padding: 3px 6px; border-radius: 4px; }
 .signin-panel .google-btn:disabled { opacity: .75; background: #fff; }
 .google-signin-block { width: 100%; }
-.google-gis-wrap { min-height: 0; width: 100%; overflow: hidden; }
-.google-gis-wrap.is-disabled { pointer-events: none; opacity: .5; }
-.google-loading { display: flex; width: 100%; padding: 10px; border: 1px solid #d9dfd1; }
+/* Fake Google switch: flips the mock picker on and off (persisted per browser). */
+.mock-switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; padding: 9px 12px; border: 1px dashed #d7dcc8; border-radius: 10px; background: #f7f8f0; }
+.mock-switch-text { display: grid; gap: 2px; min-width: 0; }
+.mock-switch-text strong { font-size: .74rem; color: #2c4433; letter-spacing: -.1px; }
+.mock-switch-text small { font-size: .64rem; color: #7a816e; }
+.mock-switch-control { position: relative; flex-shrink: 0; width: 44px; height: 24px; padding: 0; border: 1px solid #c9d2bb; border-radius: 999px; background: #e3e7d8; cursor: pointer; transition: background .18s ease, border-color .18s ease; }
+.mock-switch-control.is-on { background: #2f7a52; border-color: #256243; }
+.mock-switch-control:disabled { opacity: .55; cursor: not-allowed; }
+.mock-switch-knob { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fffefa; box-shadow: 0 1px 3px #1d3a2633; transition: transform .18s ease; }
+.mock-switch-control.is-on .mock-switch-knob { transform: translateX(20px); }
+/* Google-styled picker over sample accounts — no Google script is loaded. */
+.mock-google-overlay { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 20px; background: #10251a66; }
+.mock-google-dialog { width: min(400px, 100%); max-height: min(78vh, 620px); overflow: auto; background: #fffefa; border: 1px solid #dedfce; border-radius: 16px; box-shadow: 0 22px 60px #0d2a1c40; }
+.mock-google-dialog header { display: flex; gap: 12px; align-items: flex-start; padding: 20px 20px 14px; border-bottom: 1px solid #ecefe2; }
+.mock-google-dialog header h3 { margin: 0; font-size: 1.02rem; color: #193e2e; letter-spacing: -.3px; }
+.mock-google-dialog header p { margin: 4px 0 0; font-size: .68rem; line-height: 1.55; color: #7c8672; }
+.mock-google-dialog ul { list-style: none; margin: 0; padding: 8px; display: grid; gap: 2px; }
+.mock-google-dialog li button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border: 0; border-radius: 10px; background: transparent; text-align: left; cursor: pointer; font: inherit; }
+.mock-google-dialog li button:hover:not(:disabled) { background: #f1f5e9; }
+.mock-google-dialog li button:disabled { opacity: .6; cursor: not-allowed; }
+.mock-avatar { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; background: #dfe9dc; color: #24543a; font-size: .9rem; font-weight: 700; }
+.mock-account-text { display: grid; gap: 1px; min-width: 0; }
+.mock-account-text strong { font-size: .84rem; color: #22382a; font-weight: 600; }
+.mock-account-text small { font-size: .72rem; color: #6d7a68; overflow-wrap: anywhere; }
+.mock-account-text em { font-style: normal; font-size: .64rem; color: #8d9783; }
+.mock-google-dialog footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 20px 16px; border-top: 1px solid #ecefe2; }
+.mock-badge { font-size: .55rem; font-weight: 700; letter-spacing: .8px; color: #8a6d35; background: #fbf6e7; border: 1px solid #eee5c8; padding: 4px 7px; border-radius: 5px; }
 .auth-small-note { font-size: .69rem; text-align: center; color: #7a816e; margin: 8px 0 0; line-height: 1.6; }
 .signin-divider { display: flex; align-items: center; gap: 15px; margin: 20px 0 15px; color: #8a907e; font-size: .72rem; }
 .signin-divider::before, .signin-divider::after { content: ''; height: 1px; background: #e7e8db; flex: 1; }
@@ -76,6 +100,14 @@
 .otp-flow .auth-step-title { font-size: 1.12rem; }
 .otp-flow .auth-step-sub { font-size: .76rem; line-height: 1.6; margin-top: 5px; overflow-wrap: anywhere; }
 .otp-flow .otp-code { font-size: 1.5rem; font-variant-numeric: tabular-nums; letter-spacing: .48em; text-align: center; padding-left: .9em; font-weight: 600; min-height: 58px; }
+/* Mock OTP: the generated code is shown instead of a real SMS/email delivery. */
+.mock-code-card { display: flex; align-items: center; gap: 12px; margin: 14px 0 4px; padding: 12px 14px; border: 1px dashed #d9c48a; border-radius: 12px; background: #fdf8ea; }
+.mock-code-icon { display: grid; place-items: center; flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #f4e7c4; color: #7d5f18; }
+.mock-code-text { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.mock-code-text strong { font-size: .72rem; color: #7d5f18; letter-spacing: .1px; }
+.mock-code-text small { font-size: .64rem; line-height: 1.5; color: #8d7a4a; }
+.mock-code-value { font-size: 1.28rem; font-weight: 700; letter-spacing: .3em; color: #4a3a12; font-variant-numeric: tabular-nums; background: none; padding: 0; }
+.mock-code-card .btn { flex-shrink: 0; }
 .otp-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: .72rem; margin-top: 14px; }
 .auth-verified-contact { display: flex; gap: 10px; align-items: center; color: #246e42; border-radius: 9px; background: #eef5e8; padding: 13px; font-size: .85rem; margin-bottom: 22px; overflow-wrap: anywhere; }
 .auth-verified-contact > span { min-width: 0; }
@@ -115,6 +147,8 @@
   .signin-brand-mark { width: 38px; height: 38px; }
   .signin-header-actions { gap: 8px; }
   .signin-panel .google-btn { font-size: .76rem; }
+  .mock-google-overlay { padding: 12px; }
+  .mock-code-card { flex-wrap: wrap; }
   .signin-panel .google-btn small { font-size: .53rem; }
   .signin-panel .role-toggle-btn { font-size: .74rem; }
   .account-contact { flex-wrap: wrap; }

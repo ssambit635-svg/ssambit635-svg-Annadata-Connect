@@ -64,7 +64,7 @@ git push -u origin main
 ```bash
 # 1. On the server
 # Install Node.js 22 LTS (or newer) and npm from your trusted Node distribution first.
-node --version   # must be 22+ for the Google authentication SDK
+node --version   # must be 22+ (matches the Docker base image)
 sudo apt update && sudo apt install -y nginx
 sudo npm install -g pm2
 
@@ -141,10 +141,11 @@ Behind a reverse proxy/step 5 above, terminate TLS there as usual.
 1. **Database** — the JSON store (`backend/data/db.json`) is single-writer demo-grade. For real
    production, migrate `backend/src/db/store.js` to PostgreSQL (routes/services unchanged). If
    staying on JSON short-term: mount a persistent volume and schedule backups (nightly cron copy).
-2. **Secrets and identity** — set a unique random `JWT_SECRET` of at least 32 characters and
-   keep `ALLOW_DEMO_LOGIN=false`. Configure Google/Twilio Verify/SMTP and provision approved
-   staff using [AUTH_SETUP.md](AUTH_SETUP.md). Walk-in farmers claim access by SMS verification,
-   not a shared default password. Provider settings are backend runtime secrets.
+2. **Secrets and identity** — set a unique random `JWT_SECRET` of at least 32 characters.
+   **Sign-in is currently mocked** (fake Google picker over sample accounts, OTP codes printed
+   on screen), so replace it with a real provider layer before accepting real users; see
+   [AUTH_SETUP.md](AUTH_SETUP.md). Walk-in farmers claim access with a verified code, not a
+   shared default password.
 3. **CORS** — leave empty (same-origin, single service). Only set `CORS_ORIGIN=https://your-domain`
    if you ever host the frontend separately; then rebuild the frontend with
    `VITE_API_BASE_URL=https://api.your-domain` (Vite env vars are **build-time**).
@@ -165,12 +166,14 @@ curl https://your-domain/api/health
 curl https://your-domain/api/auth/options
 ```
 
-Check that provider availability matches your setup (availability reflects configuration,
-not provider health). With actual approved accounts, test Google account selection, SMS
-and email code delivery, rejected/expired codes, and correct-role dashboard navigation.
-Never enable sample passwords on a deployment holding real user data. Google authorized
-origins must exactly match the browser URL, including a remote preview origin.
+/api/auth/options should return `mock: true` plus the sample Google accounts. Test the fake
+Google switch and picker for each role, a mock SMS and email code (shown on screen), a wrong
+and an expired code, and correct-role dashboard navigation.
 
-Finally, create a farmer request and complete it as an approved officer. Confirm the
-farmer sees status updates. Authentication provider activation is not a substitute for
-testing the procurement workflow and production storage/security requirements.
+**Sign-in is mocked**: anyone can enter as a sample account, so do not point this build at
+real user data — replace the mock layer with real providers first (see
+[AUTH_SETUP.md](AUTH_SETUP.md)).
+
+Finally, create a farmer request and complete it as an officer. Confirm the farmer sees
+status updates. Mocked sign-in is not a substitute for testing the procurement workflow and
+production storage/security requirements.

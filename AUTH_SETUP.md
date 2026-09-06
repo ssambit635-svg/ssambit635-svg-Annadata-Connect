@@ -1,164 +1,131 @@
-# Real sign-in setup
+# Mock sign-in (no real providers)
 
-The login page offers **Google, SMS OTP, email OTP, and password** to farmers, officers,
-and authorities. Google displays **Google's own account-selection UI**, not a local list
-of pretend accounts. SMS and email codes must be verified before a session is issued.
+Authentication in this project is **fully mocked**. There is no Google OAuth, no Twilio
+Verify, and no SMTP anywhere in the codebase — `google-auth-library` and `nodemailer` are
+not even dependencies any more. Nothing needs to be configured, no credentials exist, and
+no code, message, or account leaves the machine.
 
-**Provider accounts are not bundled.** With no credentials configured, the relevant
-method says that administrator setup is needed. No code is simulated, printed to the
-console, returned by the API, or included in the officer SMS outbox. Password access
-continues to work for accounts with a password.
+Everything runs on the seeded sample data:
 
-## 1. Google — your real Google accounts
+| Method | What actually happens |
+| --- | --- |
+| **Fake Google** | A Google-styled button opens a local picker of sample accounts. Picking one posts `{role, email}` to `/api/auth/google`, which matches it against the mock account list and issues a session. |
+| **SMS OTP** | The API generates a six-digit code, records it in an in-memory mock outbox, and returns it as `mockCode`. The login screen prints it in a "Mock SMS · your code" card. |
+| **Email OTP** | Identical to SMS, shown as a "Mock email · your code" card. |
+| **Password** | Real bcrypt comparison against the sample accounts' passwords. |
 
-1. In [Google Cloud Console](https://console.cloud.google.com/apis/credentials), configure
-   the OAuth consent screen / Google Auth Platform branding and audience. While in
-   testing, add the Google accounts that will test the app as test users.
-2. Create an **OAuth 2.0 client ID → Web application**.
-3. Add every exact frontend origin under **Authorized JavaScript origins**:
-   - Local Vite: `http://localhost:5173` (and `http://127.0.0.1:5173` if used).
-   - Local single-port build: `http://localhost:5000`.
-   - Production: `https://your-actual-domain.example`.
-   - Arena preview: copy the actual `https://<port>-<sandbox-id>.e2b.app` origin from
-     the preview URL. Register it explicitly; wildcard origins do not work.
-4. Set **only the backend** `GOOGLE_CLIENT_ID=<your-public-web-client-id>` and restart.
-   The frontend reads it at runtime; no frontend rebuild or Google client secret is needed.
-5. Open the app at the authorized origin, choose a role, and use the official Google
-   button. Allow Google's cookies/pop-ups. If an embedded preview restricts pop-ups,
-   open the preview in its own browser tab. The app cannot read/list your Google
-   accounts itself; Google controls the account chooser.
+Role-bound JWT sessions, expiry, attempt limits, and rate limits are all still real — only
+the identity *delivery* is mocked.
 
-The server verifies Google's signature, issuer, exact audience, expiry, verified email,
-and a short-lived one-use nonce. Email text alone never counts as a Google credential.
-A verified new farmer completes their name and village; new staff are **not** self-created.
-For non-Gmail consumer Google accounts without a Workspace `hd` claim, use email OTP
-instead to establish current email ownership. Google may have verified that third-party
-address in the past but is not authoritative for it now. Such a Google email alone
-cannot claim a provisioned staff account.
+## 1. The fake Google switch
 
-## 2. SMS OTP — Twilio Verify
+The login page has a **"Fake Google sign-in"** switch above the Google button:
 
-1. Create a [Twilio](https://www.twilio.com/verify) account, then a **Verify Service**.
-   Set the code length to **6 digits** and enable the SMS channel.
-2. Allow the destination country (India) in Verify geographic permissions and configure
-   fraud protections/spending alerts. Fund/upgrade your account as required. Trial
-   accounts may only send to verified destinations; carrier, country, sender/DLT rules
-   and Twilio account restrictions still apply. Real SMS is a paid provider service.
-3. In the backend environment, set:
+- **On** (default): the button opens the mock account picker for the currently selected
+  role, labelled `MOCK DATA`.
+- **Off**: the button is disabled and a note explains why. The choice is stored per
+  browser in `localStorage` under `ks-mock-google`, so it survives reloads.
 
-   ```dotenv
-   AUTH_SMS_PROVIDER=twilio-verify
-   SMS_TWILIO_SID=<account-SID>
-   SMS_TWILIO_AUTH_TOKEN=<server-side-auth-token>
-   TWILIO_VERIFY_SERVICE_SID=<verify-service-SID>
-   ```
+Switching roles closes the picker, and `Escape` (or clicking the backdrop) dismisses it.
+No Google script is loaded and no request is made to `accounts.google.com`.
 
-4. Restart, choose **Authority → SMS OTP** (also available for the other roles), enter
-   your approved Indian mobile number, and request a code. Only a successful verification
-   signs you in. New farmer numbers are directed to verified profile registration.
+### The sample Google accounts
 
-OTP requests use Twilio **Verify**, not the existing procurement notification sender.
-`SMS_PROVIDER=sim` does **not** simulate authentication. `SMS_TWILIO_FROM` is only for
-procurement messages, not Verify. Twilio may reuse a code within its verification
-window; the app replaces the challenge ID on resend and accepts a challenge for at
-most **5 minutes**. A provider accepting a request is not a guarantee of carrier delivery.
+Defined once, server-side, in `backend/src/services/auth-mock.service.js`
+(`MOCK_GOOGLE_ACCOUNTS`) and served to the UI by `GET /api/auth/options`:
 
-## 3. Email OTP — authenticated SMTP
+| Role | Name | Email |
+| --- | --- | --- |
+| Farmer | Bijay Pradhan | `bijay.pradhan.anc@gmail.com` |
+| Farmer | Kuni Sahoo | `kuni.sahoo.anc@gmail.com` |
+| Officer | Rashmi Das | `rashmi.das.anc@gmail.com` |
+| Officer | Manoj Behera | `manoj.behera.anc@gmail.com` |
+| Authority | Suresh Patnaik | `district.admin.anc@gmail.com` |
 
-Configure your own transactional email provider and verify its sending domain/address.
-Use provider-specific SMTP credentials; some mailbox providers require an app password.
-Set SPF/DKIM/DMARC with the provider to improve delivery.
+Each account's email matches a seeded user in `backend/src/data/seed-data.js`, so a pick
+lands on real mock data (requests, tokens, queue history) instead of an empty profile.
 
-```dotenv
-AUTH_EMAIL_PROVIDER=smtp
-SMTP_HOST=<provider-SMTP-host>
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=<SMTP-user>
-SMTP_PASSWORD=<SMTP-secret>
-SMTP_FROM=Annadata Connect <verified-sender@your-domain.example>
-```
+**To add or change a mock account:** edit `MOCK_GOOGLE_ACCOUNTS`, then make sure a user
+with the same email exists in `USERS` (seed data) — otherwise the picker entry behaves
+like a brand-new farmer and issues a profile-completion ticket. Officers and authorities
+must also keep `accessApproved: true` in the seed data. Restart the backend; the frontend
+picks the list up automatically from `/api/auth/options`.
 
-Port 587 requires STARTTLS; port 465 uses `SMTP_SECURE=true`. TLS validation is never
-disabled. Restart the backend, choose **Email OTP**, and check your inbox/spam folder.
-The app generates cryptographically random six-digit codes and stores only a
-challenge-bound keyed hash in memory for five minutes. Email delivery is awaited,
-not fire-and-forget; a provider failure does not show a successful-send state.
+An email that is not in the list is rejected with `AUTH_GOOGLE_INVALID`, and picking an
+account whose role differs from the selected tab returns `AUTH_ROLE_MISMATCH`.
 
-**Existing farmers:** sign in with your current method, open your account menu →
-**Sign-in & contact details** → **Add & verify** next to email. Verify the email code.
-You can then use that email OTP (or matching Gmail/Workspace Google account) to sign in to
-**the same farmer profile**. Email/Google-only farmers can similarly link a mobile.
-There is no automatic account merge or unauthenticated contact linking.
+## 2. Mock OTP codes
 
-## 4. Approve officer / authority identities
+1. Choose **SMS OTP** or **Email OTP**, enter any valid contact, and press send.
+2. The response contains `mockCode`; the UI shows it in a dashed card with a **Fill**
+   button that copies it into the code field.
+3. Submit it to receive a session (`{token, user}`), or — for a contact with no account —
+   a farmer profile ticket.
 
-Real identity verification does not establish government employment or grant privileges.
-A trusted operator must provision staff contacts and scope. With the **backend stopped**
-(the JSON store does not support simultaneous CLI and server writes), run:
+The mock flow keeps every real guard rail, so the timing behaviour you see is the real
+behaviour:
+
+- codes expire after **5 minutes**, single-use, and only the hashed code is stored;
+- **5 wrong attempts** kill a challenge; a resend replaces the previous code;
+- **60-second** resend cooldown, **5 sends** and **15 checks** per contact per hour;
+- IP rate limits on the sign-in, send, and verify endpoints;
+- contact linking (`/api/auth/contact/*`) is bound to the authenticated user and purpose.
+
+Sample contacts you can type in: `9999999001`, `9999999002` (farmers), `9999999101`,
+`9999999102` (officers), `9999999201` (authority), or any of the emails in the table
+above. Any other valid number/address walks the new-farmer registration path.
+
+## 3. Sample accounts (password shortcut)
+
+`ALLOW_DEMO_LOGIN` defaults to **true** because the sample accounts *are* the mock data.
+Set it to `false` in `backend/.env` to disable password sign-in for them and hide the
+**Explore demo accounts** panel; the mock Google picker and mock OTP codes keep working.
+
+| Role | Phone | Email | Password | Scope |
+| --- | --- | --- | --- | --- |
+| Farmer | `9999999001` | `bijay.pradhan.anc@gmail.com` | `Farmer@123` | Own requests, tokens, queue, history |
+| Farmer 2 | `9999999002` | `kuni.sahoo.anc@gmail.com` | `Farmer@123` | Seeded queue history at BBSR Central |
+| Officer | `9999999101` | `rashmi.das.anc@gmail.com` | `Officer@123` | Bhubaneswar Central Procurement Centre |
+| Officer | `9999999102` | `manoj.behera.anc@gmail.com` | `Officer@123` | Jatni Mandi Procurement Centre |
+| Authority | `9999999201` | `district.admin.anc@gmail.com` | `Authority@123` | District-wide overview |
+
+Data files seeded before farmers had emails are backfilled automatically on boot by
+`backend/src/db/store.js`. Reset everything with `cd backend && npm run seed`.
+
+## 4. Extra staff accounts (optional)
+
+To add a staff account outside the seed data, stop the backend (the JSON store is
+single-writer) and run:
 
 ```bash
 npm --prefix backend run auth:provision -- \
-  --role authority --name "Approved District Administrator" \
-  --email "approved.person@example.org" --phone "9876543210" --district "Khordha"
-
-npm --prefix backend run auth:provision -- \
-  --role officer --name "Approved Procurement Officer" \
-  --email "approved.officer@example.org" --phone "9876543211" \
-  --district "Khordha" --centre-id "centre-bbsr-central"
+  --role officer --name "Extra Officer" \
+  --email "extra.officer@example.org" --phone "9876543211" \
+  --district "Khordha" --centre-id "centre-jatni"
 ```
 
-Replace the example contacts with the actual staff member's approved details. At least
-one of phone/email is required. Use the user's exact Google email if Google sign-in is
-desired. No default centre or authority role is assigned by a public endpoint.
-Use `--user-id <id>` to explicitly re-provision an old non-demo staff account after
-checking their authority; this replaces their contacts and removes prior Google/password
-credentials. Restart the backend after provisioning. Rotate `JWT_SECRET` when revoking
-or re-provisioning access if existing sessions must be invalidated immediately.
+Then sign in with a mock OTP to that phone/email, or add the same email to
+`MOCK_GOOGLE_ACCOUNTS` so it appears in the picker. Restart the backend afterwards.
 
-## 5. Deploy safely
+## 5. Things to know before deploying
 
-- Put all provider credentials in **backend/.env or your host's secret settings**;
-  never chat, frontend `VITE_*` variables, source control, or screenshots.
-- Set `NODE_ENV=production`, `ALLOW_DEMO_LOGIN=false`, a unique random `JWT_SECRET`
-  (at least 32 characters), HTTPS, and restricted `CORS_ORIGIN` for split hosting.
-- Google and provider settings are runtime backend settings. Restart after changes.
-- `GET /api/auth/options` reports configuration presence, **not provider health**.
-  Bad credentials, trial restrictions, sender approval, or delivery outages can still
-  make a configured provider fail; the UI reports those failures.
-- Configure `TRUST_PROXY` to the **exact trusted hop count** behind your reverse proxy,
-  and prevent direct access to the backend. Default `0` ignores forwarded IPs. Never
-  blindly trust user-supplied `X-Forwarded-For` headers.
-- Codes expire after five minutes, have five attempts per challenge, a 60-second
-  resend cooldown, at most five sends and fifteen checks per contact per hour,
-  and additional IP-based rate limits. Changing a role does not reset contact limits.
-- A new send replaces the old challenge. OTPs, Google nonces, and profile tickets are
-  single-use. Profile tickets expire in ten minutes and cannot call protected APIs.
-- Existing sessions from the old unverified phone/Google-demo flow are invalidated.
-  Legacy self-created staff accounts require re-provisioning. Legacy shared `Kisan@123`
-  walk-in passwords are removed; walk-in farmers must verify their mobile to claim access.
-- Seed accounts are **sample data only**; real providers never sign into them. Their
-  password logins are disabled by default in production. `ALLOW_DEMO_LOGIN=true` is
-  only for an isolated demonstration with no real user data or live provider accounts.
-- The current JSON database, in-memory verification state and in-memory rate limits
-  are for **one backend process**. A restart invalidates pending challenges. Before
-  multi-instance/large-scale deployment, use transactional persistent user storage
-  and a shared atomic TTL/rate-limit store such as Redis. Use persistent disk for
-  the JSON database even for a single-node pilot. Session JWTs still use the app's
-  existing browser storage; HTTP-only session cookies, revocation and broader
-  production security review remain recommended hardening work.
+- **This is mock authentication.** Do not expose it to real users or real data: anyone can
+  sign in as any sample account, and OTP codes are printed on screen. Re-introduce a real
+  provider layer (Google token verification, Twilio Verify, SMTP) before production use.
+- `JWT_SECRET` still matters — set a unique random value of at least 32 characters
+  (`openssl rand -hex 32`) and `NODE_ENV=production`.
+- Verification state, the mock outbox, and rate limits are in-memory and single-process;
+  a restart clears pending codes.
+- Procurement notification SMS (`SMS_PROVIDER`) is a separate subsystem and is unrelated to
+  sign-in; `sim` mode keeps messages in the officer outbox.
+- Legacy endpoints stay retired: `POST /api/auth/phone-login` returns `410`, and staff
+  accounts created by the old self-service Google flow remain disabled until re-provisioned.
 
 ## Checks
 
 ```bash
-npm --prefix backend test
+npm --prefix backend test        # mock delivery, verification limits, route contracts, setup CLI
 npm --prefix frontend run build
-# Browser tests (uses mocked external delivery, never sends billable SMS):
+# Browser tests for the picker, the switch and the on-screen codes:
 cd frontend && npx playwright install chromium && npm run test:e2e
 ```
-
-Automated tests check request/verify/profile flows, real cryptographic Google token
-validation with local test keys, nonce replay, expiry, throttling, provider failures,
-contact linking, legacy bypass removal and staff authorization. They do not claim
-live-provider delivery. After configuring your providers, smoke-test all three roles
-with approved real accounts and an actual phone/inbox, including a wrong/expired code.

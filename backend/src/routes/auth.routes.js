@@ -7,7 +7,7 @@ import { getDb, saveDb, mintFarmerId } from '../db/store.js';
 import { authenticate, publicUser, signToken, assertAccountEnabled } from '../middleware/auth.js';
 import { ApiError } from '../middleware/error.js';
 import { requireFields, requirePassword, requirePhone, requireEmail } from '../middleware/validate.js';
-import { createAuthDelivery } from '../services/auth-delivery.service.js';
+import { createMockDelivery } from '../services/auth-mock.service.js';
 import { createVerificationService } from '../services/auth-verification.service.js';
 
 const invalidCredentials = () => new ApiError(401, 'AUTH_INVALID_CREDENTIALS', 'Incorrect mobile number, email, password, or account role.');
@@ -37,8 +37,8 @@ function limiter(limit) {
   });
 }
 
-// Dependencies are injected only by tests; production always uses real providers.
-export function createAuthRouter({ db = getDb, save = saveDb, settings = config, delivery = createAuthDelivery(settings), verification = createVerificationService(delivery), authMiddleware = authenticate } = {}) {
+// Dependencies are injected only by tests; the app always uses the mock provider.
+export function createAuthRouter({ db = getDb, save = saveDb, settings = config, delivery = createMockDelivery(), verification = createVerificationService(delivery), authMiddleware = authenticate } = {}) {
   const router = Router();
   const signinLimit = limiter(30);
   const sendLimit = limiter(10);
@@ -52,17 +52,12 @@ export function createAuthRouter({ db = getDb, save = saveDb, settings = config,
   function signInIdentity(identity, role) {
     const store = db();
     const bySubject = identity.googleSub ? store.users.find((u) => u.googleSub === identity.googleSub) : null;
-    if (identity.googleSub && !bySubject && !identity.googleEmailAuthoritative) {
-      throw new ApiError(403, 'AUTH_GOOGLE_EMAIL_CONFIRMATION_REQUIRED', 'For a Google account using a non-Gmail address outside Google Workspace, use email OTP to confirm current ownership of the email address.');
-    }
     const existing = bySubject || contactUser(store, identity);
     if (!existing) {
       if (role !== 'farmer') throw new ApiError(403, 'AUTH_APPROVAL_REQUIRED', 'Officer and authority accounts must be provisioned by your administrator with this phone number or email.');
       return verification.registration(identity);
     }
     assertAccountEnabled(existing, settings);
-    // Seed accounts are explicitly for password demos, never real Google/SMS identities.
-    if (existing.isDemo) throw new ApiError(403, 'AUTH_DEMO_ACCOUNT', 'This is a sample account. Real sign-in requires your own registered phone number or email.');
     if (existing.role !== role) throw new ApiError(403, 'AUTH_ROLE_MISMATCH', 'This account is not registered for the selected role. Choose the correct role and sign in again.');
     if (identity.googleSub) {
       if (existing.googleSub && existing.googleSub !== identity.googleSub) throw new ApiError(409, 'AUTH_IDENTITY_CONFLICT', 'A different Google account is linked. Use your verified email or mobile instead.');
@@ -75,11 +70,12 @@ export function createAuthRouter({ db = getDb, save = saveDb, settings = config,
     return session(existing);
   }
 
-  // No secrets, provider response bodies, or demo identities in this endpoint.
+  // Mock mode: the frontend renders the fake Google picker from `google.accounts`.
   router.get('/options', (_req, res) => res.json({
-    google: { enabled: delivery.enabled.google, clientId: settings.googleClientId || null },
-    sms: { enabled: delivery.enabled.sms },
-    email: { enabled: delivery.enabled.email },
+    mock: true,
+    google: { enabled: delivery.enabled.google, mock: true, accounts: delivery.googleAccounts() },
+    sms: { enabled: delivery.enabled.sms, mock: true },
+    email: { enabled: delivery.enabled.email, mock: true },
     password: { enabled: true },
     demoEnabled: settings.allowDemoLogin,
   }));
@@ -111,12 +107,10 @@ export function createAuthRouter({ db = getDb, save = saveDb, settings = config,
     res.json(signInIdentity(identity, role));
   }));
 
-  router.post('/google/challenge', signinLimit, wrap((req, res) => {
-    res.json(verification.googleChallenge(roleOf(req.body.role)));
-  }));
-  router.post('/google', signinLimit, wrap(async (req, res) => {
+  // Mock Google: the picker posts the chosen sample account's email; no token exists.
+  router.post('/google', signinLimit, wrap((req, res) => {
     const role = roleOf(req.body.role);
-    const identity = await verification.verifyGoogle({ challengeId: req.body.challengeId, credential: req.body.credential, role });
+    const identity = delivery.verifyGoogle({ email: req.body.email });
     identity.destination = requireEmail(identity.destination);
     res.json(signInIdentity(identity, role));
   }));
@@ -155,14 +149,12 @@ export function createAuthRouter({ db = getDb, save = saveDb, settings = config,
   // Let existing farmers add email (and email-only farmers add mobile) without
   // duplicate profiles. Proof is bound to the authenticated user and link purpose.
   router.post('/contact/request', authMiddleware, sendLimit, wrap(async (req, res) => {
-    if (req.user.isDemo) throw new ApiError(403, 'AUTH_DEMO_ACCOUNT', 'Sample accounts cannot link real contact details.');
     const contact = contactOf(req.body);
     const field = contactField(contact);
     if (req.user[field] && req.user[field].toLowerCase() !== contact.destination) throw new ApiError(409, 'AUTH_CONTACT_EXISTS', 'A contact is already linked. Ask your administrator to change it.');
     res.json(await verification.request({ ...contact, role: req.user.role, purpose: 'link', userId: req.user.id }));
   }));
   router.post('/contact/verify', authMiddleware, verifyLimit, wrap(async (req, res) => {
-    if (req.user.isDemo) throw new ApiError(403, 'AUTH_DEMO_ACCOUNT', 'Sample accounts cannot link real contact details.');
     const identity = await verification.verify({ challengeId: req.body.challengeId, code: req.body.code, role: req.user.role, purpose: 'link', userId: req.user.id });
     const field = contactField(identity);
     const owner = contactUser(db(), identity);

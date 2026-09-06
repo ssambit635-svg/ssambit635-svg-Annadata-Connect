@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nContext.jsx';
-import { authService } from '../services/api/authService.js';
-import { authErrorMessage } from '../utils/auth.js';
 
-// Official 4-colour Google "G".
+// Official 4-colour Google "G" — kept so the mock button still looks the part.
 export function GoogleG({ size = 18 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" style={{ display: 'block', flexShrink: 0 }}>
@@ -15,92 +13,102 @@ export function GoogleG({ size = 18 }) {
   );
 }
 
-// One shared loader is safe across role changes, remounts and React StrictMode.
-let googleScript;
-function loadGoogle() {
-  if (window.google?.accounts?.id) return Promise.resolve(window.google.accounts.id);
-  if (googleScript) return googleScript;
-  googleScript = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    const fail = () => {
-      clearTimeout(timeout);
-      script.remove();
-      googleScript = null;
-      reject({ code: 'AUTH_GOOGLE_LOAD_FAILED' });
-    };
-    const timeout = setTimeout(fail, 12000);
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    script.onerror = fail;
-    script.onload = () => {
-      if (!window.google?.accounts?.id) return fail();
-      clearTimeout(timeout);
-      resolve(window.google.accounts.id);
-    };
-    document.head.appendChild(script);
-  });
-  return googleScript;
-}
+const SWITCH_KEY = 'ks-mock-google';
+const readSwitch = () => {
+  try { return localStorage.getItem(SWITCH_KEY) !== 'off'; } catch { return true; }
+};
 
-// Only Google's own UI can show the user's real Google accounts. No local
-// chooser, typed-email fallback, guessed account list, or automatic demo login.
-export function GoogleSignIn({ role, clientId, disabled, onSuccess }) {
-  const { t, lang } = useI18n();
-  const container = useRef(null);
-  const callbacks = useRef({ onSuccess, disabled });
-  callbacks.current = { onSuccess, disabled };
-  const [error, setError] = useState(null);
-  const [ready, setReady] = useState(false);
-  const [attempt, setAttempt] = useState(0);
+// Fake Google sign-in: no Google script, no OAuth, no ID token. The button opens
+// a Google-styled picker over the sample accounts served by /api/auth/options,
+// and the switch beside it turns the whole thing on or off.
+export function GoogleSignIn({ role, accounts = [], enabled = true, disabled, onSuccess }) {
+  const { t } = useI18n();
+  const [on, setOn] = useState(readSwitch);
+  const [open, setOpen] = useState(false);
+  const buttonRef = useRef(null);
+  const listRef = useRef(null);
+  const roleAccounts = accounts.filter((account) => account.role === role);
+  const available = enabled && on && roleAccounts.length > 0;
 
+  // A role change closes the picker: the account list is role-scoped.
+  useEffect(() => { setOpen(false); }, [role]);
   useEffect(() => {
-    if (!clientId) return undefined;
-    let active = true;
-    let renewal;
-    setReady(false);
-    setError(null);
-    Promise.all([loadGoogle(), authService.googleChallenge(role)]).then(([google, challenge]) => {
-      if (!active || !container.current) return;
-      google.initialize({
-        client_id: clientId,
-        nonce: challenge.nonce,
-        ux_mode: 'popup',
-        auto_select: false,
-        button_auto_select: false,
-        callback: (response) => {
-          if (!active || callbacks.current.disabled) return;
-          Promise.resolve().then(() => {
-            if (!response?.credential) throw { code: 'AUTH_GOOGLE_INVALID' };
-            return callbacks.current.onSuccess({ role, credential: response.credential, challengeId: challenge.challengeId });
-          }).catch((err) => { if (active) setError(err); })
-            .finally(() => { if (active) setAttempt((n) => n + 1); });
-        },
-      });
-      container.current.replaceChildren();
-      google.renderButton(container.current, {
-        theme: 'outline', size: 'large', shape: 'rectangular', text: 'signin_with',
-        width: Math.max(200, Math.min(400, container.current.clientWidth)), locale: lang,
-      });
-      setReady(true);
-      // Refresh an idle button's nonce instead of leaving a stale login challenge.
-      renewal = setTimeout(() => { if (active) setAttempt((n) => n + 1); }, (challenge.expiresInSeconds - 15) * 1000);
-    }).catch((err) => { if (active) setError(err); });
-    return () => { active = false; clearTimeout(renewal); };
-  }, [clientId, role, lang, attempt]);
+    if (!open) return undefined;
+    listRef.current?.querySelector('button')?.focus();
+    const onKey = (event) => { if (event.key === 'Escape') { setOpen(false); buttonRef.current?.focus(); } };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
 
-  if (!clientId) return (
-    <div className="google-signin-block">
-      <button type="button" className="google-btn" disabled aria-describedby="google-setup-note"><GoogleG /><span>{t('auth.googleButton')}</span><small>{t('auth.setupNeeded')}</small></button>
-      <p className="auth-small-note" id="google-setup-note">{t('auth.googleUnavailable')}</p>
-    </div>
-  );
+  function toggle() {
+    const next = !on;
+    setOn(next);
+    if (!next) setOpen(false);
+    try { localStorage.setItem(SWITCH_KEY, next ? 'on' : 'off'); } catch { /* private mode: keep in-memory state */ }
+  }
+
+  async function pick(account) {
+    setOpen(false);
+    try {
+      await onSuccess({ role, email: account.email });
+    } catch {
+      // The sign-in page owns the error banner; just hand focus back.
+      buttonRef.current?.focus();
+    }
+  }
 
   return (
     <div className="google-signin-block">
-      {!ready && !error && <div className="google-btn google-loading" role="status"><GoogleG />{t('auth.loadingGoogle')}</div>}
-      <div ref={container} className={`google-gis-wrap${disabled ? ' is-disabled' : ''}`} aria-busy={disabled} inert={disabled ? '' : undefined} />
-      {error && <div className="auth-provider-note" role="alert">{authErrorMessage(error, t)} <button type="button" className="text-button" disabled={disabled} onClick={() => setAttempt((n) => n + 1)}>{t('common.retry')}</button></div>}
+      <div className="mock-switch">
+        <span className="mock-switch-text">
+          <strong>{t('auth.mockSwitchLabel')}</strong>
+          <small>{on ? t('auth.mockSwitchOn') : t('auth.mockSwitchOff')}</small>
+        </span>
+        <button type="button" role="switch" aria-checked={on} className={`mock-switch-control${on ? ' is-on' : ''}`} onClick={toggle} disabled={disabled} aria-label={t('auth.mockSwitchLabel')}>
+          <span className="mock-switch-knob" />
+        </button>
+      </div>
+
+      <button ref={buttonRef} type="button" className="google-btn" disabled={disabled || !available} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>
+        <GoogleG />
+        <span>{t('auth.googleButton')}</span>
+        <small>{t('auth.mockDataBadge')}</small>
+      </button>
+
+      {!on && <p className="auth-small-note">{t('auth.mockGoogleOff')}</p>}
+      {on && enabled && roleAccounts.length === 0 && <p className="auth-small-note">{t('auth.noMockAccounts')}</p>}
+
+      {open && (
+        <div className="mock-google-overlay" onClick={() => setOpen(false)}>
+          <div className="mock-google-dialog" role="dialog" aria-modal="true" aria-labelledby="mock-google-title" onClick={(event) => event.stopPropagation()}>
+            <header>
+              <GoogleG size={22} />
+              <div>
+                <h3 id="mock-google-title">{t('auth.chooseAccount')}</h3>
+                <p>{t('auth.chooseAccountHint')}</p>
+              </div>
+            </header>
+            <ul ref={listRef}>
+              {roleAccounts.map((account) => (
+                <li key={account.sub}>
+                  <button type="button" disabled={disabled} onClick={() => pick(account)}>
+                    <span className="mock-avatar" aria-hidden="true">{account.name.trim().charAt(0).toUpperCase()}</span>
+                    <span className="mock-account-text">
+                      <strong>{account.name}</strong>
+                      <small>{account.email}</small>
+                      {account.detail && <em>{account.detail}</em>}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <footer>
+              <span className="mock-badge">{t('auth.mockDataBadge')}</span>
+              <button type="button" className="text-button" onClick={() => { setOpen(false); buttonRef.current?.focus(); }}>{t('common.cancel')}</button>
+            </footer>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

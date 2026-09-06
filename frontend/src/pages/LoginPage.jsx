@@ -135,7 +135,7 @@ export default function LoginPage({ registration = false }) {
               <button type="button" className="auth-alt-link" disabled={busy} onClick={() => { setProfileTicket(null); setError(null); }}>{t('auth.startAgain')}</button>
             </form>
           ) : <>
-            {optionsError ? <div className="auth-provider-note" role="alert">{authErrorMessage(optionsError, t)} <button type="button" className="text-button" onClick={retry}>{t('common.retry')}</button></div> : !options ? <p className="auth-small-note" role="status">{t('auth.loadingOptions')}</p> : <GoogleSignIn key={role} role={role} clientId={options.google.enabled ? options.google.clientId : null} disabled={busy} onSuccess={googleSignIn} />}
+            {optionsError ? <div className="auth-provider-note" role="alert">{authErrorMessage(optionsError, t)} <button type="button" className="text-button" onClick={retry}>{t('common.retry')}</button></div> : !options ? <p className="auth-small-note" role="status">{t('auth.loadingOptions')}</p> : <GoogleSignIn key={role} role={role} accounts={options.google.accounts || []} enabled={Boolean(options.google.enabled)} disabled={busy} onSuccess={googleSignIn} />}
             <div className="signin-divider"><span>{t('auth.orContinue')}</span></div>
             <div className="signin-methods" role="group" aria-label={t('auth.signinMethod')}>
               {METHODS.filter((item) => !registration || item.id !== 'password').map((item) => <button key={item.id} type="button" aria-pressed={method === item.id} className={method === item.id ? 'active' : ''} disabled={busy} onClick={() => selectMethod(item.id)}><Icon name={item.icon} size={19} /><span>{t(`auth.method_${item.id}`)}</span></button>)}

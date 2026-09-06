@@ -73,7 +73,7 @@ export function OtpVerification({ channel, role, enabled, onComplete, onBusy, pu
       const result = await verify({ challengeId: challenge.challengeId, code, role });
       await onComplete(result);
     } catch (err) {
-      if (err.code === 'AUTH_CHALLENGE_EXPIRED' || err.details?.attemptsRemaining === 0 || ['AUTH_ROLE_MISMATCH', 'AUTH_APPROVAL_REQUIRED', 'AUTH_IDENTITY_CONFLICT', 'AUTH_ACCOUNT_DISABLED', 'AUTH_DEMO_ACCOUNT'].includes(err.code)) setExhausted(true);
+      if (err.code === 'AUTH_CHALLENGE_EXPIRED' || err.details?.attemptsRemaining === 0 || ['AUTH_ROLE_MISMATCH', 'AUTH_APPROVAL_REQUIRED', 'AUTH_IDENTITY_CONFLICT', 'AUTH_ACCOUNT_DISABLED'].includes(err.code)) setExhausted(true);
       failure(err);
     } finally { working(false); }
   }
@@ -83,6 +83,15 @@ export function OtpVerification({ channel, role, enabled, onComplete, onBusy, pu
       <div className="otp-sent-icon"><Icon name={isSms ? 'phone' : 'mail'} size={23} /></div>
       <h3 className="auth-step-title">{t(isSms ? 'auth.checkPhone' : 'auth.checkEmail')}</h3>
       <p className="auth-step-sub" role="status">{t('auth.codeSentTo')} <strong>{challenge.destination}</strong></p>
+      {challenge.mockCode && <div className="mock-code-card">
+        <span className="mock-code-icon"><Icon name={isSms ? 'phone' : 'mail'} size={17} /></span>
+        <div className="mock-code-text">
+          <strong>{t(isSms ? 'auth.mockSmsTitle' : 'auth.mockEmailTitle')}</strong>
+          <code className="mock-code-value">{challenge.mockCode}</code>
+          <small>{t('auth.mockCodeHint')}</small>
+        </div>
+        <button type="button" className="btn btn-outline btn-sm" disabled={busy || exhausted} onClick={() => { setCode(challenge.mockCode); codeRef.current?.focus(); }}>{t('auth.fillCode')}</button>
+      </div>}
       {error && <div className="form-banner error" role="alert">{authErrorMessage(error, t)}</div>}
       <form onSubmit={checkCode}>
         <div className="field">
