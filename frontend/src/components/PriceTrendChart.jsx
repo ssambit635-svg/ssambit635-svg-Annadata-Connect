@@ -166,7 +166,7 @@ export function PriceTrendChart({ points, showBand = true, showArrivals = true, 
 
 // Small horizontal bar list used for the month-of-year seasonality view.
 export function SeasonalityBars({ months, currency = '₹', bestMonth }) {
-  const { lang } = useI18n();
+  const { pick } = useI18n();
   const values = months.filter((m) => m.averagePrice !== null).map((m) => m.averagePrice);
   if (!values.length) return null;
   const max = Math.max(...values);
@@ -179,7 +179,7 @@ export function SeasonalityBars({ months, currency = '₹', bestMonth }) {
         const best = bestMonth && m.month === bestMonth;
         return (
           <div className={`season-row${best ? ' best' : ''}`} key={m.month}>
-            <span className="m">{lang === 'hi' ? m.nameHi : m.nameEn}</span>
+            <span className="m">{pick(m, 'name')}</span>
             <span className="track"><span className="fill" style={{ width: `${pct}%` }} /></span>
             <span className="v">{has ? `${currency}${Math.round(m.averagePrice).toLocaleString('en-IN')}` : '—'}</span>
           </div>

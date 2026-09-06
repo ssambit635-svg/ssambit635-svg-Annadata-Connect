@@ -40,7 +40,7 @@ function percentileOf(values, price) {
 }
 
 function monthName(month) {
-  return MONTH_LABELS[month - 1] || { en: String(month), hi: String(month) };
+  return MONTH_LABELS[month - 1] || { en: String(month), hi: String(month), or: String(month) };
 }
 
 /** Arrival-weighted average, falling back to a plain mean when arrivals are 0. */
@@ -110,6 +110,7 @@ export function catalogue() {
       commodity: c,
       nameEn: label.en,
       nameHi: label.hi,
+      nameOr: label.or,
       // Mandi-level lists (kept for backward compatibility).
       states: [...new Set(rows.map((r) => r.stateName))].sort(),
       markets: [...new Set(rows.map((r) => r.marketName))].sort(),
@@ -143,7 +144,7 @@ export function catalogue() {
     districts: data.districts,
     stateSeries: data.stateSeries,
     cropCommodityMap: CROP_COMMODITY,
-    months: MONTH_LABELS.map((m, i) => ({ month: i + 1, nameEn: m.en, nameHi: m.hi })),
+    months: MONTH_LABELS.map((m, i) => ({ month: i + 1, nameEn: m.en, nameHi: m.hi, nameOr: m.or })),
   };
 }
 
@@ -179,6 +180,7 @@ export function priceSeries(q = {}) {
         month,
         monthEn: monthName(month).en,
         monthHi: monthName(month).hi,
+        monthOr: monthName(month).or,
         modalPrice: round(weightedPrice(group), 2),
         minPrice: lo === null ? null : round(lo, 2),
         maxPrice: hi === null ? null : round(hi, 2),
@@ -237,6 +239,7 @@ function normalisedQuery(q, rows) {
     commodity,
     commodityEn: label ? label.en : null,
     commodityHi: label ? label.hi : null,
+    commodityOr: label ? label.or : null,
     state: q.state || null,
     district: q.district || null,
     market: q.market || null,
@@ -266,6 +269,7 @@ export function seasonality(q = {}) {
       month,
       nameEn: label.en,
       nameHi: label.hi,
+      nameOr: label.or,
       averagePrice: avg === null ? null : round(avg, 2),
       // 100 = the all-year average for this slice
       index: avg === null ? null : round((avg / overall) * 100, 1),

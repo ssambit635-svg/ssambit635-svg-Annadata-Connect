@@ -14,3 +14,7 @@ screenshots
 **/.cache
 **/test-results
 **/playwright-report
+frontend/android/
+frontend/capacitor.config.json
+.github/
+screenshots/

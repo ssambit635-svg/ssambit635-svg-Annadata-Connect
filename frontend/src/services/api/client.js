@@ -4,7 +4,26 @@
 // - Emits 'ks:unauthorized' on 401 so the app can log out cleanly
 
 // Dev browsers always use Vite's same-origin /api proxy, including remote previews.
-const BASE = (import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || '')).replace(/\/$/, '');
+// Production web builds default to same-origin (Express serves dist/).
+// The Android APK (Capacitor) has no same-origin server, so it MUST be built with
+// VITE_API_BASE_URL=https://<your-render-app>.onrender.com. A runtime override
+// (localStorage 'ks-api-base') is also honoured so a sideloaded demo APK can be
+// pointed at a different backend without rebuilding.
+const API_BASE_KEY = 'ks-api-base';
+function resolveBase() {
+  if (import.meta.env.DEV) return '';
+  try {
+    const override = localStorage.getItem(API_BASE_KEY);
+    if (override) return override;
+  } catch { /* storage unavailable */ }
+  return import.meta.env.VITE_API_BASE_URL || '';
+}
+const BASE = resolveBase().replace(/\/$/, '');
+export const API_BASE = BASE;
+export function setApiBaseOverride(url) {
+  if (url) localStorage.setItem(API_BASE_KEY, url.trim().replace(/\/$/, ''));
+  else localStorage.removeItem(API_BASE_KEY);
+}
 const TOKEN_KEY = 'ks-auth';
 
 export function getStoredAuth() {
@@ -37,6 +56,8 @@ export async function api(path, { method = 'GET', body, token } = {}) {
   if (bearer) headers['Authorization'] = `Bearer ${bearer}`;
 
   let res;
+  // If the API takes > 4 s (typical Render free-tier cold start) tell the UI.
+  const slowTimer = setTimeout(() => window.dispatchEvent(new Event('ks:api-slow')), 4000);
   try {
     res = await fetch(`${BASE}${path}`, {
       method,
@@ -44,8 +65,12 @@ export async function api(path, { method = 'GET', body, token } = {}) {
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
   } catch {
+    clearTimeout(slowTimer);
     throw new ApiError(0, 'NETWORK_ERROR', 'NETWORK_ERROR');
+  } finally {
+    clearTimeout(slowTimer);
   }
+  window.dispatchEvent(new Event('ks:api-ok'));
 
   let data = null;
   try {

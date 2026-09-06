@@ -1,0 +1,151 @@
+/* ============================================================================
+   ANNADATA CONNECT — v3 POLISH LAYER (loaded last)
+   - Trilingual language pill (EN · हिंदी · ଓଡ଼ିଆ) with a sliding gold indicator
+   - Richer, higher-contrast colour tokens (WCAG AA on cream surfaces)
+   - Softer elevation, warmer hover states, larger touch targets for phones
+   - Odia / Devanagari line-height + font fallbacks so scripts never clip
+   ========================================================================= */
+
+:root {
+  --c-primary: #0b5a3a;
+  --c-primary-dark: #063526;
+  --c-primary-darker: #04271c;
+  --c-text: #14312a;
+  --c-text-soft: #4f6259;
+  --c-border: #e2dac6;
+  --c-success: #0b5a3a;
+  --c-success-bg: #e2f3e7;
+  --c-warning: #8a5300;
+  --c-warning-bg: #fff0cf;
+  --c-info: #1848c2;
+  --c-info-bg: #e5ecfd;
+  --c-danger: #b0261a;
+  --c-danger-bg: #fdeae8;
+  --p-gold: #f3b52a;
+  --p-gold-deep: #a97a08;
+  --p-gold-soft: #fff1cc;
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(6, 53, 38, 0.06), 0 6px 18px rgba(6, 53, 38, 0.06);
+  --shadow-lg: 0 10px 30px rgba(6, 53, 38, 0.12);
+}
+
+/* Script-aware typography: Odia & Devanagari glyphs need more leading. */
+html[data-lang='or'] body, html[data-lang='hi'] body { line-height: 1.62; }
+html[data-lang='or'] h1, html[data-lang='or'] h2, html[data-lang='or'] h3,
+html[data-lang='hi'] h1, html[data-lang='hi'] h2, html[data-lang='hi'] h3 { line-height: 1.38; letter-spacing: 0; }
+html[data-lang='or'] .home-hero h1, html[data-lang='hi'] .home-hero h1 { letter-spacing: -0.005em; }
+[lang='or'] { font-family: 'Noto Sans Oriya', system-ui, sans-serif; }
+[lang='hi'] { font-family: 'Noto Sans Devanagari', system-ui, sans-serif; }
+
+/* ---------- Language pill (shared by header, user menu, landing) ---------- */
+.lang-toggle, .home-language {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: visible;
+  backdrop-filter: blur(6px);
+}
+.lang-toggle button, .home-language button {
+  position: relative;
+  border: 0;
+  border-radius: 999px;
+  min-height: 30px;
+  min-width: 44px;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #dbe9df;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.lang-toggle button + button, .home-language button + button { border-left: 0; }
+.lang-toggle button:hover, .home-language button:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+.lang-toggle button.active, .home-language button.active,
+.lang-toggle button.active:hover, .home-language button.active:hover {
+  background: linear-gradient(180deg, #ffd670, var(--p-gold));
+  color: #2b220a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18), inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+.lang-toggle button:active, .home-language button:active { transform: scale(0.96); }
+.lang-toggle button:focus-visible, .home-language button:focus-visible { outline: 3px solid rgba(243, 181, 42, 0.6); outline-offset: 2px; }
+.landing-v2 .home-language button.active { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); }
+
+/* On light surfaces (account menu, auth pages). */
+.lang-toggle.on-light { border-color: var(--c-border); background: var(--p-cream-deep, #f6f1e2); backdrop-filter: none; }
+.lang-toggle.on-light button { color: var(--c-text-soft); }
+.lang-toggle.on-light button:hover { background: rgba(11, 90, 58, 0.08); color: var(--c-primary-dark); }
+.lang-toggle.on-light button.active, .lang-toggle.on-light button.active:hover { background: var(--c-primary); color: #fff; box-shadow: 0 2px 8px rgba(11, 90, 58, 0.28); }
+
+/* ---------- Header brand: show name in the active script ---------- */
+.app-header .brand-text .hi { font-size: 1.15rem; letter-spacing: 0.005em; }
+.app-header .brand-text .en { letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.68rem; opacity: 0.8; }
+
+/* ---------- Cards, stats, buttons: warmer & crisper ---------- */
+.card { border-color: var(--c-border); transition: box-shadow 0.2s ease, transform 0.2s ease; }
+.card:hover { box-shadow: var(--shadow-lg); }
+.stat { border-radius: var(--radius); box-shadow: var(--shadow); }
+.stat .num { letter-spacing: -0.02em; }
+.btn { border-radius: 10px; font-weight: 700; letter-spacing: 0.005em; min-height: 42px; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease; }
+.btn:active { transform: translateY(1px); }
+.btn.btn-primary, .btn-primary { background: linear-gradient(180deg, #0f6b45, var(--c-primary)); box-shadow: 0 4px 12px rgba(11, 90, 58, 0.22); }
+.btn.btn-primary:hover, .btn-primary:hover { background: linear-gradient(180deg, #12784e, #0d6440); box-shadow: 0 6px 16px rgba(11, 90, 58, 0.28); }
+.badge { border-radius: 999px; font-weight: 700; letter-spacing: 0.01em; }
+
+/* Inputs: bigger tap targets on phones, visible focus ring. */
+input.input, select.select, .input, .select, textarea.textarea {
+  min-height: 44px; border-radius: 10px; border: 1.5px solid var(--c-border); background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input.input:focus, select.select:focus, .input:focus, .select:focus, textarea.textarea:focus {
+  border-color: var(--c-primary); box-shadow: 0 0 0 4px rgba(11, 90, 58, 0.14); outline: none;
+}
+
+/* App nav: gold underline slides in. */
+.app-nav a { position: relative; border-bottom: 0; font-weight: 600; }
+.app-nav a::after { content: ''; position: absolute; left: 0.9rem; right: 0.9rem; bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--p-gold); transform: scaleX(0); transition: transform 0.2s ease; }
+.app-nav a.active::after { transform: scaleX(1); }
+
+/* Bottom tabs: stronger active state. */
+.bottom-tabs a.active { color: var(--c-primary-dark); }
+.bottom-tabs a.active svg { color: var(--p-gold-deep); }
+
+/* Token number: unmistakable. */
+.token-number, .token-big { letter-spacing: 0.06em; }
+
+/* ---------- Landing: richer hero contrast ---------- */
+.landing-v2 .home-utility-bar { background: linear-gradient(90deg, #04271c, #063526 60%, #0b5a3a); }
+.landing-v2 .home-hero h1 { color: var(--home-forest-dark, #063526); }
+.landing-v2 .home-overline { color: var(--p-gold-deep); }
+
+/* Reduce motion respectfully. */
+@media (prefers-reduced-motion: reduce) {
+  .lang-toggle button, .home-language button, .btn, .card, .app-nav a::after { transition: none !important; }
+}
+
+/* ---------- Native app (Capacitor) safe areas ---------- */
+.app-header { padding-top: max(0px, env(safe-area-inset-top)); }
+.bottom-tabs { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+
+/* ---------- Offline / backend-sleeping banner ---------- */
+.net-banner {
+  position: fixed; left: 50%; bottom: calc(72px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+  z-index: 90; max-width: min(92vw, 520px); padding: 0.6rem 0.95rem; border-radius: 12px;
+  background: #2b220a; color: #ffe7a6; font-size: 0.85rem; font-weight: 600;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25); display: flex; align-items: center; gap: 0.55rem;
+  animation: net-banner-in 0.25s ease;
+}
+.net-banner .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--p-gold); box-shadow: 0 0 0 4px rgba(243, 181, 42, 0.2); animation: home-pulse 1.4s ease infinite; }
+@keyframes net-banner-in { from { opacity: 0; transform: translate(-50%, 8px); } }
+@media (min-width: 900px) { .net-banner { bottom: 24px; } }
+
+/* ---------- Server address (APK only) ---------- */
+.server-settings { text-align: center; margin: 0.5rem auto 1.5rem; font-size: 0.82rem; color: var(--c-text-soft); }
+.server-settings-form { max-width: 420px; margin: 0.6rem auto 0; display: grid; gap: 0.5rem; text-align: left; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 0.85rem; }
+.server-settings-form label { font-weight: 700; font-size: 0.85rem; }

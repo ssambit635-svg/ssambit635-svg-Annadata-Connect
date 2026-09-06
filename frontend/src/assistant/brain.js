@@ -12,7 +12,7 @@ const INTENTS = [
   {
     key: 'check_status',
     patterns: [
-      /(status|स्थिति|स्टेटस).*(check|kya|kaise|क्या|कैसे|देख|पता|है|hai)/i,
+      /(status|स्थिति|स्टेटस|ସ୍ଥିତି).*(check|kya|kaise|क्या|कैसे|देख|पता|है|hai|ଦେଖ|କିପରି|କଣ)/i,
       /(procurement|khareed|kharid|खरीद).*(status|स्थिति|update|क्या है)/i,
     ],
   },
@@ -20,7 +20,8 @@ const INTENTS = [
     key: 'queue_position',
     patterns: [
       /(queue|katar|line|number|position|कतार|लाइन|नंबर|स्थान).*(kya|ka|mero|meri|mera|my|check|hai|क्या|मेरा|मेरी|बता|देख|है)/i,
-      /(meri|mera|मेरा|मेरी).*(queue|position|number|नंबर|कतार)/i,
+      /(meri|mera|मेरा|मेरी|ମୋ|ମୋର).*(queue|position|number|नंबर|कतार|ଧାଡ଼ି|ସ୍ଥାନ)/i,
+      /(ଧାଡ଼ି|ଲାଇନ).*(ସ୍ଥାନ|କଣ|କେତେ)/i,
       /kab.*(bari|turn|aayegi)/i,
       /बारी.*(kab|कब)/i,
     ],
@@ -30,6 +31,7 @@ const INTENTS = [
     patterns: [
       /token.*(generate|bana|ban|kaise|milega|create|banao|लेना|le)/i,
       /(token|टोकन).*(बन|कैसे|लेना|ले)/i,
+      /(ଟୋକନ).*(କିପରି|ନେବି|ତିଆରି|ପାଇବି)/i,
       /(request|procurement).*(kaise|kare|karna|create|submit|bhej|कर|करना|भेज)/i,
       /(फसल|फसलें).*(बेच|bech)/i,
       /खरीद.*(request|अनुरोध).*(कैसे|कर)/i,
@@ -40,6 +42,7 @@ const INTENTS = [
     patterns: [
       /(token|टोकन).*(kaha|kahan|where|dikhe|dekhe|find|कहां|कहाँ|देख|मिलेगा)/i,
       /(कहां|कहाँ|where).*(token|टोकन)/i,
+      /(ଟୋକନ).*(କେଉଁଠି|କାହିଁ)/i,
     ],
   },
   {
@@ -48,6 +51,7 @@ const INTENTS = [
       /(centre|center|kendra|केन्द्र|केंद्र).*(kaunsa|kaunsa|which|choose|badal|badl|badlu|badlo|change|best|sahi|kaise|चुन|बदल|कौन)/i,
       /recommended.*centre/i,
       /(kaunsa|कौन.सा|which).*(centre|center|kendra|केंद्र)/i,
+      /(କେନ୍ଦ୍ର).*(କେଉଁ|ବାଛ|ବଦଳ)/i,
     ],
   },
   {
@@ -58,6 +62,7 @@ const INTENTS = [
       /(kab|कब).*(bech|बेच)/i,
       /(best|sahi|सही|अच्छा).*(month|mahina|महीन).*(bech|बेच|sell)/i,
       /agmarknet/i,
+      /(ମଣ୍ଡି|ବଜାର).*(ଦର|ଦାମ|ମୂଲ୍ୟ)/i,
     ],
   },
   {
@@ -66,13 +71,15 @@ const INTENTS = [
       /(register|registration|register).*(kaise|kare|karo|how)/i,
       /(account|खाता|पंजीकरण).*(kaise|बना|कैसे)/i,
       /पंजीकरण/,
+      /ପଞ୍ଜୀକରଣ|ଖାତା.*(ଖୋଲ|କିପରି)/,
     ],
   },
   {
     key: 'change_language',
     patterns: [
       /(language|bhasha|भाषा).*(change|badal|switch|kaise|कैसे|कर|बदल)/i,
-      /(change|switch|बदल).*(language|bhasha|भाषा|hindi|english|हिंदी|हिन्दी)/i,
+      /(change|switch|बदल).*(language|bhasha|भाषा|hindi|english|हिंदी|हिन्दी|odia|oriya|ଓଡ଼ିଆ)/i,
+      /(ଭାଷା).*(ବଦଳ|କିପରି)/i,
     ],
   },
   {
@@ -80,6 +87,7 @@ const INTENTS = [
     patterns: [
       /(smartphone|phone).*(nahi|without|not have|नहीं)/i,
       /(असिस्ट|assist|counter|counter par)/i,
+      /(ସ୍ମାର୍ଟଫୋନ୍|ଫୋନ୍).*(ନାହିଁ)|କାଉଣ୍ଟର/i,
     ],
   },
   {
@@ -87,12 +95,13 @@ const INTENTS = [
     patterns: [
       /(anna\s?data|annadata|अन्नदाता).*(kya|what|hai|क्या|है)/i,
       /(kisan\s?sathi|किसान\s?साथी).*(kya|what|hai|क्या|है)/i,
+      /(ଅନ୍ନଦାତା).*(କଣ|କ'ଣ)/i,
       /^what is this (app|application|website)/i,
     ],
   },
   {
     key: 'thanks',
-    patterns: [/^(thanks|thank you|dhanyavad|dhanyawad|shukriya|धन्यवाद|शुक्रिया)[.! ]*$/i],
+    patterns: [/^(thanks|thank you|dhanyavad|dhanyawad|shukriya|धन्यवाद|शुक्रिया|ଧନ୍ୟବାଦ)[.! ]*$/i],
   },
 ];
 

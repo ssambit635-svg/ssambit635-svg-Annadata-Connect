@@ -6,14 +6,14 @@ import Icon from '../../components/Icon.jsx';
 import { formatDate } from '../../utils/format.js';
 
 export default function IdCardPage() {
-  const { t, lang } = useI18n();
+  const { t, lang, pick } = useI18n();
   const { data, error, reload } = usePoll(() => farmerService.idCard());
 
   if (error) return <ErrorState error={error} onRetry={reload} />;
   const card = data;
   if (!card) return <Loading label={t('common.loading')} />;
 
-  const cropName = (c) => (lang === 'hi' ? c.nameHi : c.nameEn);
+  const cropName = (c) => pick(c, 'name');
 
   return (
     <div className="idcard-page">
@@ -34,8 +34,8 @@ export default function IdCardPage() {
           <div className="idc-head">
             <span className="idc-mark" aria-hidden="true"><Icon name="wheat" size={22} strokeWidth={2} /></span>
             <div className="idc-title">
-              <strong>{lang === 'hi' ? 'अन्नदाता कनेक्ट' : 'Annadata Connect'}</strong>
-              <span>{lang === 'hi' ? 'किसान पहचान पत्र' : 'Farmer ID Card'}</span>
+              <strong>{t('app.name')}</strong>
+              <span>{t('idCard.cardLabel')}</span>
             </div>
             <div className="idc-gov">{t('idCard.govLine')}</div>
           </div>

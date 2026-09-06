@@ -33,7 +33,7 @@ router.get('/id-card', async (req, res, next) => {
     const crops = cropIds
       .map((id) => db.crops.find((c) => c.id === id))
       .filter(Boolean)
-      .map((c) => ({ id: c.id, nameEn: c.nameEn, nameHi: c.nameHi }));
+      .map((c) => ({ id: c.id, nameEn: c.nameEn, nameHi: c.nameHi, nameOr: c.nameOr }));
     // Machine-readable verification payload (any QR scanner shows it as text).
     const qrText = [
       'ANNADATA CONNECT — FARMER ID',
@@ -51,7 +51,7 @@ router.get('/id-card', async (req, res, next) => {
       farmerId: req.user.farmerId || null,
       name: req.user.name,
       phone: req.user.phone,
-      village: village ? { nameEn: village.nameEn, nameHi: village.nameHi } : null,
+      village: village ? { nameEn: village.nameEn, nameHi: village.nameHi, nameOr: village.nameOr } : null,
       district: req.user.district || 'Khordha',
       registeredAt: req.user.createdAt || null,
       registeredBy: req.user.registeredBy || 'self',

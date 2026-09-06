@@ -169,18 +169,21 @@ function presentBooking(db, b) {
     quantityQuintal: b.quantityQuintal,
     agreedRatePerQuintal: b.agreedRatePerQuintal,
     grossValueInr: b.grossValueInr,
-    crop: crop ? { id: crop.id, nameEn: crop.nameEn, nameHi: crop.nameHi } : null,
+    crop: crop ? { id: crop.id, nameEn: crop.nameEn, nameHi: crop.nameHi, nameOr: crop.nameOr } : null,
     buyer: buyer
       ? {
           id: buyer.id,
           nameEn: buyer.nameEn,
           nameHi: buyer.nameHi,
+          nameOr: buyer.nameOr,
           categoryEn: buyer.categoryEn,
           categoryHi: buyer.categoryHi,
+          categoryOr: buyer.categoryOr,
           address: buyer.address,
           operatingHours: buyer.operatingHours,
           settlementEn: buyer.settlementEn,
           settlementHi: buyer.settlementHi,
+          settlementOr: buyer.settlementOr,
         }
       : null,
     createdAt: b.createdAt,

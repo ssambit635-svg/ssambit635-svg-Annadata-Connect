@@ -1,7 +1,9 @@
 # अन्नदाता कनेक्ट Annadata Connect — Full-Stack MVP
 
-A real, locally-runnable crop-procurement platform connecting **Farmers**, **Procurement Officers / Centres**, and **District Authority** — with token generation, live queue tracking, rule-based smart centre recommendation, **Smart Selling Options that compare buyers before you sell** (government MSP centres vs above-MSP market buyers), **historical mandi price intelligence built on real Agmarknet records (2021–2025)**, a bilingual
-(English ↔ हिन्दी) UI, and a controlled rule-based farmer assistant.
+A real, locally-runnable crop-procurement platform connecting **Farmers**, **Procurement Officers / Centres**, and **District Authority** — with token generation, live queue tracking, rule-based smart centre recommendation, **Smart Selling Options that compare buyers before you sell** (government MSP centres vs above-MSP market buyers), **historical mandi price intelligence built on real Agmarknet records (2021–2025)**, a trilingual
+(English · हिन्दी · ଓଡ଼ିଆ) UI, an installable PWA + sideloadable **Android APK** built for free on GitHub Actions, and a controlled rule-based farmer assistant.
+
+> **Deploy for $0** — Render free backend, GitHub Actions APK, cron-job.org keep-awake: see **[FREE_STACK.md](FREE_STACK.md)**.
 
 ```
 kis an sathi/

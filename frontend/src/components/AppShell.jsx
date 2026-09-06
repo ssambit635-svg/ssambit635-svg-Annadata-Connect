@@ -35,7 +35,7 @@ const MAX_TABS = 5;
 
 export function AppShell() {
   const { user, role, logout } = useAuth();
-  const { t, lang, setLang } = useI18n();
+  const { t, lang } = useI18n();
   const navigate = useNavigate();
   const location = useLocation();
   const navItems = NAV[role] || NAV.farmer;
@@ -84,8 +84,8 @@ export function AppShell() {
             <Icon name="wheat" size={24} strokeWidth={2} />
           </span>
           <span className="brand-text">
-            <span className="hi">अन्नदाता कनेक्ट</span>
-            <span className="en">Annadata Connect</span>
+            <span className="hi" lang={lang}>{lang === 'en' ? 'Annadata Connect' : t('app.name')}</span>
+            <span className="en">{lang === 'en' ? t('app.tagline') : 'Annadata Connect'}</span>
           </span>
         </Link>
 
@@ -117,14 +117,7 @@ export function AppShell() {
                   </div>
                   <div className="user-menu-row">
                     <span className="user-menu-row-label">{t('landing.languageLabel')}</span>
-                    <div className="lang-toggle on-light">
-                      <button type="button" className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')} aria-pressed={lang === 'en'}>
-                        EN
-                      </button>
-                      <button type="button" className={lang === 'hi' ? 'active' : ''} onClick={() => setLang('hi')} aria-pressed={lang === 'hi'}>
-                        हिंदी
-                      </button>
-                    </div>
+                    <LanguageToggle className="lang-toggle on-light" />
                   </div>
                   <Link to="/account" className="btn btn-outline btn-sm user-menu-logout" role="menuitem"><Icon name="lock" size={16} /> {t('auth.accountTitle')}</Link>
                   <button type="button" className="btn btn-outline btn-sm user-menu-logout" onClick={doLogout} role="menuitem">
