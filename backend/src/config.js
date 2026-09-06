@@ -12,22 +12,16 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || 'annadata-connect-dev-secret-do-not-use-in-prod',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '12h',
   corsOrigin: process.env.CORS_ORIGIN || '',
-  // Public OAuth client ID only; Google/SMS/email never fall back to demo auth.
-  googleClientId: process.env.GOOGLE_CLIENT_ID || '',
-  allowDemoLogin: process.env.ALLOW_DEMO_LOGIN === 'true' || (process.env.NODE_ENV !== 'production' && process.env.ALLOW_DEMO_LOGIN !== 'false'),
+  // Authentication is mocked end to end: no Google OAuth, Twilio Verify or SMTP
+  // credentials exist any more. OTP codes are generated in-process and returned
+  // to the UI, and "Sign in with Google" picks a sample account from the picker.
+  authMock: true,
+  // Sample accounts are the primary mock data, so they stay usable unless switched off.
+  allowDemoLogin: process.env.ALLOW_DEMO_LOGIN !== 'false',
   trustProxy: /^\d+$/.test(process.env.TRUST_PROXY || '') ? Number(process.env.TRUST_PROXY) : false,
-  authSmsProvider: process.env.AUTH_SMS_PROVIDER || 'none',
-  twilioVerifyServiceSid: process.env.TWILIO_VERIFY_SERVICE_SID || '',
-  authEmailProvider: process.env.AUTH_EMAIL_PROVIDER || 'none',
-  smtpHost: process.env.SMTP_HOST || '',
-  smtpPort: Number(process.env.SMTP_PORT) || 587,
-  smtpSecure: process.env.SMTP_SECURE === 'true',
-  smtpUser: process.env.SMTP_USER || '',
-  smtpPassword: process.env.SMTP_PASSWORD || '',
-  smtpFrom: process.env.SMTP_FROM || '',
   seedOnBoot: (process.env.SEED_ON_BOOT || 'true') !== 'false',
   dataFile: process.env.DATA_FILE ? path.resolve(process.env.DATA_FILE) : path.resolve(__dirname, '../data/db.json'),
-  // SMS delivery
+  // Procurement notification SMS (never used for sign-in)
   smsProvider: (process.env.SMS_PROVIDER || 'sim').toLowerCase(),
   smsMsg91AuthKey: process.env.SMS_MSG91_AUTH_KEY || '',
   smsMsg91SenderId: process.env.SMS_MSG91_SENDER_ID || 'ADCONE',

@@ -205,7 +205,8 @@ export const BUYERS = [
   },
 ];
 
-// Demo accounts. Passwords are hashed at seed time (see seed-cli / store).
+// Sample (mock) accounts. Passwords are hashed at seed time (see seed-cli / store).
+// Their emails double as the mock Google picker identities (services/auth-mock.service.js).
 export const USERS = [
   {
     id: 'farmer-demo',
@@ -213,6 +214,7 @@ export const USERS = [
     farmerId: 'ANC-F-0001',
     name: 'Bijay Pradhan',
     phone: '9999999001',
+    email: 'bijay.pradhan.anc@gmail.com',
     password: 'Farmer@123',
     villageId: 'v-baranga',
     district: 'Khordha',
@@ -224,6 +226,7 @@ export const USERS = [
     farmerId: 'ANC-F-0002',
     name: 'Kuni Sahoo',
     phone: '9999999002',
+    email: 'kuni.sahoo.anc@gmail.com',
     password: 'Farmer@123',
     villageId: 'v-harirajpur',
     district: 'Khordha',
@@ -252,7 +255,7 @@ export const USERS = [
   {
     id: 'authority-demo',
     role: 'authority',
-    name: 'Suresh IAS (Collected Dist. Admin)',
+    name: 'Suresh Patnaik',
     phone: '9999999201',
     email: 'district.admin.anc@gmail.com',
     password: 'Authority@123',

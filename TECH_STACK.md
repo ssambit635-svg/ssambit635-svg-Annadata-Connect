@@ -21,8 +21,8 @@
 5. **morgan** — request logging
 6. **cors** — cross-origin control
 7. **Custom middleware** — auth guard, role guard, input validation, error handler
-8. **google-auth-library / Google Identity Services** — signed Google ID tokens and official account chooser
-9. **Twilio Verify / Nodemailer SMTP** — real SMS/email verification, never the notification simulator
+8. **Mock Google picker** (`services/auth-mock.service.js`) — local sample-account chooser behind a UI switch; no Google SDK, OAuth client or ID tokens
+9. **Mock OTP delivery** — six-digit codes generated in-process, recorded in an in-memory outbox and returned as `mockCode` for on-screen display
 10. **express-rate-limit** — IP throttling alongside contact-level OTP limits
 
 ## 4. Database
@@ -40,14 +40,14 @@
 - JWT expiry + role middleware on every protected route
 - Input validation on all write endpoints
 - Secrets only in backend environment settings (never in frontend code)
-- One-use Google nonces; expiring, attempt-limited OTPs; administrator-provisioned staff roles
-- Provider activation and single-process limitations: [AUTH_SETUP.md](AUTH_SETUP.md)
+- Expiring, attempt-limited, single-use mock OTPs; fixed mock Google account list; server-side role checks
+- Authentication is **mocked** — limits and pre-deployment warnings: [AUTH_SETUP.md](AUTH_SETUP.md)
 
 ## 7. Testing & Tooling
 1. **Playwright (headless Chromium)** — end-to-end browser tests with screenshots
 2. **npm workspaces-style scripts** — `npm run setup` → `npm run build` → `npm run start`
 3. **Seed CLI** — `npm run seed` resets demo data
-4. **Node test runner + Supertest** — auth security, provider contracts, migrations, provisioning tests
+4. **Node test runner + Supertest** — mock auth contracts, verification limits, migrations, provisioning tests
 
 ## 8. Packaging
 - Single zip, single Node process — clone → setup → build → start → open `http://localhost:5000`

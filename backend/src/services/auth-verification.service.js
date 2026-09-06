@@ -6,18 +6,19 @@ export const OTP_COOLDOWN_MS = 60 * 1000;
 const HOUR_MS = 60 * 60 * 1000;
 const opaqueId = () => randomBytes(32).toString('base64url');
 
-// Single-process, short-lived verification state. For multiple replicas use an
-// atomic shared store (e.g. Redis); a restart deliberately invalidates all codes.
+// Mock OTP flow: codes are generated here, "delivered" by the mock outbox and
+// returned to the client as `mockCode` so the UI can show them. Expiry, attempt
+// limits, resend cooldowns and hourly budgets behave exactly like the real thing.
+// Single-process, short-lived state; a restart invalidates all pending codes.
 export function createVerificationService(delivery, { now = Date.now } = {}) {
   const secret = randomBytes(32);
   const challenges = new Map();
   const destinations = new Map();
-  const googleChallenges = new Map();
   const registrations = new Map();
   const digest = (value) => createHmac('sha256', secret).update(value).digest();
 
   function prune() {
-    for (const map of [challenges, destinations, googleChallenges, registrations]) {
+    for (const map of [challenges, destinations, registrations]) {
       for (const [key, value] of map) if (value.expiresAt <= now()) map.delete(key);
     }
   }
@@ -40,18 +41,16 @@ export function createVerificationService(delivery, { now = Date.now } = {}) {
       }
       if (bucket.count >= 5 || bucket.checks >= 15) throw rateLimited(bucket.expiresAt - now());
       if (now() - bucket.lastSentAt < OTP_COOLDOWN_MS) throw rateLimited(OTP_COOLDOWN_MS - (now() - bucket.lastSentAt));
-      // Reserve BEFORE awaiting provider delivery, so parallel requests cannot spam.
+      // Reserve BEFORE "sending", so parallel requests cannot spam the outbox.
       bucket.count += 1;
       bucket.lastSentAt = now();
       const id = opaqueId();
-      const entry = { channel, destination, role, purpose, userId, key, attempts: 0, checking: false, expiresAt: now() + OTP_TTL_MS };
-      if (channel === 'sms') {
-        entry.verificationSid = await delivery.sendSmsCode(destination);
-      } else {
-        const code = String(randomInt(0, 1000000)).padStart(6, '0');
-        entry.codeHash = digest(`${id}:${code}`);
-        await delivery.sendEmailCode(destination, code);
-      }
+      const code = String(randomInt(0, 1000000)).padStart(6, '0');
+      const entry = {
+        channel, destination, role, purpose, userId, key, attempts: 0, checking: false,
+        codeHash: digest(`${id}:${code}`), expiresAt: now() + OTP_TTL_MS,
+      };
+      await delivery.sendCode({ channel, destination, code });
       // A resend replaces the old challenge, but does not reset its hourly budget.
       for (const [oldId, old] of challenges) if (old.key === key) challenges.delete(oldId);
       challenges.set(id, entry);
@@ -61,6 +60,8 @@ export function createVerificationService(delivery, { now = Date.now } = {}) {
         destination: channel === 'sms' ? `+91 ••••••${destination.slice(-4)}` : destination.replace(/^(.)(.*)(@.*)$/, '$1•••$3'),
         expiresInSeconds: Math.max(0, Math.floor((entry.expiresAt - now()) / 1000)),
         retryAfterSeconds: Math.max(0, Math.ceil((bucket.lastSentAt + OTP_COOLDOWN_MS - now()) / 1000)),
+        // Mock mode: the "sent" code is shown on screen instead of a real SMS/email.
+        mockCode: code,
       };
     },
     async verify({ challengeId, code, role, purpose = 'signin', userId = null }) {
@@ -77,13 +78,8 @@ export function createVerificationService(delivery, { now = Date.now } = {}) {
       bucket.checks += 1;
       entry.attempts += 1;
       entry.checking = true;
-      let valid = false;
       try {
-        if (typeof code === 'string' && /^\d{6}$/.test(code)) {
-          valid = entry.channel === 'sms'
-            ? await delivery.checkSmsCode(entry.verificationSid, code)
-            : timingSafeEqual(entry.codeHash, digest(`${challengeId}:${code}`));
-        }
+        const valid = typeof code === 'string' && /^\d{6}$/.test(code) && timingSafeEqual(entry.codeHash, digest(`${challengeId}:${code}`));
         if (entry.expiresAt <= now() || challenges.get(challengeId) !== entry) throw expired();
         if (!valid) throw new ApiError(401, 'AUTH_OTP_INVALID', 'Incorrect code. Check the six digits and try again.', { attemptsRemaining: Math.max(0, 5 - entry.attempts) });
         challenges.delete(challengeId); // Consume before returning identity or issuing a session.
@@ -92,29 +88,6 @@ export function createVerificationService(delivery, { now = Date.now } = {}) {
         entry.checking = false;
         if (entry.attempts >= 5) challenges.delete(challengeId);
       }
-    },
-    googleChallenge(role) {
-      prune();
-      delivery.requireEnabled('google');
-      const challengeId = opaqueId();
-      const nonce = opaqueId();
-      googleChallenges.set(challengeId, { nonce, role, expiresAt: now() + OTP_TTL_MS });
-      return { challengeId, nonce, expiresInSeconds: OTP_TTL_MS / 1000 };
-    },
-    async verifyGoogle({ challengeId, credential, role }) {
-      prune();
-      delivery.requireEnabled('google');
-      const entry = googleChallenges.get(challengeId);
-      googleChallenges.delete(challengeId); // One attempt per nonce; never replayable.
-      if (!entry || entry.role !== role) throw expired();
-      const payload = await delivery.verifyGoogle(credential);
-      if (payload.nonce !== entry.nonce || entry.expiresAt <= now()) throw new ApiError(401, 'AUTH_GOOGLE_INVALID', 'This Google sign-in has expired. Please choose your account again.');
-      return {
-        channel: 'google', destination: payload.email.toLowerCase(), googleSub: payload.sub, name: payload.name || '',
-        // For third-party consumer addresses, Google's email_verified can be stale.
-        // Gmail and Workspace are authoritative; otherwise use current email OTP.
-        googleEmailAuthoritative: /@(gmail|googlemail)\.com$/i.test(payload.email) || Boolean(payload.hd),
-      };
     },
     registration(identity) {
       prune();

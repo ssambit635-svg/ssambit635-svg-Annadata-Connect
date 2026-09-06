@@ -117,9 +117,16 @@ export function getDb() {
   if (!Array.isArray(cache.saleBookings)) cache.saleBookings = [];
   let mutated = false;
   for (const user of cache.users) {
-    if (USERS.some((seedUser) => seedUser.id === user.id) && !user.isDemo) {
+    const seedUser = USERS.find((entry) => entry.id === user.id);
+    if (seedUser && !user.isDemo) {
       user.isDemo = true;
       mutated = true;
+    }
+    // Mock sign-in maps sample accounts by email, so older data files (seeded
+    // before farmers had one) are backfilled from the seed definition.
+    if (seedUser && user.isDemo) {
+      if (seedUser.email && !user.email) { user.email = seedUser.email; mutated = true; }
+      if (seedUser.name && user.name !== seedUser.name) { user.name = seedUser.name; mutated = true; }
     }
     if (user.registeredBy?.startsWith('officer:') && user.passwordHash && bcrypt.compareSync('Kisan@123', user.passwordHash)) {
       user.passwordHash = null;

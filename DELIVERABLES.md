@@ -11,6 +11,8 @@
 ### Cross-cutting
 - ✅ Real Express backend + real React frontend sharing one stateful backend (JSON persistence)
 - ✅ JWT login/register with bcrypt password storage; 12h tokens; server-side role authorization
+- ✅ **Mocked sign-in** — fake Google account picker (with an on/off switch), SMS/email OTP codes
+  generated in-process and shown on screen, and password; no Google/Twilio/SMTP integration
 - ✅ Roles: `farmer`, `officer`, `authority` — role-based routing in UI + enforced on every API call
 - ✅ English ↔ हिन्दी toggle across the entire UI (dictionary-based, persists across navigation);
   backend data fields are bilingual too (`nameEn/nameHi`, `messageEn/messageHi`)
@@ -22,7 +24,7 @@
   out-of-scope fallback. **Not an LLM; cannot answer anything outside the FAQ.**
 
 ### Farmer
-- ✅ Verified farmer self-registration (Google, SMS or email → name + village; optional password), plus password login
+- ✅ Farmer self-registration (mock Google pick, SMS or email code → name + village; optional password), plus password login
 - ✅ **Tokens & Records dashboard** — every token with procurement status AND payment status,
   plus running totals (tokens count, completed count, amount received, payment pending)
 - ✅ **Payment tracking** — completing a procurement opens a payment record (qty × MSP);
@@ -129,9 +131,9 @@ map, bilingual `nameEn/nameHi` fields, and the request lifecycle transitions lis
   for farmers without smartphones; the rest are intentional future integrations.
 - MSP figures in seed data are indicative demo values, not official notifications.
 - Push notifications remain in-app (polled); SMS covers the offline channel once a gateway is configured.
-- Password changes/reset are not implemented; verified Google/SMS/email are alternative sign-in methods. Assisted accounts no longer receive a shared password.
-- Real authentication requires Google/Twilio Verify/SMTP setup; see [AUTH_SETUP.md](AUTH_SETUP.md). Auth never falls back to the notification SMS simulator.
-- OTP/nonce/profile-ticket state and rate limits are in-memory, single-process. Use shared atomic storage before multi-instance deployment.
+- Password changes/reset are not implemented; the mock Google picker and mock SMS/email codes are alternative sign-in methods. Assisted accounts no longer receive a shared password.
+- **Authentication is mocked on purpose**: no Google OAuth, Twilio Verify or SMTP remains in the codebase (see [AUTH_SETUP.md](AUTH_SETUP.md)). Real provider integration is required before any real deployment; auth never uses the notification SMS simulator.
+- OTP/profile-ticket state, the mock outbox and rate limits are in-memory, single-process. Use shared atomic storage before multi-instance deployment.
 - Single district (Khordha) seeded; add more districts in `backend/src/data/seed-data.js`.
 - Market-buyer offer rates, capacities and coordinates in `BUYERS` are indicative demo values; the
   transport-cost constant (`₹0.4/km/q`) is a documented rule for fair comparison, not a carrier quote.
@@ -150,7 +152,7 @@ map, bilingual `nameEn/nameHi` fields, and the request lifecycle transitions lis
 | --- | --- |
 | No broken routes / dead nav / fake buttons | ✅ verified via browser E2E across all roles |
 | No console errors | ✅ zero console/page errors in automated runs |
-| No invented endpoints / fake auth | ✅ UI only calls endpoints in the map; JWT enforced server-side |
+| No invented endpoints | ✅ UI only calls endpoints in the map; JWT enforced server-side (sign-in itself is intentionally mocked) |
 | Hindi toggle works everywhere | ✅ incl. API data fields, statuses, assistant, errors |
 | Assistant answers only approved FAQs | ✅ out-of-scope questions hit the fixed fallback |
 | Farmer workflow end-to-end | ✅ login → request → recommendation → token → queue → journey |

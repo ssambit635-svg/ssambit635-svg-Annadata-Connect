@@ -26,11 +26,6 @@ export function createApp() {
   const app = express();
   app.disable('x-powered-by');
   app.set('trust proxy', config.trustProxy);
-  // GIS popup communication must not be isolated by COOP: same-origin.
-  app.use((_req, res, next) => {
-    res.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-    next();
-  });
   app.use(express.json({ limit: '256kb' }));
   app.use(morgan(config.env === 'production' ? 'combined' : 'dev'));
 

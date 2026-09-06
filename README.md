@@ -15,17 +15,19 @@ kis an sathi/
 
 This repository ships **both** halves. The backend implements the API contract documented in
 `API_INTEGRATION_MAP.md`, and the frontend is built strictly against that contract — no invented
-endpoints, no frontend-only fake auth, no disconnected demo screens. Farmer and officer UIs share
+endpoints and no disconnected demo screens. Sign-in is deliberately **mocked** (see below).
+Farmer and officer UIs share
 the same backend state (officer actions update the farmer's view in real time via polling).
 
 ---
 
 ## 1. Prerequisites
 
-- **Node.js ≥ 22** (22 LTS or newer; required by the Google authentication SDK) and npm
+- **Node.js ≥ 22** (22 LTS or newer) and npm
 - That's it. No database server is required for the local pilot — the backend persists to a JSON file
   (`backend/data/db.json`), auto-created and seeded on first boot.
-- Real Google/SMS/email sign-in needs your own provider configuration; see [AUTH_SETUP.md](AUTH_SETUP.md).
+- Sign-in needs **no configuration at all**: Google, SMS and email are mocked end to end.
+  See [AUTH_SETUP.md](AUTH_SETUP.md).
 
 ## 2. Quick start (recommended: single-port deployment)
 
@@ -95,10 +97,7 @@ cd frontend && npm run dev
 | `JWT_EXPIRES_IN`  | `12h`                                  | Token validity                                      |
 | `CORS_ORIGIN`     | empty = allow any (dev convenience)    | Comma-separated allowed origins in production       |
 | `SEED_ON_BOOT`    | `true`                                 | Creates demo data if `data/db.json` is missing      |
-| `GOOGLE_CLIENT_ID` | empty = unavailable | Google Web OAuth client ID, shared with the frontend at runtime |
-| `AUTH_SMS_PROVIDER` | `none` | `twilio-verify` for real SMS OTP; needs Twilio credentials + Verify Service SID |
-| `AUTH_EMAIL_PROVIDER` | `none` | `smtp` for email OTP; needs authenticated SMTP settings |
-| `ALLOW_DEMO_LOGIN` | false in production | Opt in only for isolated sample-account password demos |
+| `ALLOW_DEMO_LOGIN` | `true` | Set `false` to disable password sign-in for the sample accounts and hide the demo panel |
 | `TRUST_PROXY` | `0` | Exact trusted reverse-proxy hop count for IP rate limits |
 | `NODE_ENV`        | `development`                          | Log format etc.                                     |
 
@@ -109,56 +108,53 @@ cd frontend && npm run dev
 | `VITE_API_BASE_URL` | empty = same origin | Optional public HTTPS API origin for a separately hosted production frontend. Dev browsers always use same-origin `/api`. |
 | `API_PROXY_TARGET` | `http://127.0.0.1:5000` | Server-side Vite proxy target, never called directly by a remote browser. |
 
-## 5. Verified sign-in & demo credentials
+## 5. Mocked sign-in & sample credentials
 
-The bilingual login page offers **Google, SMS OTP, email OTP, and password** for all three
-roles. Provider methods are unavailable until configured — no fake account chooser,
-no arbitrary-email Google login, and no unverified phone-number login.
+The bilingual login page offers **fake Google, SMS OTP, email OTP, and password** for all
+three roles. Nothing is real: no Google script or OAuth client, no Twilio Verify, no SMTP.
 
-- **Google:** Google's official account-selection UI; server verifies signed Google ID
-  tokens (audience, issuer, expiry, verified email, and one-use nonce).
-- **SMS OTP:** Twilio Verify sends a real six-digit code to an Indian mobile number;
-  checking the code is required before sign-in. Available to **authorities**, officers,
-  and farmers. This does not use the notification `SMS_PROVIDER=sim` outbox.
-- **Email OTP:** an authenticated SMTP provider sends a real verification code. Farmers
-  can create an email-based profile or use an email already linked to their account.
-- **Password:** registered mobile or linked email plus password, for every role.
+- **Fake Google:** a **Fake Google sign-in** switch (per-browser, on by default) enables a
+  Google-styled button that opens a local picker of sample accounts for the selected role.
+  Picking one posts `{role, email}` and returns a session. Accounts live in
+  `backend/src/services/auth-mock.service.js` and are served by `/api/auth/options`.
+- **SMS OTP / Email OTP:** the API generates a six-digit code and returns it as `mockCode`;
+  the screen shows it in a "Mock SMS · your code" card with a **Fill** button. Expiry
+  (5 min), five attempts, the 60-second resend cooldown and hourly/IP limits still apply.
+- **Password:** real bcrypt check against the sample accounts below, for every role.
 
-New farmers verify first, then complete their name and village; setting a password is
-optional. Existing farmers can open **Account menu → Sign-in & contact details** to
-verify and link email or mobile without creating a duplicate profile. Email-only
-accounts still receive in-app notifications; SMS notifications need a linked phone.
+New farmers verify a contact first, then complete their name and village; setting a
+password is optional. Any account can open **Account menu → Sign-in & contact details** to
+link an email or mobile without creating a duplicate profile. Email-only accounts still
+receive in-app notifications; SMS notifications need a linked phone.
 
-**Officers and authorities require administrator-provisioned contacts and scope.**
-Choosing a role in the UI never grants privileges. Full provider setup, staff provisioning,
-security limits, migration notes and live-testing instructions: **[AUTH_SETUP.md](AUTH_SETUP.md)**.
-Do not put real credentials in frontend variables or source control.
+Roles stay enforced server-side: choosing a role in the UI never grants privileges, and
+officer/authority contacts must exist in the data. Full mock-account list, limits,
+provisioning and pre-deployment warnings: **[AUTH_SETUP.md](AUTH_SETUP.md)**.
 
-### Isolated local demo (password only)
+### Sample accounts
 
-To explore sample data without configuring providers, set `ALLOW_DEMO_LOGIN=true` in
-`backend/.env` and restart. The login page then has a separately labelled **Explore demo
-accounts** section. Leave it **false for real deployments** (the example `.env` does).
-Real Google/SMS/email sign-ins never authenticate seeded sample identities.
+Sample accounts are the mock data, so `ALLOW_DEMO_LOGIN` defaults to `true`. Set it to
+`false` in `backend/.env` to hide the **Explore demo accounts** panel and disable their
+password logins (the fake Google picker and mock OTP codes keep working).
 
-| Role      | Phone        | Password        | Scope                                  |
-| --------- | ------------ | --------------- | -------------------------------------- |
-| Farmer    | `9999999001` | `Farmer@123`    | Own requests, tokens, queue, history    |
-| Farmer 2  | `9999999002` | `Farmer@123`    | Seeded queue history at BBSR Central    |
-| Officer   | `9999999101` | `Officer@123`   | Bhubaneswar Central Procurement Centre |
-| Officer   | `9999999102` | `Officer@123`   | Jatni Mandi Procurement Centre          |
-| Authority | `9999999201` | `Authority@123` | District-wide overview                  |
+| Role      | Phone        | Email                             | Password        | Scope                                  |
+| --------- | ------------ | --------------------------------- | --------------- | -------------------------------------- |
+| Farmer    | `9999999001` | `bijay.pradhan.anc@gmail.com`     | `Farmer@123`    | Own requests, tokens, queue, history    |
+| Farmer 2  | `9999999002` | `kuni.sahoo.anc@gmail.com`        | `Farmer@123`    | Seeded queue history at BBSR Central    |
+| Officer   | `9999999101` | `rashmi.das.anc@gmail.com`        | `Officer@123`   | Bhubaneswar Central Procurement Centre |
+| Officer   | `9999999102` | `manoj.behera.anc@gmail.com`      | `Officer@123`   | Jatni Mandi Procurement Centre          |
+| Authority | `9999999201` | `district.admin.anc@gmail.com`    | `Authority@123` | District-wide overview                  |
 
-Walk-in farmers created by officers use SMS verification to claim their account; there
-is no shared default password. Old bypass-era sessions are invalidated, and legacy
-self-created staff accounts require explicit re-provisioning.
+Walk-in farmers created by officers claim their account with a mock SMS code; there is no
+shared default password. Old bypass-era sessions are invalidated, and legacy self-created
+staff accounts require explicit re-provisioning.
 
 Reset sample data: `cd backend && npm run seed` (**destructive; never use on real user data**).
 
 ## 6. End-to-end demo script
 
-For an isolated demo, first enable sample password access as described above. Select the
-matching role and the **Password** method, or use the explicit demo section.
+Pick the matching role and any method: the **fake Google picker**, a **mock OTP** (the code
+is printed on screen), or the **Password** shortcut below.
 
 ```
 FARMER                                    OFFICER (same backend state)
@@ -208,6 +204,7 @@ AUTHORITY: Login 9999999201 / Authority@123 → District Overview (congestion / 
   server-side (`farmer` / `officer` / `authority`). Frontend route guards are UX-only.
 - Farmers can only see/touch their own requests and notifications; officers only their own centre.
 - Request validation lives in the backend; the UI validates only for convenience.
-- Auth endpoints enforce IP limits; OTPs also have contact-level limits, expiry and single-use checks.
-- Provider secrets stay server-side — see `.gitignore`, `.env.example`, and [AUTH_SETUP.md](AUTH_SETUP.md).
+- Auth endpoints enforce IP limits; mock OTPs also have contact-level limits, expiry and single-use checks.
+- **Authentication is mocked** — anyone can sign in as a sample account and codes are shown on
+  screen. Never expose this build to real users; see [AUTH_SETUP.md](AUTH_SETUP.md).
 - Use persistent transactional storage and a shared verification/rate-limit store before scaling beyond one process.

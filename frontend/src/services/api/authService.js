@@ -6,8 +6,8 @@ export const authService = {
   login: (identifier, password, role) => post('login', { identifier, password, role }),
   requestOtp: (payload) => post('otp/request', payload),
   verifyOtp: (payload) => post('otp/verify', payload),
-  googleChallenge: (role) => post('google/challenge', { role }),
-  googleLogin: (payload) => post('google', payload),
+  // Mock Google: the picker posts the chosen sample account's email.
+  googleLogin: ({ role, email }) => post('google', { role, email }),
   register: (payload) => post('register', payload),
   requestContact: (payload) => post('contact/request', payload),
   verifyContact: (payload) => post('contact/verify', payload),

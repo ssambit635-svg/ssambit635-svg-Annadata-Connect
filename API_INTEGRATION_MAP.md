@@ -34,24 +34,25 @@ layer (`frontend/src/services/api/*`) implements exactly these endpoints — not
 
 ## Auth & reference (public)
 
-Real provider configuration and staff provisioning: [AUTH_SETUP.md](AUTH_SETUP.md).
+Sign-in is **mocked end to end** — no Google OAuth, Twilio Verify or SMTP exists; codes are
+generated in-process and the "Google" picker uses a fixed sample-account list.
+Mock accounts, limits and staff provisioning: [AUTH_SETUP.md](AUTH_SETUP.md).
 All auth responses set `Cache-Control: no-store`. `role` must be `farmer`, `officer`, or
 `authority`; it is a sign-in expectation, not a privilege grant.
 
 | Method | Endpoint | Body | Response |
 | ------ | -------- | ---- | -------- |
-| GET | `/api/auth/options` | – | `{google:{enabled,clientId},sms:{enabled},email:{enabled},password:{enabled},demoEnabled}`; no secrets |
+| GET | `/api/auth/options` | – | `{mock:true,google:{enabled,mock,accounts:[{sub,role,name,email,detail}]},sms:{enabled,mock},email:{enabled,mock},password:{enabled},demoEnabled}` |
 | POST | `/api/auth/login` | `{identifier,password,role}` (`identifier` is mobile or email; legacy `phone` alias also accepted) | `200 {token,user}` |
-| POST | `/api/auth/otp/request` | `{channel:"sms"\|"email",destination,role}` | `200 {challengeId,channel,destination,expiresInSeconds,retryAfterSeconds}`; masked destination, no OTP/session |
+| POST | `/api/auth/otp/request` | `{channel:"sms"\|"email",destination,role}` | `200 {challengeId,channel,destination,expiresInSeconds,retryAfterSeconds,mockCode}`; masked destination, no session. `mockCode` is the mock delivery — the UI prints it |
 | POST | `/api/auth/otp/verify` | `{challengeId,code,role}`; six-digit **string** preserving leading zeros | `200 {token,user}` or a verified-farmer profile ticket (below) |
-| POST | `/api/auth/google/challenge` | `{role}` | `{challengeId,nonce,expiresInSeconds}`; pass `nonce` to Google Identity Services |
-| POST | `/api/auth/google` | `{credential,challengeId,role}` | Same result as OTP verification; signed Google credential required |
+| POST | `/api/auth/google` | `{email,role}`; `email` must be one of `options.google.accounts` | Same result as OTP verification; no token, nonce or Google call is involved |
 | POST | `/api/auth/register` | `{registrationToken,name,villageId,password?,preferredLanguage?}` | `201 {token,user}`; always farmer, identity bound to the verified ticket |
 | POST | `/api/auth/phone-login` | – | `410 AUTH_VERIFICATION_REQUIRED`; old unverified endpoint is retired |
 | GET | `/api/reference/crops` | – | `{crops:[{id,nameEn,nameHi,mspPerQuintal}]}` |
 | GET | `/api/reference/villages` | – | `{villages:[{id,nameEn,nameHi}]}` |
 
-A verified identity without an existing farmer account returns:
+A verified (or mock-Google-picked) identity without an existing farmer account returns:
 
 ```json
 {
@@ -71,13 +72,10 @@ Common auth errors:
 
 | Code | HTTP | Meaning |
 | ---- | ---- | ------- |
-| `AUTH_PROVIDER_UNAVAILABLE` | 503 | Provider not configured; no simulated fallback |
-| `AUTH_DELIVERY_FAILED` | 502 | Provider/network request failed; no successful-send claim |
 | `AUTH_OTP_INVALID` | 401 | Wrong code; `details.attemptsRemaining` counts down from five |
 | `AUTH_CHALLENGE_EXPIRED` | 401 | Expired, consumed, mismatched or invalid verification challenge |
 | `AUTH_REGISTRATION_EXPIRED` | 401 | Profile ticket expired or already consumed |
-| `AUTH_GOOGLE_INVALID` | 401 | Invalid signature/claims/nonce in Google sign-in |
-| `AUTH_GOOGLE_EMAIL_CONFIRMATION_REQUIRED` | 403 | Third-party Google email is not authoritative; use email OTP |
+| `AUTH_GOOGLE_INVALID` | 401 | Email is not in the mock Google account list |
 | `AUTH_RATE_LIMITED` | 429 | IP/contact limit; `Retry-After` and `details.retryAfterSeconds` |
 | `AUTH_APPROVAL_REQUIRED` | 403 | Staff access is not provisioned/approved |
 | `AUTH_ROLE_MISMATCH` | 403 | Verified account does not have the selected role |

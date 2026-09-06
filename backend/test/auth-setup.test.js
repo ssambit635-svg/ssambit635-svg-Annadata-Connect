@@ -18,13 +18,18 @@ function withStore(fn) {
   try { fn(file); } finally { fs.rmSync(directory, { recursive: true, force: true }); }
 }
 
-test('production refuses a default/short signing key and disables sample login by default', () => {
+test('production refuses a default/short signing key; mock mode keeps sample accounts usable', () => {
   const invalid = run(['--input-type=module', '-e', "await import('./src/config.js')"], { JWT_SECRET: 'change-me-in-production' });
   assert.notEqual(invalid.status, 0);
   assert.match(invalid.stderr, /JWT_SECRET/);
-  const valid = run(['--input-type=module', '-e', "const {default:c}=await import('./src/config.js');console.log(c.allowDemoLogin)"]);
+  const valid = run(['--input-type=module', '-e', "const {default:c}=await import('./src/config.js');console.log(c.authMock, c.allowDemoLogin)"]);
   assert.equal(valid.status, 0, valid.stderr);
-  assert.equal(valid.stdout.trim(), 'false');
+  assert.equal(valid.stdout.trim(), 'true true');
+  // No real provider settings are read any more.
+  const noProviders = run(['--input-type=module', '-e', "const {default:c}=await import('./src/config.js');console.log(Object.keys(c).filter((k)=>/google|smtp|twilioVerify|authSms|authEmail/i.test(k)).join(','))"]);
+  assert.equal(noProviders.stdout.trim(), '');
+  const off = run(['--input-type=module', '-e', "const {default:c}=await import('./src/config.js');console.log(c.allowDemoLogin)"], { ALLOW_DEMO_LOGIN: 'false' });
+  assert.equal(off.stdout.trim(), 'false');
 });
 
 test('trusted CLI provisions real staff without a password, verified-contact claim, or default centre', () => withStore((file) => {
