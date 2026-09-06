@@ -25,6 +25,13 @@ import AuthorityDashboard from './pages/authority/AuthorityDashboard.jsx';
 import AuthorityCentreDetail from './pages/authority/AuthorityCentreDetail.jsx';
 import MarketPricesPage from './pages/MarketPricesPage.jsx';
 import { NotFoundPage, UnauthorizedPage } from './pages/ErrorPages.jsx';
+import { isAppMode, consumePreviewOverride } from './mobile/isApp.js';
+import { MobileApp } from './mobile/MobileApp.jsx';
+
+// Which frontend boots is decided once per load: the website in browsers,
+// the bespoke Android app UI ("Annadata Saathi") inside the Capacitor APK
+// (or in a browser with the ?app=1 preview flag).
+consumePreviewOverride();
 
 // '/' is the farmer home; officers/authority are routed to their dashboards.
 function FarmerHome() {
@@ -34,7 +41,7 @@ function FarmerHome() {
   return <FarmerDashboard />;
 }
 
-export default function App() {
+function WebApp() {
   return (
     <I18nProvider>
       <AuthProvider>
@@ -81,4 +88,8 @@ export default function App() {
       </AuthProvider>
     </I18nProvider>
   );
+}
+
+export default function App() {
+  return isAppMode() ? <MobileApp /> : <WebApp />;
 }

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Annadata Connect</string>
-    <string name="title_activity_main">Annadata Connect</string>
+    <string name="app_name">Annadata Saathi</string>
+    <string name="title_activity_main">Annadata Saathi</string>
     <string name="package_name">in.annadata.connect</string>
     <string name="custom_url_scheme">in.annadata.connect</string>
 </resources>

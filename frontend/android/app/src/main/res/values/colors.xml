@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0E5B3B</color>
-    <color name="colorPrimaryDark">#07382A</color>
-    <color name="colorAccent">#F2B632</color>
+    <!-- Annadata Saathi theme: forest green + MSP gold -->
+    <color name="colorPrimary">#14532D</color>
+    <color name="colorPrimaryDark">#0F3D22</color>
+    <color name="colorAccent">#FBBF24</color>
 </resources>
