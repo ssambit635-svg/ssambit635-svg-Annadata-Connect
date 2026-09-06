@@ -143,7 +143,7 @@ export default function SmartSell() {
     <div className="m-stagger">
       <MCard plain className="gold">
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <ArtScales size={54} className="m-anim-bob" />
+          <ArtScales size={54} className="m-anim-pop" />
           <div>
             <h2 style={{ fontSize: 18.5, fontFamily: 'var(--m-f-display)' }}>{t('smartSell.title')}</h2>
             <p style={{ fontSize: 13.5, color: 'var(--m-ink-soft)' }}>{t('smartSell.subtitle')}</p>

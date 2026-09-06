@@ -90,7 +90,7 @@ export default function Prices() {
 
       <MCard plain className="gold">
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <ArtMandi size={64} className="m-anim-bob" />
+          <ArtMandi size={64} className="m-anim-pop" />
           <div style={{ flex: 1 }}>
             <h2 style={{ fontSize: 18, fontFamily: 'var(--m-f-display)' }}>{t('prices.title')}</h2>
             <p style={{ fontSize: 12.5, color: 'var(--m-ink-soft)' }}>{t('prices.subtitle')}</p>

@@ -1,7 +1,7 @@
 // Annadata Saathi — the Android app frontend.
 //
 // A completely separate UI from the website: bottom tab navigation,
-// passbook-style cards, folk-art illustration, Baloo 2/Mukta type.
+// flat document-style surfaces, monoline emblems, Inter/IBM Plex Mono type.
 // It reuses the same auth, i18n, polling hooks and API services, so the
 // app and website stay feature-identical by construction.
 import { useEffect, useRef, useState } from 'react';

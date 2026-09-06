@@ -43,13 +43,13 @@ export default function Account() {
             style={{
               width: 64, height: 64, flex: 'none', display: 'grid', placeItems: 'center',
               borderRadius: '50%', background: 'rgba(251,191,36,0.2)', border: '2.5px dashed var(--m-gold)',
-              fontFamily: 'var(--m-f-display)', fontSize: 26, fontWeight: 800, color: 'var(--m-gold)',
+              fontFamily: 'var(--m-f-display)', fontSize: 26, fontWeight: 650, color: 'var(--m-gold)',
             }}
           >
             {(user?.name || '?').trim().charAt(0).toUpperCase()}
           </div>
           <div style={{ minWidth: 0 }}>
-            <h2 style={{ fontSize: 21, fontWeight: 800, color: '#fff', fontFamily: 'var(--m-f-display)' }}>{user?.name}</h2>
+            <h2 style={{ fontSize: 21, fontWeight: 650, color: '#fff', fontFamily: 'var(--m-f-display)' }}>{user?.name}</h2>
             <p style={{ color: '#cfe2cd', fontSize: 13.5 }}>{user?.village ? user.village.nameEn || user.village.nameHi || '' : ''} · {user?.district || ''}</p>
             <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
               <span className="m-badge gold">{t(`common.${role}`)}</span>
@@ -103,11 +103,11 @@ export default function Account() {
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <ArtSun size={44} />
           <div style={{ flex: 1 }}>
-            <div className="m-display" style={{ fontWeight: 800, fontSize: 16, color: 'var(--m-green-forest)' }}>{t('saathi.name')}</div>
+            <div className="m-display" style={{ fontWeight: 650, fontSize: 16, color: 'var(--m-green-forest)' }}>{t('saathi.name')}</div>
             <div style={{ fontSize: 12.5, color: 'var(--m-ink-soft)' }}>{t('saathi.madeWith')}</div>
           </div>
           {isNative && (
-            <button type="button" className="m-chip" onClick={() => setServerOpen(true)}>⚙</button>
+            <button type="button" className="m-chip" onClick={() => setServerOpen(true)}><Icon name="more" size={15} /></button>
           )}
         </div>
         <MBtn block variant="danger" style={{ marginTop: 12 }} onClick={() => setLogoutOpen(true)} icon={<Icon name="logout" size={18} />}>

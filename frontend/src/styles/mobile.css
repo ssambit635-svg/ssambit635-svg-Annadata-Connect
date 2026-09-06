@@ -1,8 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════════
    ANNADATA SAATHI — the Android app design system.
    Same green/gold/cream theme as the website, its own design language:
-   rounded "passbook" cards, toran scallop borders, folk-art touches,
-   Baloo 2 display + Mukta body typography, thumb-friendly controls.
+   flat document surfaces with hairline rules, monoline institutional
+   emblems, Inter / IBM Plex Mono typography, thumb-friendly controls.
+   See mobile-gov.css for the refinement layer loaded on top of this.
    Everything is scoped under .m-root so the website styles never leak.
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -15,9 +16,9 @@
   --m-paper: #ffffff;
   --m-leaf: #e3f2e7;
   --m-leaf-deep: #cfe8d4;
-  --m-gold: #fbbf24;
-  --m-gold-deep: #e8a60b;
-  --m-gold-soft: #fdf3d0;
+  --m-gold: #c79a2e;
+  --m-gold-deep: #a97f1c;
+  --m-gold-soft: #f6efdd;
   --m-ink: #17281d;
   --m-ink-soft: #5b6b5f;
   --m-ink-faint: #8a978c;
@@ -30,17 +31,19 @@
   --m-blue-soft: #e4ecfc;
   --m-clay: #e0784f;
 
-  --m-f-display: 'Baloo 2', 'Mukta', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, sans-serif;
-  --m-f-body: 'Mukta', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, sans-serif;
+  --m-f-display: 'Inter Tight Variable', 'Inter', 'IBM Plex Sans', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --m-f-body: 'Inter', 'IBM Plex Sans', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --m-f-num: 'IBM Plex Mono', 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --m-r-xl: 26px;
-  --m-r-lg: 20px;
-  --m-r-md: 16px;
-  --m-r-sm: 12px;
+  --m-r-xl: 12px;
+  --m-r-lg: 10px;
+  --m-r-md: 8px;
+  --m-r-sm: 6px;
   --m-r-pill: 999px;
 
-  --m-shadow-card: 0 4px 16px -6px rgba(20, 61, 34, 0.14), 0 1px 3px rgba(20, 61, 34, 0.07);
-  --m-shadow-pop: 0 10px 30px -8px rgba(20, 61, 34, 0.28);
+  --m-shadow-card: 0 1px 2px rgba(16, 40, 24, 0.05), 0 1px 1px rgba(16, 40, 24, 0.04);
+  --m-shadow-pop: 0 6px 18px -8px rgba(16, 40, 24, 0.22), 0 1px 2px rgba(16, 40, 24, 0.06);
+  --m-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --m-tab-h: 68px;
 
   font-family: var(--m-f-body);
@@ -49,7 +52,9 @@
   min-height: 100vh;
   -webkit-tap-highlight-color: transparent;
   font-size: 16px;
-  line-height: 1.55;
+  line-height: 1.5;
+  letter-spacing: -0.006em;
+  font-feature-settings: 'tnum' 1, 'cv05' 1;
 }
 
 .m-root *,
@@ -110,7 +115,7 @@
   color: var(--m-green-deep);
   box-shadow: var(--m-shadow-card);
 }
-.m-appbar .m-back:active { transform: scale(0.94); }
+.m-appbar .m-back:active { background: var(--m-leaf); }
 
 .m-page {
   max-width: 560px;
@@ -121,7 +126,7 @@
   gap: 14px;
 }
 
-.m-page-title { font-size: 25px; font-weight: 800; letter-spacing: -0.01em; }
+.m-page-title { font-size: 25px; font-weight: 650; letter-spacing: -0.01em; }
 .m-page-sub { color: var(--m-ink-soft); font-size: 14.5px; margin-top: 2px; }
 
 /* ── Bottom tab bar ────────────────────────────────────────────── */
@@ -138,7 +143,7 @@
   padding: 6px 10px calc(8px + env(safe-area-inset-bottom, 0px));
   background: var(--m-paper);
   border-top: 1.5px solid var(--m-line);
-  border-radius: 26px 26px 0 0;
+  border-radius: 0;
   box-shadow: 0 -8px 30px -12px rgba(20, 61, 34, 0.25);
 }
 .m-tab {
@@ -159,35 +164,33 @@
 }
 .m-tab svg { transition: transform 0.18s ease; }
 .m-tab.active { color: var(--m-green-deep); background: var(--m-leaf); }
-.m-tab.active svg { transform: translateY(-1px) scale(1.08); }
-.m-tab:active svg { transform: scale(0.9); }
+.m-tab.active svg { transform: none; }
+.m-tab:active svg { transform: none; }
 
 /* raised centre "new" button */
 .m-tab-add {
   flex: none;
-  width: 62px; height: 62px;
-  margin-top: -30px;
+  width: 56px; height: 56px;
+  margin-top: -24px;
   display: grid;
   place-items: center;
   border-radius: var(--m-r-pill);
-  background: linear-gradient(160deg, var(--m-gold), var(--m-gold-deep));
-  color: var(--m-green-forest);
+  background: var(--m-green-deep);
+  color: #fff;
   border: 3px solid var(--m-paper);
-  box-shadow: 0 10px 22px -8px rgba(232, 166, 11, 0.65);
+  box-shadow: 0 6px 16px -8px rgba(16, 40, 24, 0.5);
 }
-.m-tab-add:active { transform: scale(0.92); }
+.m-tab-add:active { transform: scale(0.96); }
 
 /* ── Toran scallop strip (little hanging garland) ──────────────── */
 
 .m-scallops {
-  height: 12px;
-  background-image:
-    radial-gradient(circle at 50% 100%, currentColor 0 1.6px, transparent 2.2px),
-    radial-gradient(circle at 50% 0, currentColor 0 6px, transparent 6.6px);
-  background-size: 18px 12px, 18px 9px;
-  background-position: 0 3px, 0 0;
-  background-repeat: repeat-x;
-  opacity: 0.9;
+  height: 3px;
+  background-image: linear-gradient(90deg, currentColor 0 34%, transparent 34%);
+  background-size: 100% 3px;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  opacity: 0.85;
 }
 
 /* ── Cards ─────────────────────────────────────────────────────── */
@@ -198,7 +201,7 @@
   border-radius: var(--m-r-xl);
   box-shadow: var(--m-shadow-card);
   padding: 18px;
-  animation: m-rise 0.4s ease both;
+  animation: m-rise 0.36s var(--m-ease) both;
 }
 .m-card.plain { animation: none; }
 .m-card.tight { padding: 14px; }
@@ -345,7 +348,7 @@
   padding: 12px 14px;
   box-shadow: var(--m-shadow-card);
 }
-.m-stat .m-stat-num { font-family: var(--m-f-display); font-size: 24px; font-weight: 800; color: var(--m-green-deep); line-height: 1.1; }
+.m-stat .m-stat-num { font-family: var(--m-f-display); font-size: 24px; font-weight: 650; color: var(--m-green-deep); line-height: 1.1; }
 .m-stat .m-stat-lbl { font-size: 12.5px; color: var(--m-ink-soft); font-weight: 600; }
 .m-stat.warning .m-stat-num { color: var(--m-amber); }
 .m-stat.info .m-stat-num { color: var(--m-blue); }
@@ -415,7 +418,7 @@
   font-size: 14.5px;
   font-weight: 600;
   line-height: 1.45;
-  animation: m-rise 0.3s ease both;
+  animation: m-rise 0.26s var(--m-ease) both;
 }
 .m-banner.error { background: var(--m-red-soft); color: var(--m-red); }
 .m-banner.warning { background: var(--m-amber-soft); color: var(--m-amber); }
@@ -433,12 +436,12 @@
   display: grid; place-items: center;
   border: 2px solid #cfe5d3;
   font-family: var(--m-f-display);
-  font-weight: 800;
+  font-weight: 650;
   font-size: 26px;
   line-height: 1;
 }
 .m-stepper .m-step-btn:active { transform: scale(0.92); background: var(--m-leaf-deep); }
-.m-stepper .m-input { text-align: center; font-family: var(--m-f-display); font-weight: 800; font-size: 22px; }
+.m-stepper .m-input { text-align: center; font-family: var(--m-f-display); font-weight: 650; font-size: 22px; }
 
 /* radio option cards (crops, centres, buyers) */
 .m-option {
@@ -503,7 +506,7 @@
   text-transform: uppercase;
   color: var(--m-gold);
 }
-.m-hero .m-hero-title { font-family: var(--m-f-display); font-size: 27px; font-weight: 800; line-height: 1.15; margin: 4px 0 2px; color: #fff; }
+.m-hero .m-hero-title { font-family: var(--m-f-display); font-size: 27px; font-weight: 650; line-height: 1.15; margin: 4px 0 2px; color: #fff; }
 .m-hero .m-hero-sub { font-size: 14px; color: #d9e7d4; font-weight: 500; }
 .m-hero .m-hero-bottom {
   position: relative;
@@ -529,7 +532,7 @@
   text-align: center;
   line-height: 1.25;
 }
-.m-action:active { transform: scale(0.94); background: var(--m-leaf); }
+.m-action:active { background: var(--m-leaf); border-color: var(--m-green); }
 .m-action .m-action-ico {
   width: 52px; height: 52px;
   display: grid; place-items: center;
@@ -579,7 +582,7 @@
   border-radius: var(--m-r-xl);
   box-shadow: var(--m-shadow-pop);
   overflow: hidden;
-  animation: m-rise 0.4s ease both;
+  animation: m-rise 0.36s var(--m-ease) both;
 }
 .m-ticket .m-ticket-top {
   background: linear-gradient(150deg, var(--m-green-deep), var(--m-green-forest));
@@ -594,7 +597,7 @@
 .m-ticket .m-ticket-num {
   font-family: var(--m-f-display);
   font-size: 56px;
-  font-weight: 800;
+  font-weight: 650;
   letter-spacing: 0.02em;
   color: var(--m-green-forest);
   text-align: center;
@@ -621,7 +624,7 @@
 .m-ticket .m-ticket-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .m-ticket .m-cell { background: #f6f8f1; border-radius: var(--m-r-sm); padding: 10px 12px; }
 .m-ticket .m-cell .m-k { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--m-ink-faint); }
-.m-ticket .m-cell .m-v { font-family: var(--m-f-display); font-size: 18px; font-weight: 800; color: var(--m-green-deep); line-height: 1.2; }
+.m-ticket .m-cell .m-v { font-family: var(--m-f-display); font-size: 18px; font-weight: 650; color: var(--m-green-deep); line-height: 1.2; }
 .m-ticket .m-cell.wide { grid-column: 1 / -1; }
 
 /* ── Journey timeline ──────────────────────────────────────────── */
@@ -646,7 +649,7 @@
   background: var(--m-paper);
   display: grid; place-items: center;
   font-family: var(--m-f-display);
-  font-weight: 800;
+  font-weight: 650;
   font-size: 15px;
   color: var(--m-ink-faint);
   z-index: 1;
@@ -669,7 +672,7 @@
   border-radius: var(--m-r-lg);
   padding: 12px 14px;
   box-shadow: var(--m-shadow-card);
-  animation: m-rise 0.35s ease both;
+  animation: m-rise 0.3s var(--m-ease) both;
 }
 .m-row .m-row-ico {
   flex: none;
@@ -679,7 +682,7 @@
   color: var(--m-green-deep);
   display: grid; place-items: center;
   font-family: var(--m-f-display);
-  font-weight: 800;
+  font-weight: 650;
   font-size: 13px;
   letter-spacing: 0.02em;
 }
@@ -690,7 +693,7 @@
 .m-row .m-row-title { font-weight: 700; font-size: 15px; color: var(--m-ink); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .m-row .m-row-sub { font-size: 13px; color: var(--m-ink-soft); margin-top: 1px; line-height: 1.45; }
 .m-row .m-row-side { text-align: right; flex: none; }
-.m-row .m-row-amount { font-family: var(--m-f-display); font-weight: 800; font-size: 16.5px; color: var(--m-green-deep); }
+.m-row .m-row-amount { font-family: var(--m-f-display); font-weight: 650; font-size: 16.5px; color: var(--m-green-deep); }
 
 .m-stack { display: flex; flex-direction: column; gap: 10px; }
 
@@ -719,7 +722,7 @@
   overflow-y: auto;
 }
 .m-sheet .m-sheet-grab { width: 44px; height: 5px; border-radius: 3px; background: #d9e0d2; margin: 4px auto 14px; }
-.m-sheet h3 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.m-sheet h3 { font-size: 20px; font-weight: 650; margin-bottom: 4px; }
 .m-sheet .m-sheet-sub { color: var(--m-ink-soft); font-size: 14.5px; margin-bottom: 14px; }
 
 /* ── Loading / error / empty states ────────────────────────────── */
@@ -733,7 +736,7 @@
   padding: 48px 20px;
   text-align: center;
 }
-.m-state .m-state-title { font-family: var(--m-f-display); font-weight: 800; font-size: 19px; color: var(--m-green-forest); }
+.m-state .m-state-title { font-family: var(--m-f-display); font-weight: 650; font-size: 19px; color: var(--m-green-forest); }
 .m-state .m-state-sub { color: var(--m-ink-soft); font-size: 14.5px; max-width: 300px; }
 
 .m-spinner {
@@ -745,7 +748,14 @@
 }
 
 .m-loader-brand { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 60px 20px; }
-.m-loader-brand .m-loader-word { font-family: var(--m-f-display); font-weight: 800; font-size: 21px; color: var(--m-green-forest); animation: m-bob 2.2s ease-in-out infinite; }
+.m-loader-brand .m-loader-word {
+  font-family: var(--m-f-display); font-weight: 650; font-size: 15px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--m-ink-soft);
+  background: linear-gradient(90deg, var(--m-ink-faint) 20%, var(--m-green-deep) 50%, var(--m-ink-faint) 80%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: m-sweep 1.6s linear infinite;
+}
 
 /* ── Welcome / auth ────────────────────────────────────────────── */
 
@@ -761,7 +771,7 @@
   color: var(--m-cream);
   text-align: center;
 }
-.m-welcome-hero .m-welcome-title { font-family: var(--m-f-display); font-weight: 800; font-size: 34px; line-height: 1.1; color: #fff; margin-top: 8px; }
+.m-welcome-hero .m-welcome-title { font-family: var(--m-f-display); font-weight: 650; font-size: 34px; line-height: 1.1; color: #fff; margin-top: 8px; }
 .m-welcome-hero .m-welcome-title .m-gold { color: var(--m-gold); }
 .m-welcome-hero .m-welcome-tag { font-size: 15px; color: #cfe2cd; font-weight: 500; margin-top: 6px; }
 .m-welcome-hero .m-welcome-art { margin: 4px auto -2px; }
@@ -835,8 +845,8 @@
   color: #2b2b2b;
   box-shadow: var(--m-shadow-card);
 }
-.m-google-btn:active { transform: scale(0.97); }
-.m-google-btn .m-mock-tag { font-size: 9.5px; font-weight: 800; letter-spacing: 0.06em; background: var(--m-amber-soft); color: var(--m-amber); padding: 2px 7px; border-radius: 6px; font-family: var(--m-f-body); }
+.m-google-btn:active { background: #f4f6f1; }
+.m-google-btn .m-mock-tag { font-size: 9.5px; font-weight: 650; letter-spacing: 0.06em; background: var(--m-amber-soft); color: var(--m-amber); padding: 2px 7px; border-radius: 6px; font-family: var(--m-f-body); }
 
 .m-account-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px 10px; border-radius: var(--m-r-md); }
 .m-account-row:active { background: #f4f7ef; }
@@ -848,7 +858,7 @@
   background: var(--m-leaf);
   color: var(--m-green-deep);
   font-family: var(--m-f-display);
-  font-weight: 800;
+  font-weight: 650;
   font-size: 18px;
 }
 .m-account-row strong { display: block; font-size: 15px; color: var(--m-ink); }
@@ -895,7 +905,7 @@
   display: grid; place-items: center;
   color: var(--m-amber);
 }
-.m-idcard .m-id-name { font-family: var(--m-f-display); font-weight: 800; font-size: 21px; color: var(--m-green-forest); }
+.m-idcard .m-id-name { font-family: var(--m-f-display); font-weight: 650; font-size: 21px; color: var(--m-green-forest); }
 .m-idcard .m-id-line { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; padding: 3px 0; }
 .m-idcard .m-id-line span { color: var(--m-ink-faint); font-weight: 600; }
 .m-idcard .m-id-line strong { color: var(--m-ink); text-align: right; }
@@ -931,11 +941,11 @@
   align-items: center;
   gap: 8px;
   padding: 12px 18px;
-  border-radius: var(--m-r-pill);
+  border-radius: var(--m-r-md);
   background: linear-gradient(160deg, var(--m-gold), var(--m-gold-deep));
   color: var(--m-green-forest);
   font-family: var(--m-f-display);
-  font-weight: 800;
+  font-weight: 650;
   font-size: 15px;
   box-shadow: 0 12px 26px -8px rgba(232, 166, 11, 0.7);
   border: 3px solid var(--m-paper);
@@ -954,7 +964,7 @@
 /* ── Section header with art ───────────────────────────────────── */
 
 .m-section-h { display: flex; align-items: center; gap: 10px; margin: 6px 0 -2px; }
-.m-section-h .m-section-title { font-family: var(--m-f-display); font-weight: 800; font-size: 18.5px; color: var(--m-green-forest); }
+.m-section-h .m-section-title { font-family: var(--m-f-display); font-weight: 650; font-size: 18.5px; color: var(--m-green-forest); }
 .m-section-h .m-section-hint { margin-left: auto; font-size: 12.5px; font-weight: 700; color: var(--m-green); white-space: nowrap; }
 
 /* stamp badge (govt seal feel) */
@@ -965,7 +975,7 @@
   border: 2.5px dashed var(--m-green);
   color: var(--m-green);
   font-family: var(--m-f-display);
-  font-weight: 800;
+  font-weight: 650;
   font-size: 11px;
   text-align: center;
   text-transform: uppercase;
@@ -995,7 +1005,7 @@
 /* ── Animations ────────────────────────────────────────────────── */
 
 @keyframes m-rise {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes m-fade { from { opacity: 0; } to { opacity: 1; } }
@@ -1009,26 +1019,28 @@
   70% { box-shadow: 0 0 0 9px rgba(22, 101, 52, 0); }
   100% { box-shadow: 0 0 0 0 rgba(22, 101, 52, 0); }
 }
-@keyframes m-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-@keyframes m-sway {
-  0%, 100% { transform: rotate(-2.5deg); }
-  50% { transform: rotate(2.5deg); }
+@keyframes m-reveal {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes m-pop {
-  0% { transform: scale(0.7); opacity: 0; }
-  70% { transform: scale(1.05); }
-  100% { transform: scale(1); opacity: 1; }
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* live-data sweep for tickers and refreshing values */
+@keyframes m-sweep {
+  from { background-position: -180% 0; }
+  to { background-position: 280% 0; }
 }
 
-.m-anim-bob { animation: m-bob 3s ease-in-out infinite; }
-.m-anim-sway { animation: m-sway 4s ease-in-out infinite; transform-origin: bottom center; }
-.m-anim-pop { animation: m-pop 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+/* Motion policy: entrances and state changes only — nothing loops
+   decoratively. Loops are reserved for genuine "live data" affordances. */
+.m-anim-bob { animation: m-reveal 0.45s var(--m-ease) both; }
+.m-anim-sway { animation: m-spin 1s linear infinite; transform-origin: center; }
+.m-anim-pop { animation: m-pop 0.28s var(--m-ease) both; }
 
 /* staggered card entrance */
-.m-stagger > * { animation: m-rise 0.4s ease both; }
+.m-stagger > * { animation: m-rise 0.36s var(--m-ease) both; }
 .m-stagger > *:nth-child(2) { animation-delay: 0.05s; }
 .m-stagger > *:nth-child(3) { animation-delay: 0.1s; }
 .m-stagger > *:nth-child(4) { animation-delay: 0.15s; }
@@ -1040,7 +1052,7 @@
 /* ── Restyled shared web components (OTP flow etc.) inside the app ── */
 
 .m-root .otp-flow { text-align: left; }
-.m-root .otp-flow .auth-step-title { font-family: var(--m-f-display); font-size: 19px; font-weight: 800; color: var(--m-green-forest); }
+.m-root .otp-flow .auth-step-title { font-family: var(--m-f-display); font-size: 19px; font-weight: 650; color: var(--m-green-forest); }
 .m-root .otp-flow .auth-step-sub { color: var(--m-ink-soft); font-size: 14.5px; }
 .m-root .otp-sent-icon {
   width: 56px; height: 56px;
@@ -1066,14 +1078,14 @@
 .m-root .mock-code-card .mock-code-text code.mock-code-value {
   font-family: var(--m-f-display);
   font-size: 26px;
-  font-weight: 800;
+  font-weight: 650;
   letter-spacing: 0.14em;
   color: var(--m-green-forest);
   display: block;
   line-height: 1.3;
 }
 .m-root .mock-code-card .mock-code-text small { color: #a3812a; font-size: 11.5px; display: block; }
-.m-root .otp-code { font-family: var(--m-f-display) !important; font-size: 26px !important; letter-spacing: 0.14em; text-align: center; font-weight: 800; }
+.m-root .otp-code { font-family: var(--m-f-display) !important; font-size: 26px !important; letter-spacing: 0.14em; text-align: center; font-weight: 650; }
 .m-root .otp-actions { display: flex; gap: 16px; justify-content: center; margin: 12px 0 4px; }
 .m-root .text-button { color: var(--m-green); font-weight: 700; font-size: 14px; }
 .m-root .auth-small-note { color: var(--m-ink-faint); font-size: 12px; text-align: center; margin: 8px 0 0; }

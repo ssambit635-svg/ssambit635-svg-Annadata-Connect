@@ -38,7 +38,7 @@ export default function OfficerQueue() {
       <p style={{ fontSize: 13.5, color: 'var(--m-ink-soft)', marginTop: -6 }}>{pick(data.centre, 'name')}</p>
 
       {data.queue.length === 0 ? (
-        <MEmpty art={<ArtQueue size={110} className="m-anim-bob" />} title={t('officer.noPending')} />
+        <MEmpty art={<ArtQueue size={110} className="m-anim-pop" />} title={t('officer.noPending')} />
       ) : (
         data.queue.map((r) => (
           <MCard key={r.id} plain tight>

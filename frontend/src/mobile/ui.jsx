@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import { useI18n } from '../i18n/I18nContext.jsx';
 import { statusTone, formatInr, waitText, JOURNEY, formatDate } from '../utils/format.js';
-import { ArtWheat, ArtBasket, ArtSun, ArtLogo, ArtBirds } from './art.jsx';
+import { ArtWheat, ArtBasket, ArtSun, ArtLogo, ArtBirds, ArtNotice } from './art.jsx';
 
 /* ── Card ────────────────────────────────────────────────────────── */
 export function MCard({ className = '', plain, tight, children, ...rest }) {
@@ -174,7 +174,7 @@ export function MLoader({ label }) {
   const { t } = useI18n();
   return (
     <div className="m-loader-brand" role="status" aria-live="polite">
-      <ArtLogo size={64} className="m-anim-bob" />
+      <ArtLogo size={56} />
       <div className="m-loader-word">{t('saathi.name')}</div>
       <div className="m-spinner" aria-hidden="true" />
       <p style={{ color: 'var(--m-ink-faint)', fontSize: 13.5 }}>{label || t('common.loading')}</p>
@@ -192,7 +192,7 @@ export function MError({ error, onRetry }) {
       : t('common.errorGeneric');
   return (
     <div className="m-state" role="alert">
-      <ArtSun size={72} sleepy />
+      <ArtNotice size={76} tone="error" />
       <div className="m-state-title">{t('common.crashTitle')}</div>
       <p className="m-state-sub">{message}</p>
       {onRetry && (
@@ -208,7 +208,7 @@ export function MEmpty({ art, title, hint, action }) {
   const { t } = useI18n();
   return (
     <div className="m-state">
-      {art || <ArtBasket size={96} className="m-anim-bob" />}
+      {art || <ArtBasket size={96} className="m-anim-pop" />}
       <div className="m-state-title">{title || t('common.empty')}</div>
       {hint && <p className="m-state-sub">{hint}</p>}
       {action}
@@ -400,4 +400,4 @@ export function greetingKey() {
   return 'saathi.greetDay';
 }
 
-export { ArtWheat, ArtBasket, ArtLogo, ArtBirds, ArtSun };
+export { ArtWheat, ArtBasket, ArtLogo, ArtBirds, ArtSun, ArtNotice };

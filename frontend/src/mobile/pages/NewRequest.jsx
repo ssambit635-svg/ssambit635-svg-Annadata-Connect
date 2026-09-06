@@ -223,7 +223,7 @@ export default function NewRequest() {
             <MBtn to="/farmer" variant="soft">{t('nav.dashboard')}</MBtn>
           </div>
           <div style={{ margin: '10px 0 0' }}>
-            <ArtSun size={40} sleepy className="m-anim-bob" />
+            <ArtSun size={40} sleepy className="m-anim-pop" />
           </div>
         </div>
       )}

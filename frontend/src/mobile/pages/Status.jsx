@@ -41,11 +41,11 @@ export default function Status() {
       <MCard plain>
         {request.status === 'COMPLETED' ? (
           <div style={{ textAlign: 'center', marginBottom: 8 }}>
-            <ArtField size={180} className="m-anim-bob" />
+            <ArtField size={180} />
           </div>
         ) : (
           <div style={{ textAlign: 'center', marginBottom: 8 }}>
-            <ArtTractor size={110} className="m-anim-sway" />
+            <ArtTractor size={110} />
           </div>
         )}
         <Journey request={request} />

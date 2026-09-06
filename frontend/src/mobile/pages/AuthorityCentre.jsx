@@ -23,7 +23,7 @@ export default function AuthorityCentre() {
     <div className="m-stagger">
       <MCard plain className="green">
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <ArtMandi size={56} className="m-anim-bob" />
+          <ArtMandi size={56} className="m-anim-pop" />
           <div style={{ flex: 1, minWidth: 0 }}>
             <h2 style={{ fontSize: 18, color: '#fff', fontFamily: 'var(--m-f-display)' }}>{pick(centre, 'name')}</h2>
             <p style={{ fontSize: 12.5, color: '#cfe2cd' }}>{centre.address} · {centre.operatingHours}</p>
