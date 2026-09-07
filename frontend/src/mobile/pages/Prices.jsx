@@ -88,18 +88,11 @@ export default function Prices() {
         ))}
       </div>
 
-      <MCard plain className="gold">
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <ArtMandi size={64} className="m-anim-pop" />
-          <div style={{ flex: 1 }}>
-            <h2 style={{ fontSize: 18, fontFamily: 'var(--m-f-display)' }}>{t('prices.title')}</h2>
-            <p style={{ fontSize: 12.5, color: 'var(--m-ink-soft)' }}>{t('prices.subtitle')}</p>
-            <span className="m-badge gold" style={{ marginTop: 6 }}>
-              <Icon name="checkCircle" size={13} /> {t('prices.realData')}
-            </span>
-          </div>
-        </div>
-      </MCard>
+      {/* ── source strip ── */}
+      <div className="m-source-strip">
+        <span className="m-source-brand"><Icon name="checkCircle" size={14} /> {t('prices.realData')}</span>
+        <span className="m-live">{t('prices.liveSynced')}</span>
+      </div>
 
       {loading && <MLoader />}
       {error && <MError error={error} onRetry={() => setCommodity((c) => c)} />}
@@ -107,7 +100,7 @@ export default function Prices() {
       {!loading && !error && data && (summary ? (
         <>
           {/* ── summary ── */}
-          <div className="m-stat-grid">
+          <div className="m-stat-grid m-stat-grid-2">
             <MStat num={formatInr(Math.round(summary.latest.modalPrice))} label={t('prices.latestPrice', { period: summary.latest.period })} />
             <MStat num={formatInr(Math.round(summary.last12MonthAverage))} label={t('prices.avg12')} />
             <MStat
@@ -129,11 +122,19 @@ export default function Prices() {
                     <stop offset="1" stopColor="#166534" stopOpacity="0.02" />
                   </linearGradient>
                 </defs>
+                {[0.25, 0.5, 0.75].map((f) => (
+                  <line key={f} x1="6" x2="314" y1={10 + f * (trend.H - 26)} y2={10 + f * (trend.H - 26)} stroke="#e6eae1" strokeWidth="1" strokeDasharray="3 4" />
+                ))}
                 <path d={trend.area} fill="url(#m-spark-fill)" />
-                <path d={trend.path} fill="none" stroke="#166534" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d={trend.path} fill="none" stroke="#1f7d3c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
                 {trend.points.map((p, i) => (
                   i === trend.points.length - 1
-                    ? <circle key={i} cx={trend.x(i)} cy={trend.y(p.modalPrice)} r="5.5" fill="#fbbf24" stroke="#0f3d22" strokeWidth="2.4" />
+                    ? (
+                      <g key={i}>
+                        <circle cx={trend.x(i)} cy={trend.y(p.modalPrice)} r="9" fill="#f2b632" fillOpacity="0.25" />
+                        <circle cx={trend.x(i)} cy={trend.y(p.modalPrice)} r="5" fill="#f2b632" stroke="#fff" strokeWidth="2.2" />
+                      </g>
+                    )
                     : null
                 ))}
                 <text x="6" y="112" fontSize="10" fill="#8a978c" fontWeight="700">{trend.first.period}</text>
@@ -181,16 +182,19 @@ export default function Prices() {
               <div className="m-stack">
                 {topMarkets.map((m, i) => (
                   <div key={`${m.stateName}-${m.marketName}`} className="m-row">
-                    <span className={`m-row-ico ${i === 0 ? 'gold' : ''}`}>#{i + 1}</span>
+                    <span className={`m-row-ico ${i === 0 ? 'gold' : ''}`}>{i + 1}</span>
                     <div className="m-row-main">
-                      <div className="m-row-title">{m.marketName}</div>
+                      <div className="m-row-title">
+                        {m.marketName}
+                        {i === 0 && <span className="m-badge gold">{t('prices.topPaying')}</span>}
+                      </div>
                       <div className="m-row-sub">
                         {m.district || m.stateName} · {formatInr(Math.round(m.latestPrice))} ({m.latestPeriod})
                       </div>
                     </div>
                     <div className="m-row-side">
                       <div className="m-row-amount">{formatInr(Math.round(m.last12MonthAverage))}</div>
-                      <div style={{ fontSize: 11, color: 'var(--m-ink-faint)', fontWeight: 700 }}>12m avg</div>
+                      <div style={{ fontSize: 10.5, color: 'var(--m-ink-faint)', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' }}>{t('prices.avg12Short')}</div>
                     </div>
                   </div>
                 ))}

@@ -1,19 +1,26 @@
 import { ApiError } from '../middleware/error.js';
+import { FARMERS, VILLAGES } from '../data/seed-data.js';
 
 // Mock-only authentication. There is no Google, Twilio or SMTP integration left
 // in this codebase: codes are generated locally and handed straight back to the
 // UI, and "Sign in with Google" picks one of the sample accounts below.
 // Every entry mirrors a seeded user (see src/data/seed-data.js) so a pick lands
 // on real mock data instead of creating a throwaway profile.
+// Farmer picker entries are derived from the seeded farmer roster so the two
+// can never drift apart. The first two keep their historical `sub` values
+// (the e2e suite and older data files reference them).
+const LEGACY_SUBS = { 'farmer-demo': 'mock-google-farmer-bijay', 'farmer-demo-2': 'mock-google-farmer-kuni' };
+const villageName = (id) => VILLAGES.find((v) => v.id === id)?.nameEn || 'Khordha';
+const farmerAccounts = FARMERS.map((f) => ({
+  sub: LEGACY_SUBS[f.id] || `mock-google-${f.id}`,
+  role: 'farmer',
+  name: f.name,
+  email: f.email,
+  detail: `${f.farmerId} · ${villageName(f.villageId)}`,
+}));
+
 export const MOCK_GOOGLE_ACCOUNTS = [
-  {
-    sub: 'mock-google-farmer-bijay', role: 'farmer', name: 'Bijay Pradhan',
-    email: 'bijay.pradhan.anc@gmail.com', detail: 'ANC-F-0001 · Baranga',
-  },
-  {
-    sub: 'mock-google-farmer-kuni', role: 'farmer', name: 'Kuni Sahoo',
-    email: 'kuni.sahoo.anc@gmail.com', detail: 'ANC-F-0002 · Harirajpur',
-  },
+  ...farmerAccounts,
   {
     sub: 'mock-google-officer-rashmi', role: 'officer', name: 'Rashmi Das',
     email: 'rashmi.das.anc@gmail.com', detail: 'Bhubaneswar Central centre',
@@ -21,6 +28,10 @@ export const MOCK_GOOGLE_ACCOUNTS = [
   {
     sub: 'mock-google-officer-manoj', role: 'officer', name: 'Manoj Behera',
     email: 'manoj.behera.anc@gmail.com', detail: 'Jatni centre',
+  },
+  {
+    sub: 'mock-google-officer-sasmita', role: 'officer', name: 'Sasmita Mohapatra',
+    email: 'sasmita.mohapatra.anc@gmail.com', detail: 'Khordha centre',
   },
   {
     sub: 'mock-google-authority-suresh', role: 'authority', name: 'Suresh Patnaik',

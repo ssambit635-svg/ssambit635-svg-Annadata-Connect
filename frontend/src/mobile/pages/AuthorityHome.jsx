@@ -7,8 +7,8 @@ import { officerService } from '../../services/api/farmerService.js';
 import { authorityService } from '../../services/api/farmerService.js';
 import { formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
-import { ArtField, ArtMandi } from '../art.jsx';
-import { MCard, MStat, MBar, MLoader, MError, MBadge, SectionH } from '../ui.jsx';
+import { ArtMandi } from '../art.jsx';
+import { MCard, MStat, MBar, MBtn, MLoader, MError, MBadge, SectionH } from '../ui.jsx';
 
 export default function AuthorityHome() {
   const { t, pick } = useI18n();
@@ -22,25 +22,27 @@ export default function AuthorityHome() {
 
   return (
     <div className="m-stagger">
-      <MCard plain className="green">
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <ArtField size={130} />
-          <div style={{ flex: 1 }}>
-            <h2 style={{ fontSize: 19, color: '#fff', fontFamily: 'var(--m-f-display)' }}>{t('authority.overview')}</h2>
-            <p style={{ fontSize: 13, color: '#cfe2cd' }}>{t('authority.district')}: {district}</p>
-            <button type="button" className="m-chip" style={{ marginTop: 8, borderColor: 'rgba(255,255,255,.35)', color: '#cfe2cd', background: 'transparent' }} onClick={reload} disabled={refreshing}>
-              <Icon name="refresh" size={14} /> {t('common.refresh')}
-            </button>
+      <MCard plain className="green m-centre-card">
+        <div className="m-centre-top">
+          <span className="m-centre-mark m-centre-mark-icon"><Icon name="flag" size={24} strokeWidth={1.7} /></span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="m-eyebrow" style={{ color: 'var(--m-gold-bright)' }}>{t('authority.district')} · {district}</div>
+            <h2 className="m-centre-name">{t('authority.overview')}</h2>
+            <p className="m-centre-sub"><Icon name="store" size={13} /> {totals.openCentres}/{totals.totalCentres} {t('authority.centresOpen').toLowerCase()}</p>
           </div>
+        </div>
+        <div className="m-btn-row" style={{ marginTop: 16 }}>
+          <MBtn variant="white" size="sm" onClick={reload} disabled={refreshing} icon={<Icon name="refresh" size={15} />}>{t('common.refresh')}</MBtn>
+          <MBtn variant="gold" size="sm" to="/authority/simulator" icon={<Icon name="activity" size={15} />}>{t('nav.simulator')}</MBtn>
         </div>
       </MCard>
 
-      <div className="m-stat-grid">
+      <div className="m-stat-grid m-stat-grid-2">
         <MStat num={totals.farmersToday} label={t('authority.totalFarmersToday')} />
         <MStat num={totals.waiting} label={t('authority.totalWaiting')} tone="warning" />
         <MStat num={totals.completed} label={t('authority.totalCompleted')} />
         <MStat num={totals.procuredQuintals} label={`${t('authority.totalProcured')} (${t('common.quintalShort')})`} tone="info" />
-        <MStat num={`${totals.openCentres}/${totals.totalCentres}`} label={t('authority.centresOpen')} className="gold" />
+        <MStat num={`${totals.openCentres}/${totals.totalCentres}`} label={t('authority.centresOpen')} className="gold m-stat-wide" />
       </div>
 
       {/* Procurement Simulator module entry */}

@@ -70,7 +70,7 @@ export default function AuthorityCentre() {
       ) : (
         recentRequests.map((r) => (
           <div key={r.id} className="m-row">
-            <span className="m-row-ico">{r.tokenNumber}</span>
+            <span className="m-row-ico m-row-ico-token">{r.tokenNumber}</span>
             <div className="m-row-main">
               <div className="m-row-title">{r.farmer?.name} <MBadge status={r.status} /></div>
               <div className="m-row-sub">{pick(r.crop, 'name')} · {r.quantityQuintals}{t('common.quintalShort')} · {formatDate(r.createdAt, lang)}</div>

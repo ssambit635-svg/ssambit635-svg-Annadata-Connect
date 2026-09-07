@@ -1,4 +1,4 @@
-// Annadata Saathi — institutional emblem kit.
+// Annadata Connect — institutional emblem kit.
 //
 // Design language: government-grade monoline emblems. Thin, precise strokes,
 // geometric construction, a restrained deep-green / gold / slate palette and

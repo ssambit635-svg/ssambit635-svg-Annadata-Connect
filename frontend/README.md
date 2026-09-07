@@ -7,7 +7,7 @@ React 18 + Vite SPA for the Annadata Connect procurement platform.
 - Controlled rule-based farmer assistant (`src/assistant/brain.js`) — FAQ intents only, no LLM
 - Dedicated API service layer in `src/services/api/`
 - **Two frontends, one codebase** — the website (default in browsers) and
-  **Annadata Saathi**, the bespoke Android app UI in `src/mobile/` that boots
+  **Annadata Connect**, the bespoke Android app UI in `src/mobile/` that boots
   inside the Capacitor APK (preview it in any browser with `?app=1`).
   See **../SAATHI_APP.md**.
 

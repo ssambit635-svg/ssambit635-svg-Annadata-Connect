@@ -6,15 +6,25 @@ import { orTranslations, orAssistantAnswers } from './or.js';
 export const translations = {
   en: {
     app: { name: 'Annadata Connect', tagline: 'Crop procurement made simple' },
-    // "Annadata Saathi" — the bespoke Android app frontend (same product, its own
-    // friendlier design language). Keys here must stay in en/hi/or parity.
+    // The Android app frontend (same product, its own friendlier design
+    // language). The key is historical; the brand is "Annadata Connect".
+    // Keys here must stay in en/hi/or parity.
     saathi: {
-      name: 'Annadata Saathi', tagline: 'Harvest Companion',
+      name: 'Annadata Connect', brandFirst: 'Annadata', brandSecond: 'Connect',
+      tagline: 'Harvest Companion · Seamless Mandi Procurement',
       greetMorning: 'Suprabhat', greetEvening: 'Shubh sandhya', greetDay: 'Namaste',
       heroTitle: 'Farming, made gentle', heroBody: 'Tokens, queues and payments — with a friend by your side at every step.',
       madeWith: 'Made with care for our annadaas', getStarted: 'Get started',
-      liveToken: 'Live token', tipTitle: 'Saathi says',
+      liveToken: 'Live token', tipTitle: 'Connect says',
       previewBanner: 'Previewing the Android app UI — open with ?app=0 to return to the website.',
+      livePill: 'Live mandi', govChip: 'Govt. of Odisha · Khordha Pilot',
+      stepOf: 'Step {n} of {total}',
+      helpTitle: 'Need help with registration?',
+      helpBody: 'Visit your nearest procurement centre with your Aadhaar and bank passbook, or call the Kisan helpline.',
+      helpCall: 'Toll-free: 155261',
+      trustNic: 'NIC Odisha verified', trustDbt: 'Direct DBT enabled', trustMsp: 'MSP assured',
+      aadhaarLinked: 'Aadhaar linked',
+      roleFarmerSub: 'Annadata', roleOfficerSub: 'Procurement', roleAuthoritySub: 'District apex',
     },
     nav: {
       dashboard: 'Dashboard', newRequest: 'New Request', smartSell: 'Smart Sell',
@@ -90,6 +100,7 @@ export const translations = {
       },
     },
     prices: {
+      liveSynced: 'Live synced', avg12Short: '12m avg',
       title: 'Mandi Price History',
       subtitle: 'What your crop actually fetched in the mandis — real Agmarknet records, 2021–2025',
       realData: 'Real Agmarknet data',
@@ -197,6 +208,8 @@ export const translations = {
       smsOutbox: 'SMS Outbox', smsHint: 'These are the SMS sent to farmers for every update.',
       smsSimulated: 'Gateway in simulation mode — messages recorded, not physically sent.',
       smsEmpty: 'No SMS sent yet.', smsTo: 'To', smsProvider: 'Provider', providerMode: 'Mode',
+      shiftTitle: 'Shift performance', liveTelemetry: 'Live telemetry',
+      queueValue: 'Queue value', avgTurnaround: 'Avg. turnaround', sessionThroughput: 'Session throughput',
     },
     authority: {
       overview: 'District Overview', district: 'District', totalFarmersToday: 'Farmers today',
@@ -366,12 +379,21 @@ export const translations = {
   hi: {
     app: { name: 'अन्नदाता कनेक्ट', tagline: 'फसल खरीद अब आसान' },
     saathi: {
-      name: 'अन्नदाता साथी', tagline: 'फसल का साथी',
+      name: 'अन्नदाता कनेक्ट', brandFirst: 'अन्नदाता', brandSecond: 'कनेक्ट',
+      tagline: 'फसल का साथी · सहज मंडी खरीद',
       greetMorning: 'सुप्रभात', greetEvening: 'शुभ संध्या', greetDay: 'नमस्ते',
       heroTitle: 'खेती, अब और आसान', heroBody: 'टोकन, कतार और भुगतान — हर कदम पर आपके साथ एक साथी।',
       madeWith: 'हमारे अन्नदाताओं के लिए प्यार से बना', getStarted: 'शुरू करें',
-      liveToken: 'लाइव टोकन', tipTitle: 'साथी कहते हैं',
+      liveToken: 'लाइव टोकन', tipTitle: 'कनेक्ट कहता है',
       previewBanner: 'एंड्रॉइड ऐप यूआई देख रहे हैं — वेबसाइट के लिए ?app=0 खोलें।',
+      livePill: 'लाइव मंडी', govChip: 'ओडिशा सरकार · खोर्धा पायलट',
+      stepOf: 'चरण {n} / {total}',
+      helpTitle: 'पंजीकरण में मदद चाहिए?',
+      helpBody: 'आधार और बैंक पासबुक लेकर नज़दीकी खरीद केंद्र जाएँ, या किसान हेल्पलाइन पर कॉल करें।',
+      helpCall: 'टोल-फ्री: 155261',
+      trustNic: 'NIC ओडिशा सत्यापित', trustDbt: 'सीधा DBT सक्षम', trustMsp: 'MSP सुनिश्चित',
+      aadhaarLinked: 'आधार से जुड़ा',
+      roleFarmerSub: 'अन्नदाता', roleOfficerSub: 'खरीद', roleAuthoritySub: 'जिला शीर्ष',
     },
     nav: {
       dashboard: 'डैशबोर्ड', newRequest: 'नया अनुरोध', smartSell: 'स्मार्ट बिक्री',
@@ -447,6 +469,7 @@ export const translations = {
       },
     },
     prices: {
+      liveSynced: 'लाइव सिंक', avg12Short: '12 माह औसत',
       title: 'मंडी भाव इतिहास',
       subtitle: 'आपकी फसल को मंडियों में असल में क्या भाव मिला — वास्तविक अगमार्कनेट रिकॉर्ड, 2021–2025',
       realData: 'वास्तविक अगमार्कनेट डेटा',
@@ -554,6 +577,8 @@ export const translations = {
       smsOutbox: 'SMS आउटबॉक्स', smsHint: 'हर अपडेट पर किसानों को भेजे गए SMS यहाँ दिखते हैं।',
       smsSimulated: 'गेटवे सिमुलेशन मोड में — संदेश दर्ज, भौतिक रूप से नहीं भेजे गए।',
       smsEmpty: 'अभी कोई SMS नहीं भेजा गया।', smsTo: 'प्राप्तकर्ता', smsProvider: 'प्रदाता', providerMode: 'मोड',
+      shiftTitle: 'शिफ्ट प्रदर्शन', liveTelemetry: 'लाइव टेलीमेट्री',
+      queueValue: 'कतार मूल्य', avgTurnaround: 'औसत समय', sessionThroughput: 'सत्र थ्रूपुट',
     },
     authority: {
       overview: 'जिला सारांश', district: 'जिला', totalFarmersToday: 'आज के किसान',

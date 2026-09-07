@@ -1,4 +1,4 @@
-// Procurement Simulator — Annadata Saathi (mobile) authority module.
+// Procurement Simulator — Annadata Connect (mobile) authority module.
 // Same scenario engine and API as the website; the phone-first layout stacks
 // inputs, district impact, warnings, centre impact cards and the honest-note.
 import { useEffect, useRef, useState } from 'react';

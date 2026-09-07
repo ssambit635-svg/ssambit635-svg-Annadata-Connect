@@ -1,4 +1,4 @@
-// Annadata Saathi — shared UI primitives.
+// Annadata Connect — shared UI primitives.
 // Small, composable building blocks so every screen speaks the same
 // design language: pill buttons, rounded cards, thumb-sized targets.
 import { useEffect, useRef, useState } from 'react';
@@ -51,7 +51,7 @@ export function MBadge({ status, tone, children }) {
 
 export function MPayBadge({ payment }) {
   const { t } = useI18n();
-  if (!payment) return <span className="m-badge neutral"><span className="m-dot" />—</span>;
+  if (!payment) return null;
   const paid = payment.status === 'PAID';
   return (
     <span className={`m-badge ${paid ? 'success' : 'warning'}`}>

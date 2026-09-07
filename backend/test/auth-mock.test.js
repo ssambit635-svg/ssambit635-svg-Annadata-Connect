@@ -39,11 +39,19 @@ test('the mock outbox stays bounded', async () => {
 
 test('mock Google accounts are grouped by role', () => {
   const delivery = createMockDelivery();
-  assert.deepEqual(delivery.googleAccounts('farmer').map((a) => a.email).length, 2);
-  assert.deepEqual(delivery.googleAccounts('officer').map((a) => a.role), ['officer', 'officer']);
+  const seededFarmers = USERS.filter((u) => u.role === 'farmer');
+  const seededOfficers = USERS.filter((u) => u.role === 'officer');
+  // Every seeded farmer shows up in the picker (the demo should feel like a district, not one account).
+  assert.deepEqual(delivery.googleAccounts('farmer').map((a) => a.email), seededFarmers.map((u) => u.email));
+  assert.ok(seededFarmers.length >= 12);
+  assert.deepEqual(delivery.googleAccounts('officer').map((a) => a.role), seededOfficers.map(() => 'officer'));
   assert.deepEqual(delivery.googleAccounts('authority').map((a) => a.role), ['authority']);
   assert.equal(delivery.googleAccounts().length, MOCK_GOOGLE_ACCOUNTS.length);
-  assert.ok(delivery.googleAccounts('farmer').every((a) => a.sub && a.name && a.email));
+  assert.ok(delivery.googleAccounts('farmer').every((a) => a.sub && a.name && a.email && a.detail));
+  // Historical picker identities stay stable for the e2e suite and older data files.
+  assert.equal(delivery.googleAccounts('farmer')[0].sub, 'mock-google-farmer-bijay');
+  assert.equal(delivery.googleAccounts('farmer')[1].sub, 'mock-google-farmer-kuni');
+  assert.equal(new Set(MOCK_GOOGLE_ACCOUNTS.map((a) => a.sub)).size, MOCK_GOOGLE_ACCOUNTS.length);
 });
 
 test('every mock Google account maps onto a seeded sample user of the same role', () => {

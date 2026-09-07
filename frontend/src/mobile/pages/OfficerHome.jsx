@@ -80,16 +80,21 @@ export default function OfficerHome() {
   return (
     <div className="m-stagger">
       {/* ── centre header ── */}
-      <MCard plain className="green">
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <ArtMandi size={56} className="m-anim-pop" />
+      <MCard plain className="green m-centre-card">
+        <div className="m-centre-top">
+          <span className="m-centre-mark"><ArtMandi size={40} className="m-anim-pop" /></span>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <h2 style={{ fontSize: 18, color: '#fff', fontFamily: 'var(--m-f-display)' }}>{pick(centre, 'name')}</h2>
-            <p style={{ fontSize: 12.5, color: '#cfe2cd' }}>{centre.operatingHours}</p>
+            <div className="m-eyebrow" style={{ color: 'var(--m-gold-bright)' }}>{t('officer.centreStatus')} · {centre.district}</div>
+            <h2 className="m-centre-name">{pick(centre, 'name')}</h2>
+            <p className="m-centre-sub">
+              <Icon name="pin" size={13} /> {centre.address}
+              <span aria-hidden="true"> · </span>
+              <Icon name="clock" size={13} /> {centre.operatingHours}
+            </p>
           </div>
           <MBadge status={centre.status} />
         </div>
-        <div className="m-btn-row" style={{ marginTop: 12 }}>
+        <div className="m-btn-row" style={{ marginTop: 16 }}>
           <MBtn variant="white" size="sm" onClick={reload} disabled={refreshing} icon={<Icon name="refresh" size={15} />}>{t('common.refresh')}</MBtn>
           <MBtn variant="gold" size="sm" onClick={() => setToggleOpen(true)} disabled={busy}>
             {centre.status === 'OPEN' ? t('officer.pauseIntake') : t('officer.resumeIntake')}
@@ -100,49 +105,54 @@ export default function OfficerHome() {
       {centre.status !== 'OPEN' && <div className="m-banner warning"><Icon name="alertTriangle" size={17} />{t('officer.intakePaused')}</div>}
 
       {/* ── stats ── */}
-      <div className="m-stat-grid">
+      <SectionH title={t('officer.shiftTitle')} hint={<span className="m-live">{t('officer.liveTelemetry')}</span>} />
+      <div className="m-stat-grid m-stat-grid-2">
         <MStat num={stats.farmersToday} label={t('officer.farmersToday')} />
         <MStat num={stats.waiting} label={t('officer.waiting')} tone="warning" />
         <MStat num={stats.called + stats.processing} label={t('officer.processing')} tone="info" />
         <MStat num={stats.completed} label={t('officer.completed')} />
         <MStat num={`${stats.capacityPct}%`} label={t('officer.capacity')} />
-        <MStat num={payments.pendingCount} label={`${t('officer.paymentsPending')} · ${formatInr(payments.pendingAmountInr)}`} tone="warning" />
+        <MStat num={formatInr(payments.pendingAmountInr)} label={`${t('officer.paymentsPending')} · ${payments.pendingCount}`} tone="warning" />
       </div>
 
       {/* ── storage ── */}
       <MCard plain>
-        <div className="m-card-h"><Icon name="store" size={19} /> {t('officer.storage')}</div>
-        <MBar pct={stats.capacityPct} />
-        <p style={{ fontSize: 13.5, color: 'var(--m-ink-soft)', marginTop: 8 }}>
-          {centre.currentStockQuintals} / {centre.capacityQuintals} {t('officer.stockOf')}
+        <div className="m-card-h m-card-h-split">
+          <span><Icon name="store" size={19} /> {t('officer.storage')}</span>
+          <span className="m-card-h-val">{stats.capacityPct}%</span>
+        </div>
+        <MBar pct={stats.capacityPct} tone={stats.capacityPct >= 90 ? 'bad' : stats.capacityPct >= 75 ? 'warn' : undefined} />
+        <p style={{ fontSize: 13, color: 'var(--m-ink-soft)', marginTop: 10 }}>
+          <strong style={{ color: 'var(--m-green-forest)' }}>{centre.currentStockQuintals.toLocaleString('en-IN')}</strong> / {centre.capacityQuintals.toLocaleString('en-IN')} {t('officer.stockOf')}
         </p>
       </MCard>
 
       {/* ── serving now ── */}
       <SectionH title={t('officer.servingNow')} art={<ArtQueue size={38} />} />
-      <MCard plain>
-        {serving.length === 0 ? (
-          <p style={{ color: 'var(--m-ink-faint)', fontSize: 14 }}>{t('officer.noPending')}</p>
-        ) : (
-          serving.map((r) => (
-            <div key={r.id} className="m-row" style={{ marginBottom: 10 }}>
-              <span className="m-row-ico blue">{r.tokenNumber}</span>
-              <div className="m-row-main">
-                <div className="m-row-title">{r.farmer?.name} <MBadge status={r.status} /></div>
-                <div className="m-row-sub">{pick(r.crop, 'name')} · {r.quantityQuintals}{t('common.quintalShort')}</div>
-              </div>
+      {serving.length === 0 ? (
+        <MCard plain><p style={{ color: 'var(--m-ink-faint)', fontSize: 14 }}>{t('officer.noPending')}</p></MCard>
+      ) : (
+        serving.map((r) => (
+          <div key={r.id} className={`m-token-card ${r.status === 'PROCESSING' ? 'is-processing' : 'is-called'}`}>
+            <div className="m-token-card-top">
+              <span className="m-token-chip">{r.tokenNumber}</span>
+              <MBadge status={r.status} />
+            </div>
+            <div className="m-token-card-name">{r.farmer?.name}</div>
+            <div className="m-token-card-sub">{pick(r.crop, 'name')} · {r.quantityQuintals} {t('common.quintalShort')} · {formatInr(r.estimatedValueInr)}</div>
+            <div className="m-token-card-actions">
               {r.status === 'CALLED' && (
-                <MBtn size="sm" variant="primary" disabled={busy} onClick={() => quick(r.id, 'START')}>{t('officer.start')}</MBtn>
+                <MBtn block variant="primary" disabled={busy} onClick={() => quick(r.id, 'START')} iconRight={<Icon name="arrowUpRight" size={16} />}>{t('officer.start')}</MBtn>
               )}
               {r.status === 'PROCESSING' && (
-                <MBtn size="sm" variant="gold" disabled={busy} onClick={() => quick(r.id, 'COMPLETE')} icon={<Icon name="check" size={15} strokeWidth={2.8} />}>
+                <MBtn block variant="gold" disabled={busy} onClick={() => quick(r.id, 'COMPLETE')} icon={<Icon name="check" size={16} strokeWidth={2.8} />}>
                   {t('officer.complete')}
                 </MBtn>
               )}
             </div>
-          ))
-        )}
-      </MCard>
+          </div>
+        ))
+      )}
 
       {/* ── payments to settle ── */}
       <SectionH title={t('officer.paymentsToSettle')} art={<ArtScales size={30} />} />
@@ -152,10 +162,10 @@ export default function OfficerHome() {
         ) : (
           pendingPayments.slice(0, 6).map((r) => (
             <div key={r.id} className="m-row" style={{ marginBottom: 10 }}>
-              <span className="m-row-ico gold">₹</span>
+              <span className="m-row-ico gold"><Icon name="rupee" size={18} /></span>
               <div className="m-row-main">
-                <div className="m-row-title">{r.tokenNumber} · {r.farmer?.name}</div>
-                <div className="m-row-sub">{pick(r.crop, 'name')} · <strong>{formatInr(r.payment.amountInr)}</strong></div>
+                <div className="m-row-title">{r.farmer?.name}</div>
+                <div className="m-row-sub"><span className="m-token-mini">{r.tokenNumber}</span> {pick(r.crop, 'name')} · <strong>{formatInr(r.payment.amountInr)}</strong></div>
               </div>
               <MBtn
                 size="sm"
@@ -180,11 +190,11 @@ export default function OfficerHome() {
           <p style={{ color: 'var(--m-ink-faint)', fontSize: 14 }}>{t('officer.noPending')}</p>
         ) : (
           nextWaiting.slice(0, 5).map((r, i) => (
-            <div key={r.id} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 0', borderBottom: '1.5px dashed #e5e9dd' }}>
-              <span className="m-badge neutral" style={{ minWidth: 34, justifyContent: 'center', fontWeight: 800 }}>#{i + 1}</span>
+            <div key={r.id} className="m-queue-line">
+              <span className="m-queue-pos">{i + 1}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 700, fontSize: 14.5 }}>{r.farmer?.name}</div>
-                <div style={{ fontSize: 12.5, color: 'var(--m-ink-soft)' }}>{r.tokenNumber} · {pick(r.crop, 'name')} · {r.quantityQuintals}{t('common.quintalShort')}</div>
+                <div className="m-queue-name">{r.farmer?.name}</div>
+                <div className="m-queue-sub"><span className="m-token-mini">{r.tokenNumber}</span> {pick(r.crop, 'name')} · {r.quantityQuintals} {t('common.quintalShort')}</div>
               </div>
               <MBtn size="sm" variant="soft" disabled={busy} onClick={() => quick(r.id, 'CALL')}>
                 <Icon name="megaphone" size={14} /> {t('officer.call')}
@@ -224,7 +234,7 @@ export default function OfficerHome() {
           <p style={{ color: 'var(--m-ink-faint)', fontSize: 14 }}>{t('officer.smsEmpty')}</p>
         ) : (
           smsLog.slice(0, 4).map((s) => (
-            <div key={s.id} style={{ padding: '8px 0', borderBottom: '1.5px dashed #e5e9dd' }}>
+            <div key={s.id} className="m-sms-line">
               <div style={{ fontSize: 13.5 }}>{s.text}</div>
               <div style={{ fontSize: 11.5, color: 'var(--m-ink-faint)', display: 'flex', gap: 8, marginTop: 2 }}>
                 <span>{t('officer.smsTo')}: {s.to}</span>

@@ -81,12 +81,21 @@ export const orAuth = {
 export const orTranslations = {
   app: { name: 'ଅନ୍ନଦାତା କନେକ୍ଟ', tagline: 'ଫସଲ କ୍ରୟ ଏବେ ସହଜ' },
   saathi: {
-    name: 'ଅନ୍ନଦାତା ସାଥୀ', tagline: 'ଫସଲର ସାଥୀ',
+    name: 'ଅନ୍ନଦାତା କନେକ୍ଟ', brandFirst: 'ଅନ୍ନଦାତା', brandSecond: 'କନେକ୍ଟ',
+    tagline: 'ଫସଲର ସାଥୀ · ସହଜ ମଣ୍ଡି କ୍ରୟ',
     greetMorning: 'ଶୁଭ ପ୍ରଭାତ', greetEvening: 'ଶୁଭ ସନ୍ଧ୍ୟା', greetDay: 'ନମସ୍କାର',
     heroTitle: 'ଚାଷ, ଏବେ ସହଜ', heroBody: 'ଟୋକନ, ଧାଡ଼ି ଓ ଦେୟ — ପ୍ରତି ପାଦରେ ଆପଣଙ୍କ ପାଖରେ ଜଣେ ସାଥୀ।',
     madeWith: 'ଆମ ଅନ୍ନଦାତାମାନଙ୍କ ପାଇଁ ଯତ୍ନରେ ନିର୍ମିତ', getStarted: 'ଆରମ୍ଭ କରନ୍ତୁ',
-    liveToken: 'ଲାଇଭ୍ ଟୋକନ', tipTitle: 'ସାଥୀ କହନ୍ତି',
+    liveToken: 'ଲାଇଭ୍ ଟୋକନ', tipTitle: 'କନେକ୍ଟ କହେ',
     previewBanner: 'ଆଣ୍ଡ୍ରଏଡ୍ ଆପ୍ ୟୁଆଇ ଦେଖୁଛନ୍ତି — ୱେବସାଇଟ୍ ପାଇଁ ?app=0 ଖୋଲନ୍ତୁ।',
+    livePill: 'ଲାଇଭ୍ ମଣ୍ଡି', govChip: 'ଓଡ଼ିଶା ସରକାର · ଖୋର୍ଦ୍ଧା ପାଇଲଟ୍',
+    stepOf: 'ପାଦ {n} / {total}',
+    helpTitle: 'ପଞ୍ଜୀକରଣରେ ସାହାଯ୍ୟ ଦରକାର?',
+    helpBody: 'ଆଧାର ଓ ବ୍ୟାଙ୍କ ପାସବୁକ୍ ନେଇ ନିକଟସ୍ଥ କ୍ରୟ କେନ୍ଦ୍ରକୁ ଯାଆନ୍ତୁ, କିମ୍ବା କିଷାନ ହେଲ୍ପଲାଇନକୁ କଲ୍ କରନ୍ତୁ।',
+    helpCall: 'ଟୋଲ୍-ଫ୍ରି: 155261',
+    trustNic: 'NIC ଓଡ଼ିଶା ଯାଞ୍ଚିତ', trustDbt: 'ସିଧା DBT ସକ୍ଷମ', trustMsp: 'MSP ନିଶ୍ଚିତ',
+    aadhaarLinked: 'ଆଧାର ସଂଯୁକ୍ତ',
+    roleFarmerSub: 'ଅନ୍ନଦାତା', roleOfficerSub: 'କ୍ରୟ', roleAuthoritySub: 'ଜିଲ୍ଲା ଶୀର୍ଷ',
   },
   nav: {
     dashboard: 'ଡ୍ୟାସବୋର୍ଡ', newRequest: 'ନୂଆ ଅନୁରୋଧ', smartSell: 'ସ୍ମାର୍ଟ ବିକ୍ରି',
@@ -162,6 +171,7 @@ export const orTranslations = {
     },
   },
   prices: {
+    liveSynced: 'ଲାଇଭ୍ ସିଙ୍କ', avg12Short: '୧୨ ମାସ ହାରାହାରି',
     title: 'ମଣ୍ଡି ଦର ଇତିହାସ',
     subtitle: 'ମଣ୍ଡିରେ ଆପଣଙ୍କ ଫସଲ ପ୍ରକୃତରେ କେତେ ମିଳିଲା — ପ୍ରକୃତ Agmarknet ରେକର୍ଡ, ୨୦୨୧–୨୦୨୫',
     realData: 'ପ୍ରକୃତ Agmarknet ତଥ୍ୟ',
@@ -269,6 +279,8 @@ export const orTranslations = {
     smsOutbox: 'SMS ଆଉଟବକ୍ସ', smsHint: 'ପ୍ରତ୍ୟେକ ଅପଡେଟ୍ ପାଇଁ ଚାଷୀଙ୍କୁ ପଠାଯାଇଥିବା SMS ଏଗୁଡ଼ିକ।',
     smsSimulated: 'ଗେଟୱେ ସିମୁଲେସନ୍ ମୋଡରେ — ବାର୍ତ୍ତା ରେକର୍ଡ ହୋଇଛି, ପ୍ରକୃତରେ ପଠାଯାଇନାହିଁ।',
     smsEmpty: 'ଏବେ ପର୍ଯ୍ୟନ୍ତ କୌଣସି SMS ପଠାଯାଇନାହିଁ।', smsTo: 'ପ୍ରତି', smsProvider: 'ପ୍ରଦାନକାରୀ', providerMode: 'ମୋଡ୍',
+    shiftTitle: 'ସିଫ୍ଟ ପ୍ରଦର୍ଶନ', liveTelemetry: 'ଲାଇଭ୍ ଟେଲିମେଟ୍ରି',
+    queueValue: 'ଧାଡ଼ି ମୂଲ୍ୟ', avgTurnaround: 'ହାରାହାରି ସମୟ', sessionThroughput: 'ସେସନ୍ ଥ୍ରୁପୁଟ୍',
   },
   authority: {
     overview: 'ଜିଲ୍ଲା ସାରାଂଶ', district: 'ଜିଲ୍ଲା', totalFarmersToday: 'ଆଜିର ଚାଷୀ',
