@@ -22,6 +22,7 @@ import OfficerQueue from './pages/officer/OfficerQueue.jsx';
 import OfficerRequests from './pages/officer/OfficerRequests.jsx';
 import AssistedRequest from './pages/officer/AssistedRequest.jsx';
 import AuthorityDashboard from './pages/authority/AuthorityDashboard.jsx';
+import StateOverview from './pages/authority/StateOverview.jsx';
 import AuthorityCentreDetail from './pages/authority/AuthorityCentreDetail.jsx';
 import AuthoritySimulator from './pages/authority/AuthoritySimulator.jsx';
 import MarketPricesPage from './pages/MarketPricesPage.jsx';
@@ -79,6 +80,7 @@ function WebApp() {
               <Route path="/officer/assisted" element={<ProtectedRoute roles={['officer']}><AssistedRequest /></ProtectedRoute>} />
               {/* Authority */}
               <Route path="/authority" element={<ProtectedRoute roles={['authority']}><AuthorityDashboard /></ProtectedRoute>} />
+              <Route path="/authority/state" element={<ProtectedRoute roles={['authority']}><StateOverview /></ProtectedRoute>} />
               <Route path="/authority/simulator" element={<ProtectedRoute roles={['authority']}><AuthoritySimulator /></ProtectedRoute>} />
               <Route path="/authority/centres/:id" element={<ProtectedRoute roles={['authority']}><AuthorityCentreDetail /></ProtectedRoute>} />
               <Route path="/unauthorized" element={<UnauthorizedPage />} />

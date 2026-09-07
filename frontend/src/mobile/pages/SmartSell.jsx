@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext.jsx';
-import { referenceService, sellingService, farmerService } from '../../services/api/farmerService.js';
+import { referenceService, sellingService, farmerService, requestService } from '../../services/api/farmerService.js';
 import { marketPriceService } from '../../services/api/marketPriceService.js';
 import { formatDate, formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
@@ -29,23 +29,45 @@ export default function SmartSell() {
   const [bench, setBench] = useState(null);
 
   const [blocked, setBlocked] = useState(false);
+  const [activeRequest, setActiveRequest] = useState(null);
+  const [activeBooking, setActiveBooking] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [bookingsError, setBookingsError] = useState(null);
   const [cancelFor, setCancelFor] = useState(null);
   const [cancelBusy, setCancelBusy] = useState(false);
+  const [requestCancelBusy, setRequestCancelBusy] = useState(false);
+  const [requestCancelConfirm, setRequestCancelConfirm] = useState(false);
 
   async function loadBookings() {
     setBookingsLoading(true);
     setBookingsError(null);
     try {
       const [b, me] = await Promise.all([sellingService.bookings(), farmerService.me()]);
+      const liveBooking = b.bookings.find((x) => x.status === 'CONFIRMED') || null;
       setBookings(b.bookings);
-      setBlocked(Boolean(me.activeRequest) || b.bookings.some((x) => x.status === 'CONFIRMED'));
+      setActiveRequest(me.activeRequest || null);
+      setActiveBooking(liveBooking);
+      setBlocked(Boolean(me.activeRequest) || Boolean(liveBooking));
     } catch (e) {
       setBookingsError(e);
     } finally {
       setBookingsLoading(false);
+    }
+  }
+
+  async function cancelActiveRequest() {
+    if (!activeRequest) return;
+    setRequestCancelBusy(true);
+    setApiError(null);
+    try {
+      await requestService.cancel(activeRequest.id);
+      setRequestCancelConfirm(false);
+      await loadBookings();
+    } catch (e) {
+      setApiError(e);
+    } finally {
+      setRequestCancelBusy(false);
     }
   }
 
@@ -151,7 +173,41 @@ export default function SmartSell() {
         </div>
       </MCard>
 
-      {blocked && <div className="m-banner warning"><Icon name="info" size={17} />{t('smartSell.activeBlockNote')}</div>}
+      {blocked && (
+        <MCard plain className="gold" style={{ borderColor: 'rgba(199, 154, 46, 0.35)' }}>
+          <div className="m-card-h" style={{ color: 'var(--m-amber)' }}>
+            <Icon name="alertOctagon" size={19} /> {t('smartSell.blockedTitle')}
+          </div>
+          <p style={{ fontSize: 14, marginBottom: 10 }}>
+            {activeRequest
+              ? t('smartSell.blockedRequest', { token: activeRequest.tokenNumber })
+              : t('smartSell.blockedBooking', { ref: activeBooking ? activeBooking.reference : '' })}
+          </p>
+          <p style={{ fontSize: 13, color: 'var(--m-ink-soft)', marginBottom: 12 }}>{t('smartSell.blockedHint')}</p>
+          <div className="m-btn-row" style={{ marginTop: 4 }}>
+            {activeRequest && (
+              <>
+                <MBtn to={`/requests/${activeRequest.id}`} variant="soft" size="sm" icon={<Icon name="ticket" size={16} />}>
+                  {t('smartSell.viewActive')}
+                </MBtn>
+                <MBtn variant="danger" size="sm" onClick={() => setRequestCancelConfirm(true)} disabled={requestCancelBusy}>
+                  {t('smartSell.cancelActiveRequest')}
+                </MBtn>
+              </>
+            )}
+            {activeBooking && (
+              <>
+                <MBtn variant="soft" size="sm" onClick={() => setCancelFor(activeBooking.id)}>
+                  {t('smartSell.viewBooking')}
+                </MBtn>
+                <MBtn variant="danger" size="sm" onClick={() => setCancelFor(activeBooking.id)} disabled={cancelBusy}>
+                  {t('smartSell.cancelActiveBooking')}
+                </MBtn>
+              </>
+            )}
+          </div>
+        </MCard>
+      )}
       {apiError && mode !== 'result' && <div className="m-banner error" role="alert"><Icon name="alertTriangle" size={17} />{apiError.message}</div>}
 
       {/* ── form ── */}
@@ -373,6 +429,17 @@ export default function SmartSell() {
         confirmLabel={t('common.confirm')}
         danger
         busy={cancelBusy}
+      />
+
+      <MConfirm
+        open={requestCancelConfirm}
+        onClose={() => setRequestCancelConfirm(false)}
+        onConfirm={cancelActiveRequest}
+        title={t('farmer.cancelRequest')}
+        sub={t('farmer.cancelConfirm')}
+        confirmLabel={t('common.confirm')}
+        danger
+        busy={requestCancelBusy}
       />
     </div>
   );

@@ -25,9 +25,15 @@ const METHODS = [
   { id: 'password', icon: 'key' },
 ];
 const DEMO = [
-  { role: 'farmer', phone: '9999999001', password: 'Farmer@123' },
-  { role: 'officer', phone: '9999999101', password: 'Officer@123' },
-  { role: 'authority', phone: '9999999201', password: 'Authority@123' },
+  { role: 'farmer', name: 'Bijay Pradhan', phone: '9999999001', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Kuni Sahoo', phone: '9999999002', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Ramesh Patra', phone: '9999999003', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Pramila Swain', phone: '9999999009', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Debendra Biswal', phone: '9999999021', password: 'Farmer@123', district: 'Cuttack' },
+  { role: 'farmer', name: 'Rashmita Behera', phone: '9999999025', password: 'Farmer@123', district: 'Puri' },
+  { role: 'officer', name: 'Rashmi Das', phone: '9999999101', password: 'Officer@123', district: 'Khordha' },
+  { role: 'authority', name: 'Suresh Patnaik', phone: '9999999201', password: 'Authority@123', district: 'Khordha' },
+  { role: 'authority', name: 'Anita Meher', phone: '9999999202', password: 'Authority@123', district: 'Odisha' },
 ];
 const GOOGLE_SWITCH_KEY = 'ks-mock-google';
 
@@ -348,11 +354,11 @@ export default function Welcome({ registration = false }) {
       <Sheet open={demoOpen} onClose={() => setDemoOpen(false)} title={t('auth.demoTitle')} sub={t('auth.demoHint')}>
         <div className="m-stack">
           {DEMO.map((account) => (
-            <button key={account.role} type="button" className="m-account-row" onClick={() => demoSignIn(account)} disabled={busy}>
-              <span className="m-avatar">{t(`common.${account.role}`).charAt(0)}</span>
+            <button key={account.phone} type="button" className="m-account-row" onClick={() => demoSignIn(account)} disabled={busy}>
+              <span className="m-avatar">{account.name.charAt(0)}</span>
               <span style={{ flex: 1 }}>
-                <strong>{t(`common.${account.role}`)}</strong>
-                <small>{account.phone} · {account.password}</small>
+                <strong>{account.name}</strong>
+                <small>{t(`common.${account.role}`)} · {account.district} · {account.phone}</small>
               </span>
               <Icon name="arrowUpRight" size={18} style={{ color: 'var(--m-ink-faint)' }} />
             </button>

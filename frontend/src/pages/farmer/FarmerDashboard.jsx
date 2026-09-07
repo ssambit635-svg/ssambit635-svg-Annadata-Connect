@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
 import { farmerService, notificationService, requestService } from '../../services/api/farmerService.js';
-import { Loading, ErrorState, EmptyState } from '../../components/States.jsx';
+import { Loading, ErrorState } from '../../components/States.jsx';
 import { TokenCard } from '../../components/TokenCard.jsx';
-import { formatDate } from '../../utils/format.js';
-import { useState } from 'react';
+import { formatDate, formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
+import { MCard, MBtn, MStat, SectionH, greetingKey } from '../../mobile/ui.jsx';
+import { ArtSun, ArtRupeeSprout, ArtWheat, ArtFarmer, ArtLeafPair } from '../../mobile/art.jsx';
 
 const QUICK_ACTIONS = [
+  { to: '/sell', icon: 'rupee', key: 'farmer.sellNow', gold: true },
   { to: '/requests/new', icon: 'plus', key: 'farmer.createRequest' },
-  { to: '/sell', icon: 'wheat', key: 'nav.smartSell' },
   { to: '/market-prices', icon: 'chart', key: 'nav.marketPrices' },
   { to: '/history', icon: 'folder', key: 'nav.history' },
   { to: '/centres', icon: 'store', key: 'farmer.centresTitle' },
@@ -32,6 +34,7 @@ export default function FarmerDashboard() {
   if (error) return <ErrorState error={error} onRetry={reload} />;
 
   const { profile, activeRequest, activeQueue, notifications, unread } = data;
+  const dateStr = new Date().toLocaleDateString(lang === 'en' ? 'en-IN' : lang === 'hi' ? 'hi-IN' : 'or-IN', { weekday: 'long', day: 'numeric', month: 'long' });
 
   async function onCancel() {
     if (!window.confirm(t('farmer.cancelConfirm'))) return;
@@ -47,21 +50,39 @@ export default function FarmerDashboard() {
   }
 
   return (
-    <>
-      <div className="page-head">
-        <h1>
-          {t('farmer.welcome')}, {profile.name}
-        </h1>
-        <button className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}>
-          <Icon name="refresh" size={14} /> {t('common.refresh')}
-        </button>
+    <div>
+      {/* ── greeting hero ── */}
+      <MCard plain className="green" style={{ marginBottom: 14, padding: '1.4rem 1.5rem', position: 'relative', overflow: 'hidden' }}>
+        <ArtSun size={64} style={{ position: 'absolute', right: 18, top: 14, opacity: 0.9 }} />
+        <div style={{ position: 'relative' }}>
+          <div className="m-hero-eyebrow" style={{ color: 'rgba(255,255,255,0.75)' }}>{t('app.name')}</div>
+          <h1 style={{ color: '#fff', margin: '2px 0 4px', fontFamily: 'var(--m-f-display)', fontSize: 27, fontWeight: 800, letterSpacing: '-0.02em' }}>
+            {t(greetingKey())}, {profile.name.split(' ')[0]}
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.82)', margin: 0, fontSize: 13.5 }}>
+            {profile.village ? pick(profile.village, 'name') : ''} · {dateStr}
+          </p>
+        </div>
+      </MCard>
+
+      {/* ── sell now CTA ── */}
+      <div className="sell-cta">
+        <span className="sell-cta-art"><ArtRupeeSprout size={30} /></span>
+        <div className="sell-cta-copy">
+          <strong>{t('farmer.sellNow')}</strong>
+          <span>{t('farmer.sellNowHint')}</span>
+        </div>
+        <Link to="/sell" className="btn btn-primary">
+          <Icon name="rupee" size={16} /> {t('farmer.sellNow')} <Icon name="arrowUpRight" size={15} />
+        </Link>
       </div>
 
-      <div className="grid two">
+      <div className="grid two" style={{ marginTop: 2 }}>
+        {/* ── active request ── */}
         <section aria-labelledby="active-h">
-          <h2 id="active-h">{t('farmer.activeRequest')}</h2>
+          <h2 id="active-h" className="m-page-title" style={{ fontSize: 19, marginBottom: 10 }}>{t('farmer.activeRequest')}</h2>
           {activeRequest ? (
-            <div className="active-request-wrap">
+            <MCard plain>
               <TokenCard request={activeRequest} queue={activeQueue} />
               {activeQueue?.inQueue && (
                 <p className="queue-line">
@@ -73,10 +94,10 @@ export default function FarmerDashboard() {
               )}
               <div className="dash-actions">
                 <Link className="btn btn-primary btn-sm" to={`/requests/${activeRequest.id}`}>
-                  <Icon name="ticket" size={16} /> {t('farmer.viewToken')}
+                  <Icon name="ticket" size={15} /> {t('farmer.viewToken')}
                 </Link>
                 <Link className="btn btn-outline btn-sm" to={`/requests/${activeRequest.id}/status`}>
-                  <Icon name="clipboard" size={16} /> {t('farmer.viewStatus')}
+                  <Icon name="clipboard" size={15} /> {t('farmer.viewStatus')}
                 </Link>
                 {activeRequest.status === 'WAITING' && (
                   <button className="btn btn-danger btn-sm" onClick={onCancel} disabled={cancelBusy}>
@@ -84,22 +105,23 @@ export default function FarmerDashboard() {
                   </button>
                 )}
               </div>
-            </div>
+            </MCard>
           ) : (
-            <EmptyState
-              title={t('farmer.noActive')}
-              hint={t('farmer.noActiveHint')}
-              action={
-                <Link className="btn btn-primary" to="/requests/new">
-                  <Icon name="plus" size={16} /> {t('farmer.createRequest')}
-                </Link>
-              }
-            />
+            <MCard plain style={{ textAlign: 'center' }}>
+              <ArtFarmer size={104} className="m-anim-pop" style={{ margin: '0 auto' }} />
+              <div className="m-state-title" style={{ marginTop: 6 }}>{t('farmer.noActive')}</div>
+              <p style={{ color: 'var(--m-ink-soft)', fontSize: 14, margin: '4px 0 14px' }}>{t('farmer.noActiveHint')}</p>
+              <div className="m-btn-row" style={{ justifyContent: 'center' }}>
+                <MBtn to="/sell" variant="primary" icon={<Icon name="rupee" size={17} />}>{t('farmer.sellNow')}</MBtn>
+                <MBtn to="/requests/new" variant="soft" icon={<Icon name="plus" size={17} />}>{t('farmer.createRequest')}</MBtn>
+              </div>
+            </MCard>
           )}
         </section>
 
+        {/* ── notifications ── */}
         <section aria-labelledby="notif-h">
-          <h2 id="notif-h" className="dash-section-title">
+          <h2 id="notif-h" className="dash-section-title m-page-title" style={{ fontSize: 19, marginBottom: 10 }}>
             <span>
               {t('farmer.notifications')} {unread > 0 && <span className="badge info">{unread}</span>}
             </span>
@@ -115,31 +137,49 @@ export default function FarmerDashboard() {
               </button>
             )}
           </h2>
-          <div className="notif-stack">
-            {notifications.length === 0 && (
-              <div className="card" style={{ marginBottom: 0 }}>{t('farmer.noNotifications')}</div>
-            )}
-            {notifications.slice(0, 6).map((n) => (
-              <div key={n.id} className={`notif ${n.read ? '' : 'unread'}`}>
-                <div>{pick(n, 'message')}</div>
-                <div className="when">{formatDate(n.createdAt, lang)}</div>
-              </div>
-            ))}
-          </div>
+          <MCard plain>
+            <div className="notif-stack">
+              {notifications.length === 0 && <div style={{ color: 'var(--m-ink-faint)' }}>{t('farmer.noNotifications')}</div>}
+              {notifications.slice(0, 6).map((n) => (
+                <div key={n.id} className={`notif ${n.read ? '' : 'unread'}`}>
+                  <div>{pick(n, 'message')}</div>
+                  <div className="when">{formatDate(n.createdAt, lang)}</div>
+                </div>
+              ))}
+            </div>
+          </MCard>
         </section>
       </div>
 
-      <section className="card" aria-labelledby="quick-h" style={{ marginTop: '1rem' }}>
-        <h2 id="quick-h" style={{ marginTop: 0, marginBottom: '0.9rem' }}>{t('farmer.quickActions')}</h2>
+      {/* ── quick actions ── */}
+      <div style={{ marginTop: 4 }}>
+        <SectionH title={t('farmer.quickActions')} art={<ArtWheat size={26} />} />
         <div className="quick-grid">
           {QUICK_ACTIONS.map((a) => (
             <Link key={a.to} className="quick-tile" to={a.to}>
-              <span className="quick-ico"><Icon name={a.icon} size={19} /></span>
+              <span className="quick-ico" style={a.gold ? { background: 'var(--m-gold-soft)', color: 'var(--m-gold-deep)' } : undefined}>
+                <Icon name={a.icon} size={19} />
+              </span>
               {t(a.key)}
             </Link>
           ))}
         </div>
-      </section>
-    </>
+      </div>
+
+      {/* ── quick numbers ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10, marginTop: 16 }}>
+        <MStat num={activeRequest ? formatInr(activeRequest.estimatedValueInr) : '—'} label={t('farmer.estimatedValue')} tone="gold" />
+        <MStat num={activeQueue?.inQueue ? activeQueue.aheadCount : '—'} label={t('farmer.aheadOfYou')} />
+        <MStat num={unread} label={t('farmer.notifications')} />
+      </div>
+
+      {/* ── saathi tip ── */}
+      <MCard className="leaf" style={{ marginTop: 14 }}>
+        <div className="m-card-h">
+          <ArtLeafPair size={18} /> {t('saathi.tipTitle')}
+        </div>
+        <p style={{ fontSize: 14, color: 'var(--m-ink)', margin: 0 }}>{t('farmer.mspNote')}</p>
+      </MCard>
+    </div>
   );
 }

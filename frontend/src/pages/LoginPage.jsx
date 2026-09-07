@@ -17,10 +17,21 @@ const ROLES = [
   { id: 'authority', icon: 'flag' },
 ];
 const METHODS = [{ id: 'sms', icon: 'phone' }, { id: 'email', icon: 'mail' }, { id: 'password', icon: 'key' }];
+// Demo quick-sign-in: a handful of the 30 seeded farmers so the picker feels
+// like a district full of people — not just the two original accounts.
 const DEMO = [
-  { role: 'farmer', phone: '9999999001', password: 'Farmer@123' },
-  { role: 'officer', phone: '9999999101', password: 'Officer@123' },
-  { role: 'authority', phone: '9999999201', password: 'Authority@123' },
+  { role: 'farmer', name: 'Bijay Pradhan', phone: '9999999001', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Kuni Sahoo', phone: '9999999002', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Ramesh Patra', phone: '9999999003', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Pramila Swain', phone: '9999999009', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Gopal Barik', phone: '9999999010', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Minati Parida', phone: '9999999012', password: 'Farmer@123', district: 'Khordha' },
+  { role: 'farmer', name: 'Debendra Biswal', phone: '9999999021', password: 'Farmer@123', district: 'Cuttack' },
+  { role: 'farmer', name: 'Rashmita Behera', phone: '9999999025', password: 'Farmer@123', district: 'Puri' },
+  { role: 'farmer', name: 'Surendra Gouda', phone: '9999999026', password: 'Farmer@123', district: 'Ganjam' },
+  { role: 'officer', name: 'Rashmi Das', phone: '9999999101', password: 'Officer@123', district: 'Khordha' },
+  { role: 'authority', name: 'Suresh Patnaik', phone: '9999999201', password: 'Authority@123', district: 'Khordha' },
+  { role: 'authority', name: 'Anita Meher', phone: '9999999202', password: 'Authority@123', district: 'Odisha' },
 ];
 
 export default function LoginPage({ registration = false }) {
@@ -151,7 +162,28 @@ export default function LoginPage({ registration = false }) {
             </div>
             <p className="signin-security"><Icon name="lock" size={14} />{t('auth.neverShareCode')}</p>
             <p className="auth-register-line">{t(registration ? 'auth.haveAccount' : 'auth.noAccount')} <Link to={registration ? '/login' : '/register'}>{t(registration ? 'auth.login' : 'auth.registerFarmer')}</Link></p>
-            {options?.demoEnabled && <details className="signin-demo"><summary>{t('auth.demoTitle')}<span>{t('auth.demoOnly')}</span></summary><p>{t('auth.demoHint')}</p><div>{DEMO.map((account) => <button key={account.role} type="button" className="btn btn-outline btn-sm" disabled={busy} onClick={() => demoSignIn(account)}>{t(`common.${account.role}`)}</button>)}</div></details>}
+            {options?.demoEnabled && (
+              <details className="signin-demo">
+                <summary>{t('auth.demoTitle')}<span>{t('auth.demoOnly')}</span></summary>
+                <p>{t('auth.demoHint')}</p>
+                <div className="signin-demo-grid">
+                  {DEMO.map((account) => (
+                    <button
+                      key={account.phone}
+                      type="button"
+                      className="btn btn-outline btn-sm"
+                      disabled={busy}
+                      onClick={() => demoSignIn(account)}
+                      title={`${account.name} · ${account.district}`}
+                    >
+                      <Icon name={account.role === 'farmer' ? 'wheat' : account.role === 'officer' ? 'clipboard' : 'flag'} size={14} />
+                      {account.name}
+                      <small>{t(`common.${account.role}`)} · {account.district}</small>
+                    </button>
+                  ))}
+                </div>
+              </details>
+            )}
           </>}
         </section>
       </main>

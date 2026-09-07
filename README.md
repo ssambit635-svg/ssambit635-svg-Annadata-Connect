@@ -152,6 +152,13 @@ password logins (the fake Google picker and mock OTP codes keep working).
 | Officer   | `9999999101` | `rashmi.das.anc@gmail.com`        | `Officer@123`   | Bhubaneswar Central Procurement Centre |
 | Officer   | `9999999102` | `manoj.behera.anc@gmail.com`      | `Officer@123`   | Jatni Mandi Procurement Centre          |
 | Authority | `9999999201` | `district.admin.anc@gmail.com`    | `Authority@123` | District-wide overview                  |
+| Authority | `9999999202` | `state.admin.anc@gmail.com`       | `Authority@123` | State-wide command centre               |
+
+The seed now spans **6 Odisha districts (Khordha, Cuttack, Puri, Ganjam, Sambalpur,
+Balasore), 14 centres, 30 farmers and 6 officers**, with a deterministic week of
+procurement history so the state monitor always has trend data. The **Explore demo
+accounts** panel lists a dozen named sample farmers (not just the original two), and the
+fake-Google picker lists all 30.
 
 Walk-in farmers created by officers claim their account with a mock SMS code; there is no
 shared default password. Old bypass-era sessions are invalidated, and legacy self-created
@@ -177,12 +184,17 @@ Confirm centre → Token ANC-xxx            Queue → Call → Start → Complet
                                         Assisted Entry → token for walk-in farmer
 
 SMART SELL (compare buyers before selling):
-Login 9999999001 / Farmer@123 → Smart Sell → pick paddy + 20 q → compare ranked buyers
+Login 9999999001 / Farmer@123 → Sell Now → pick paddy + 20 q → compare ranked buyers
 (Govt MSP centres vs market buyers paying above MSP) → choose → booked as token (MSP)
 or a market booking reference (SSB-…) with on-the-spot settlement; market bookings are
-listed & cancellable on the Smart Sell page.
+listed & cancellable on the Smart Sell page. If the farmer already holds an active
+request or booking, the page shows a clear "Sell Now is paused" panel with one-tap
+"Cancel request/booking & sell" actions instead of a silently disabled button.
 
 AUTHORITY: Login 9999999201 / Authority@123 → District Overview (congestion / capacity / volume / alerts)
+        → State Monitor (/authority/state): whole-state command centre — KPI grid,
+        7-day procurement trend, district comparison bars, crop-mix donut, live
+        pipeline flowchart, and one-tap drill-down into every district's centres.
 ```
 
 ## 7. Troubleshooting

@@ -26,6 +26,7 @@ import { initNative } from './pwa/native.js';
 import './styles/brand.css';
 import './styles/mobile.css';
 import './styles/mobile-gov.css';
+import './styles/web-apk.css';
 
 initNative();
 

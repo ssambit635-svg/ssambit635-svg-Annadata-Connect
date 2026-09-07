@@ -45,7 +45,7 @@ test('mock Google accounts are grouped by role', () => {
   assert.deepEqual(delivery.googleAccounts('farmer').map((a) => a.email), seededFarmers.map((u) => u.email));
   assert.ok(seededFarmers.length >= 12);
   assert.deepEqual(delivery.googleAccounts('officer').map((a) => a.role), seededOfficers.map(() => 'officer'));
-  assert.deepEqual(delivery.googleAccounts('authority').map((a) => a.role), ['authority']);
+  assert.deepEqual(delivery.googleAccounts('authority').map((a) => a.role), USERS.filter((u) => u.role === 'authority').map(() => 'authority'));
   assert.equal(delivery.googleAccounts().length, MOCK_GOOGLE_ACCOUNTS.length);
   assert.ok(delivery.googleAccounts('farmer').every((a) => a.sub && a.name && a.email && a.detail));
   // Historical picker identities stay stable for the e2e suite and older data files.

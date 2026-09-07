@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
@@ -8,15 +9,18 @@ import Icon from '../../components/Icon.jsx';
 import { formatInr } from '../../utils/format.js';
 
 // District-level oversight: demand, congestion, capacity, volume — all derived
-// from real per-centre data (no decorative charts).
+// from real per-centre data (no decorative charts). The district switcher lets
+// the authority walk the districts one by one; /authority/state is the whole-
+// state command centre.
 export default function AuthorityDashboard() {
   const { t, pick } = useI18n();
-  const { data, error, loading, reload, refreshing } = usePoll(() => authorityService.overview(), { intervalMs: 15000 });
+  const [district, setDistrict] = useState('');
+  const { data, error, loading, reload, refreshing } = usePoll(() => authorityService.overview(district || undefined), { intervalMs: 15000, deps: [district] });
 
   if (loading) return <Loading />;
   if (error) return <ErrorState error={error} onRetry={reload} />;
 
-  const { district, totals, centres } = data;
+  const { district: activeDistrict, districts, totals, centres, homeDistrict } = data;
   const maxWaiting = Math.max(...centres.map((c) => c.stats.waiting), 1);
   const maxDemand = Math.max(...centres.map((c) => c.stats.farmersToday), 1);
   const alertCentres = centres.filter((c) => c.alerts.length > 0);
@@ -26,17 +30,26 @@ export default function AuthorityDashboard() {
       <div className="page-head">
         <div>
           <h1 style={{ marginBottom: 0 }}>{t('authority.overview')}</h1>
-          <p style={{ margin: 0, color: 'var(--c-text-soft)' }}>{t('authority.district')}: {district}</p>
+          <p style={{ margin: 0, color: 'var(--c-text-soft)' }}>{t('authority.district')}: {activeDistrict}</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <Link className="btn btn-primary" to="/authority/simulator"><Icon name="activity" size={15} /> {t('simulator.title')}</Link>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          {districts?.length > 1 && (
+            <select className="select" style={{ width: 'auto', padding: '0.45rem 0.75rem' }} value={district} onChange={(e) => setDistrict(e.target.value)} aria-label={t('authority.district')}>
+              <option value="">{homeDistrict} · {t('authority.homeDistrictTag')}</option>
+              {districts.filter((d) => d !== homeDistrict).map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          )}
+          <Link className="btn btn-primary" to="/authority/state"><Icon name="activity" size={15} /> {t('authority.stateMonitor')}</Link>
+          <Link className="btn btn-outline btn-sm" to="/authority/simulator"><Icon name="activity" size={14} /> {t('simulator.title')}</Link>
           <button className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}><Icon name="refresh" size={14} /> {t('common.refresh')}</button>
         </div>
       </div>
 
-      <Link to="/authority/simulator" className="sim-hero sim-hero-link" style={{ textDecoration: 'none' }}>
+      <Link to="/authority/state" className="sim-hero sim-hero-link" style={{ textDecoration: 'none' }}>
         <Icon name="activity" size={17} />
-        <span>{t('simulator.title')} — {t('simulator.blurb')}</span>
+        <span>{t('authority.stateMonitor')} — {t('authority.stateSub')}</span>
         <Icon name="arrowUpRight" size={16} style={{ flexShrink: 0, color: 'var(--c-primary)' }} />
       </Link>
 
