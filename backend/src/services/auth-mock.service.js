@@ -34,8 +34,24 @@ export const MOCK_GOOGLE_ACCOUNTS = [
     email: 'sasmita.mohapatra.anc@gmail.com', detail: 'Khordha centre',
   },
   {
+    sub: 'mock-google-officer-pratap', role: 'officer', name: 'Pratap Keshari Das',
+    email: 'pratap.das.anc@gmail.com', detail: 'Choudwar centre · Cuttack',
+  },
+  {
+    sub: 'mock-google-officer-lopamudra', role: 'officer', name: 'Lopamudra Mohanty',
+    email: 'lopamudra.mohanty.anc@gmail.com', detail: 'Brahmagiri centre · Puri',
+  },
+  {
+    sub: 'mock-google-officer-bijay', role: 'officer', name: 'Bijay Kumar Padhi',
+    email: 'bijay.padhi.anc@gmail.com', detail: 'Chhatrapur centre · Ganjam',
+  },
+  {
     sub: 'mock-google-authority-suresh', role: 'authority', name: 'Suresh Patnaik',
     email: 'district.admin.anc@gmail.com', detail: 'District Administration · Khordha',
+  },
+  {
+    sub: 'mock-google-authority-anita', role: 'authority', name: 'Anita Meher',
+    email: 'state.admin.anc@gmail.com', detail: 'State Monitor · Odisha',
   },
 ];
 

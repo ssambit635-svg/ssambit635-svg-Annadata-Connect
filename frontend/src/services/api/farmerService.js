@@ -53,8 +53,9 @@ export const officerService = {
 };
 
 export const authorityService = {
-  overview: () => api('/api/authority/overview'),
+  overview: (district) => api(`/api/authority/overview${district ? `?district=${encodeURIComponent(district)}` : ''}`),
   centre: (id) => api(`/api/authority/centres/${id}`),
+  stateOverview: () => api('/api/authority/state-overview'),
   // Procurement Simulator — POST a what-if scenario, get the projected impact.
   simulate: (scenario) => api('/api/authority/simulator', { method: 'POST', body: scenario }),
 };

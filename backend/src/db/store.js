@@ -8,11 +8,22 @@ import { CROPS, VILLAGES, CENTRES, USERS, BUYERS } from '../data/seed-data.js';
 const DB_PATH = config.dataFile;
 let cache = null;
 
+// Small deterministic PRNG so generated seed history is stable across reseeds.
+function mulberry32(a) {
+  return function next() {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 function seedDemoRequests(db) {
-  // Give the demo a realistic starting state: a procurement day in full
-  // swing across the district. Every centre has its own farmers in the
+  // Give the demo a realistic starting state: a procurement week in full
+  // swing across the state. Every centre has its own farmers in the
   // queue, completed handovers with payment records, and a mix of crops —
-  // so officer dashboards, the authority overview and every farmer's own
+  // so officer dashboards, the authority monitor and every farmer's own
   // history look like real mock data rather than a single test account.
   const now = Date.now();
   const crop = (id) => db.crops.find((c) => c.id === id);
@@ -111,8 +122,66 @@ function seedDemoRequests(db) {
     mk(135, 'farmer-012', 'crop-moong', 10, PIPILI, 'WAITING', 21),
     mk(136, 'farmer-017', 'crop-paddy', 44, PIPILI, 'WAITING', 7),
   ];
+
+  // ── Deterministic generator for the rest of the state ─────────────
+  // Seeds 7 days of history for every non-Khordha centre (plus a little
+  // extra Khordha history) so the authority monitor has a full week of
+  // trend data and every district looks busy, not empty. Fixed-seed PRNG
+  // keeps the data stable across reseeds so tests and screenshots match.
+  const rng = mulberry32(20260907);
+  const pick = (arr) => arr[Math.floor(rng() * arr.length)];
+  const rint = (lo, hi) => lo + Math.floor(rng() * (hi - lo + 1));
+  const CROP_POOL = ['crop-paddy', 'crop-wheat', 'crop-maize', 'crop-moong', 'crop-mustard', 'crop-cotton'];
+  const nonKhordhaCentres = db.centres.filter((c) => c.district !== 'Khordha');
+  const farmersByDistrict = {};
+  for (const u of db.users) {
+    if (u.role !== 'farmer') continue;
+    (farmersByDistrict[u.district || 'Khordha'] ||= []).push(u.id);
+  }
+  const khordhaFarmerPool = farmersByDistrict.Khordha.filter((f) => f !== 'farmer-demo' && f !== 'farmer-demo-2');
+  const khordhaCentrePool = [BBSR, JATNI, KHORDHA, BALIANTA, PIPILI];
+
+  let seq = 136;
+  const gen = (centreId, dayOffset) => {
+    const district = db.centres.find((c) => c.id === centreId)?.district || 'Khordha';
+    const pool = farmersByDistrict[district] || [];
+    if (pool.length === 0) return;
+    seq += 1;
+    const minutesAgo = dayOffset === 0
+      ? rint(4, 480)
+      : dayOffset * 1440 + rint(120, 1100);
+    const roll = rng();
+    let status;
+    if (dayOffset === 0) status = roll < 0.45 ? 'WAITING' : roll < 0.75 ? 'PROCESSING' : 'CALLED';
+    else if (dayOffset === 1) status = roll < 0.55 ? 'COMPLETED' : roll < 0.75 ? 'CANCELLED' : 'COMPLETED';
+    else status = roll < 0.8 ? 'COMPLETED' : roll < 0.9 ? 'REJECTED' : 'CANCELLED';
+    const extra = status === 'REJECTED' ? { note: pick(['Moisture above limit — dry the lot and re-book.', 'Grade below FAQ norms.', 'Lot not as declared in the booking.']) } : {};
+    reqs.push(mk(seq, pick(pool), pick(CROP_POOL), rint(10, 60), centreId, status, minutesAgo, extra));
+  };
+
+  for (const c of nonKhordhaCentres) {
+    for (let day = 6; day >= 1; day -= 1) {
+      const n = c.status === 'PAUSED' ? rint(1, 2) : rint(2, 3);
+      for (let i = 0; i < n; i += 1) gen(c.id, day);
+    }
+    // Today's live queue at each centre
+    for (let i = 0; i < rint(2, 4); i += 1) gen(c.id, 0);
+  }
+
+  // A little extra Khordha history (days 2-6) so the home district's
+  // trend line isn't flat while the rest of the state has a full week.
+  for (let day = 6; day >= 2; day -= 1) {
+    const n = rint(1, 2);
+    for (let i = 0; i < n; i += 1) {
+      seq += 1;
+      const minutesAgo = day * 1440 + rint(120, 1100);
+      const status = rng() < 0.85 ? 'COMPLETED' : 'CANCELLED';
+      reqs.push(mk(seq, pick(khordhaFarmerPool), pick(CROP_POOL), rint(10, 55), pick(khordhaCentrePool), status, minutesAgo));
+    }
+  }
+
   db.requests.push(...reqs);
-  db.meta.tokenSeq = 136;
+  db.meta.tokenSeq = seq;
 
   // In-app notifications that mirror the seeded history, so farmer inboxes
   // are populated from first boot. Newest first once sorted by the API.
@@ -199,6 +268,40 @@ export function getDb() {
   if (!Array.isArray(cache.notifications)) cache.notifications = [];
   if (!Array.isArray(cache.saleBookings)) cache.saleBookings = [];
   let mutated = false;
+  // Older data files predate the state-wide districts: add any seeded demo
+  // entities (users, centres, villages, crops, buyers) that are missing so a
+  // persistent store gains the new districts without a full reset.
+  for (const u of USERS) {
+    if (!cache.users.some((x) => x.id === u.id)) {
+      cache.users.push({
+        ...u,
+        isDemo: true,
+        passwordHash: bcrypt.hashSync(u.password, 10),
+        password: undefined,
+        createdAt: new Date().toISOString(),
+      });
+      mutated = true;
+    }
+  }
+  if (!Array.isArray(cache.crops)) cache.crops = [];
+  if (!Array.isArray(cache.villages)) cache.villages = [];
+  if (!Array.isArray(cache.centres)) cache.centres = [];
+  if (!Array.isArray(cache.buyers)) cache.buyers = [];
+  for (const c of CROPS) {
+    if (!cache.crops.some((x) => x.id === c.id)) { cache.crops.push({ ...c }); mutated = true; }
+  }
+  for (const v of VILLAGES) {
+    if (!cache.villages.some((x) => x.id === v.id)) { cache.villages.push({ ...v }); mutated = true; }
+  }
+  for (const c of CENTRES) {
+    if (!cache.centres.some((x) => x.id === c.id)) { cache.centres.push({ ...c }); mutated = true; }
+  }
+  for (const b of BUYERS) {
+    if (!cache.buyers.some((x) => x.id === b.id)) {
+      cache.buyers.push({ ...b, crops: b.crops.map((c) => ({ ...c })) });
+      mutated = true;
+    }
+  }
   for (const user of cache.users) {
     const seedUser = USERS.find((entry) => entry.id === user.id);
     if (seedUser && !user.isDemo) {

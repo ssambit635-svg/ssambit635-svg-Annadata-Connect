@@ -6,7 +6,7 @@ import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
 import { farmerService, notificationService, requestService } from '../../services/api/farmerService.js';
 import Icon from '../../components/Icon.jsx';
-import { ArtSun, ArtFarmer, ArtField, ArtWheat, ArtLeafPair } from '../art.jsx';
+import { ArtSun, ArtFarmer, ArtField, ArtWheat, ArtLeafPair, ArtRupeeSprout } from '../art.jsx';
 import { MCard, MBtn, MLoader, MError, MEmpty, TicketCard, SectionH, MConfirm, greetingKey } from '../ui.jsx';
 
 const ACTIONS = [
@@ -70,6 +70,20 @@ export default function Home() {
           <div className="m-scallops" />
         </div>
       </div>
+
+      {/* ── sell now CTA ── */}
+      <MCard className="gold">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <ArtRupeeSprout size={44} className="m-anim-pop" />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="m-state-title" style={{ fontSize: 16.5 }}>{t('farmer.sellNow')}</div>
+            <p style={{ color: 'var(--m-ink-soft)', fontSize: 13.5, margin: '2px 0 10px' }}>{t('farmer.sellNowHint')}</p>
+          </div>
+        </div>
+        <MBtn to="/sell" block variant="primary" icon={<Icon name="rupee" size={18} />} iconRight={<Icon name="arrowUpRight" size={16} />}>
+          {t('farmer.sellNow')}
+        </MBtn>
+      </MCard>
 
       {/* ── active request ── */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

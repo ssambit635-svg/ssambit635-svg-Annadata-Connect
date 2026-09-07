@@ -1,5 +1,7 @@
-// Seed data for the KisanSathi demo backend.
-// District: Khordha (Odisha). MSP figures are indicative demo values in INR/quintal.
+// Seed data for the Annadata Connect demo backend.
+// State: Odisha. MSP figures are indicative demo values in INR/quintal.
+// Khordha is the home/pilot district; the other districts keep the state-wide
+// authority monitor (district-by-district + whole-state overview) alive.
 
 export const CROPS = [
   { id: 'crop-paddy', nameEn: 'Paddy (Common)', nameHi: 'धान (सामान्य)', nameOr: 'ଧାନ (ସାଧାରଣ)', mspPerQuintal: 2300 },
@@ -23,6 +25,22 @@ export const VILLAGES = [
   { id: 'v-godi', nameEn: 'Godibandha', nameHi: 'गोदीबंधा', nameOr: 'ଗୋଦିବନ୍ଧ', lat: 20.15, lng: 85.68 },
   { id: 'v-uttara', nameEn: 'Uttara', nameHi: 'उत्तरा', nameOr: 'ଉତ୍ତରା', lat: 20.335, lng: 85.955 },
   { id: 'v-pipili', nameEn: 'Pipili (Rural)', nameHi: 'पिपली (ग्रामीण)', nameOr: 'ପିପିଲି (ଗ୍ରାମୀଣ)', lat: 20.1182, lng: 85.8371 },
+  // Cuttack district
+  { id: 'v-banki', nameEn: 'Banki', nameHi: 'बांकी', nameOr: 'ବାଙ୍କୀ', lat: 20.379, lng: 85.5295 },
+  { id: 'v-salepur', nameEn: 'Salepur', nameHi: 'सालेपुर', nameOr: 'ସାଲେପୁର', lat: 20.4735, lng: 86.1192 },
+  { id: 'v-niali', nameEn: 'Niali', nameHi: 'नियाली', nameOr: 'ନିଆଳୀ', lat: 20.1202, lng: 86.0063 },
+  // Puri district
+  { id: 'v-brahmagiri', nameEn: 'Brahmagiri', nameHi: 'ब्रह्मगिरी', nameOr: 'ବ୍ରହ୍ମଗିରି', lat: 19.7894, lng: 85.6452 },
+  { id: 'v-konark', nameEn: 'Konark', nameHi: 'कोणार्क', nameOr: 'କୋଣାର୍କ', lat: 19.8952, lng: 86.0943 },
+  // Ganjam district
+  { id: 'v-chhatrapur', nameEn: 'Chhatrapur', nameHi: 'छत्रपुर', nameOr: 'ଛତ୍ରପୁର', lat: 19.3526, lng: 84.9859 },
+  { id: 'v-hinjili', nameEn: 'Hinjilicut', nameHi: 'हिंजिलीकट', nameOr: 'ହିଞ୍ଜିଳିକାଟୁ', lat: 19.4839, lng: 84.7509 },
+  // Sambalpur district
+  { id: 'v-kuchinda', nameEn: 'Kuchinda', nameHi: 'कुचिंडा', nameOr: 'କୁଚିଣ୍ଡା', lat: 21.7431, lng: 84.0132 },
+  { id: 'v-rengali', nameEn: 'Rengali', nameHi: 'रेंगाली', nameOr: 'ରେଙ୍ଗାଲି', lat: 21.6506, lng: 84.0534 },
+  // Balasore district
+  { id: 'v-nilgiri', nameEn: 'Nilgiri', nameHi: 'नीलगिरी', nameOr: 'ନୀଳଗିରି', lat: 21.4604, lng: 86.7753 },
+  { id: 'v-soro', nameEn: 'Soro', nameHi: 'सोरो', nameOr: 'ସୋରୋ', lat: 21.2868, lng: 86.6864 },
 ];
 
 export const CENTRES = [
@@ -115,6 +133,131 @@ export const CENTRES = [
     avgProcessingMinutesPerFarmer: 7,
     status: 'OPEN',
     operatingHours: '08:00 - 17:00',
+  },
+  // ── Cuttack district ──
+  {
+    id: 'centre-cuttack-choudwar',
+    nameEn: 'Choudwar Procurement Centre',
+    nameHi: 'चौद्वार खरीद केंद्र',
+    nameOr: 'ଚୌଦ୍ୱାର କ୍ରୟ କେନ୍ଦ୍ର',
+    district: 'Cuttack',
+    address: 'Choudwar, near NH-16',
+    lat: 20.5062,
+    lng: 85.9204,
+    capacityQuintals: 5500,
+    currentStockQuintals: 2100,
+    avgProcessingMinutesPerFarmer: 7,
+    status: 'OPEN',
+    operatingHours: '08:00 - 17:30',
+  },
+  {
+    id: 'centre-cuttack-niali',
+    nameEn: 'Niali Procurement Centre',
+    nameHi: 'नियाली खरीद केंद्र',
+    nameOr: 'ନିଆଳୀ କ୍ରୟ କେନ୍ଦ୍ର',
+    district: 'Cuttack',
+    address: 'Niali Block Office Campus',
+    lat: 20.1202,
+    lng: 86.0063,
+    capacityQuintals: 3800,
+    currentStockQuintals: 1200,
+    avgProcessingMinutesPerFarmer: 6,
+    status: 'OPEN',
+    operatingHours: '08:00 - 17:00',
+  },
+  // ── Puri district ──
+  {
+    id: 'centre-puri-brahmagiri',
+    nameEn: 'Brahmagiri Procurement Centre',
+    nameHi: 'ब्रह्मगिरी खरीद केंद्र',
+    nameOr: 'ବ୍ରହ୍ମଗିରି କ୍ରୟ କେନ୍ଦ୍ର',
+    district: 'Puri',
+    address: 'Brahmagiri Market Yard',
+    lat: 19.7894,
+    lng: 85.6452,
+    capacityQuintals: 4600,
+    currentStockQuintals: 2800,
+    avgProcessingMinutesPerFarmer: 7,
+    status: 'OPEN',
+    operatingHours: '08:00 - 17:00',
+  },
+  {
+    id: 'centre-puri-konark',
+    nameEn: 'Konark Procurement Centre',
+    nameHi: 'कोणार्क खरीद केंद्र',
+    nameOr: 'କୋଣାର୍କ କ୍ରୟ କେନ୍ଦ୍ର',
+    district: 'Puri',
+    address: 'Konark Bypass Road',
+    lat: 19.8952,
+    lng: 86.0943,
+    capacityQuintals: 3000,
+    currentStockQuintals: 400,
+    avgProcessingMinutesPerFarmer: 8,
+    status: 'PAUSED',
+    operatingHours: '08:00 - 16:00',
+  },
+  // ── Ganjam district ──
+  {
+    id: 'centre-ganjam-chhatrapur',
+    nameEn: 'Chhatrapur Procurement Centre',
+    nameHi: 'छत्रपुर खरीद केंद्र',
+    nameOr: 'ଛତ୍ରପୁର କ୍ରୟ କେନ୍ଦ୍ର',
+    district: 'Ganjam',
+    address: 'Chhatrapur, NH-59 Service Road',
+    lat: 19.3526,
+    lng: 84.9859,
+    capacityQuintals: 6500,
+    currentStockQuintals: 1900,
+    avgProcessingMinutesPerFarmer: 6,
+    status: 'OPEN',
+    operatingHours: '08:00 - 18:00',
+  },
+  {
+    id: 'centre-ganjam-hinjili',
+    nameEn: 'Hinjilicut Procurement Centre',
+    nameHi: 'हिंजिलीकट खरीद केंद्र',
+    nameOr: 'ହିଞ୍ଜିଳିକାଟୁ କ୍ରୟ କେନ୍ଦ୍ର',
+    district: 'Ganjam',
+    address: 'Hinjilicut Market Complex',
+    lat: 19.4839,
+    lng: 84.7509,
+    capacityQuintals: 4200,
+    currentStockQuintals: 2600,
+    avgProcessingMinutesPerFarmer: 7,
+    status: 'OPEN',
+    operatingHours: '08:00 - 17:00',
+  },
+  // ── Sambalpur district ──
+  {
+    id: 'centre-sambalpur-kuchinda',
+    nameEn: 'Kuchinda Procurement Centre',
+    nameHi: 'कुचिंडा खरीद केंद्र',
+    nameOr: 'କୁଚିଣ୍ଡା କ୍ରୟ କେନ୍ଦ୍ର',
+    district: 'Sambalpur',
+    address: 'Kuchinda, SH-15',
+    lat: 21.7431,
+    lng: 84.0132,
+    capacityQuintals: 5000,
+    currentStockQuintals: 3400,
+    avgProcessingMinutesPerFarmer: 6,
+    status: 'OPEN',
+    operatingHours: '08:00 - 17:00',
+  },
+  // ── Balasore district ──
+  {
+    id: 'centre-balasore-soro',
+    nameEn: 'Soro Procurement Centre',
+    nameHi: 'सोरो खरीद केंद्र',
+    nameOr: 'ସୋରୋ କ୍ରୟ କେନ୍ଦ୍ର',
+    district: 'Balasore',
+    address: 'Soro Market Yard, NH-16',
+    lat: 21.2868,
+    lng: 86.6864,
+    capacityQuintals: 4400,
+    currentStockQuintals: 1500,
+    avgProcessingMinutesPerFarmer: 5,
+    status: 'OPEN',
+    operatingHours: '08:00 - 17:30',
   },
 ];
 
@@ -225,6 +368,58 @@ export const BUYERS = [
       { cropId: 'crop-moong', offerPerQuintal: 8720, intakeCapacityQuintal: 90, committedQuintal: 0 },
     ],
   },
+  {
+    id: 'buyer-cuttack-mill',
+    type: 'market',
+    categoryEn: 'FPO · Rice Mill',
+    categoryHi: 'एफपीओ · चावल मिल',
+    categoryOr: 'FPO · ଚାଉଳ ମିଲ୍',
+    nameEn: 'Cuttack Agro Rice Mill (FPO)',
+    nameHi: 'कटक एग्रो चावल मिल (एफपीओ)',
+    nameOr: 'କଟକ ଆଗ୍ରୋ ଚାଉଳ ମିଲ୍ (FPO)',
+    district: 'Cuttack',
+    address: 'Choudwar Industrial Estate, Cuttack',
+    lat: 20.5062,
+    lng: 85.9204,
+    status: 'OPEN',
+    operatingHours: '07:00 - 20:00',
+    settlementEn: 'Paid on the spot (UPI / cash) at delivery',
+    settlementHi: 'डिलीवरी पर तुरंत भुगतान (UPI / नकद)',
+    settlementOr: 'ଡେଲିଭରିରେ ତୁରନ୍ତ ଦେୟ (UPI / ନଗଦ)',
+    noteEn: 'Above-MSP mill rate; quality graded at the mill gate.',
+    noteHi: 'MSP से ऊपर मिल दर; मिल गेट पर गुणवत्ता जाँच।',
+    noteOr: 'MSP ଠାରୁ ଅଧିକ ମିଲ୍ ଦର; ମିଲ୍ ଗେଟରେ ଗୁଣବତ୍ତା ଯାଞ୍ଚ।',
+    crops: [
+      { cropId: 'crop-paddy', offerPerQuintal: 2400, intakeCapacityQuintal: 500, committedQuintal: 0 },
+      { cropId: 'crop-mustard', offerPerQuintal: 5820, intakeCapacityQuintal: 150, committedQuintal: 0 },
+    ],
+  },
+  {
+    id: 'buyer-ganjam-trader',
+    type: 'market',
+    categoryEn: 'Private Trader',
+    categoryHi: 'निजी व्यापारी',
+    categoryOr: 'ଘରୋଇ ବ୍ୟବସାୟୀ',
+    nameEn: 'Ganjam Grain & Pulses Trader',
+    nameHi: 'गंजम अनाज एवं दाल व्यापारी',
+    nameOr: 'ଗଞ୍ଜାମ ଶସ୍ୟ ଓ ଡାଲି ବ୍ୟବସାୟୀ',
+    district: 'Ganjam',
+    address: 'Chhatrapur Main Market, Ganjam',
+    lat: 19.3526,
+    lng: 84.9859,
+    status: 'OPEN',
+    operatingHours: '06:30 - 19:00',
+    settlementEn: 'Cash on the spot',
+    settlementHi: 'मौके पर नकद',
+    settlementOr: 'ସ୍ଥାନରେ ନଗଦ',
+    noteEn: 'Daily market rate; compare before you sell.',
+    noteHi: 'दैनिक बाज़ार दर; बेचने से पहले तुलना करें।',
+    noteOr: 'ଦୈନିକ ବଜାର ଦର; ବିକ୍ରି ପୂର୍ବରୁ ତୁଳନା କରନ୍ତୁ।',
+    crops: [
+      { cropId: 'crop-paddy', offerPerQuintal: 2375, intakeCapacityQuintal: 350, committedQuintal: 0 },
+      { cropId: 'crop-moong', offerPerQuintal: 8810, intakeCapacityQuintal: 80, committedQuintal: 0 },
+    ],
+  },
 ];
 
 // Sample (mock) accounts. Passwords are hashed at seed time (see seed-cli / store).
@@ -234,7 +429,7 @@ export const BUYERS = [
 // officer request lists and the authority overview look like a real district
 // in the middle of a procurement season — not one farmer booking everything.
 const FARMER_PASSWORD = 'Farmer@123';
-const farmer = (n, name, phone, email, villageId, preferredLanguage = 'en') => ({
+const farmer = (n, name, phone, email, villageId, preferredLanguage = 'en', district = 'Khordha') => ({
   id: n === 1 ? 'farmer-demo' : n === 2 ? 'farmer-demo-2' : `farmer-${String(n).padStart(3, '0')}`,
   role: 'farmer',
   farmerId: `ANC-F-${String(n).padStart(4, '0')}`,
@@ -243,7 +438,7 @@ const farmer = (n, name, phone, email, villageId, preferredLanguage = 'en') => (
   email,
   password: FARMER_PASSWORD,
   villageId,
-  district: 'Khordha',
+  district,
   preferredLanguage,
 });
 
@@ -268,6 +463,21 @@ export const FARMERS = [
   farmer(18, 'Basanti Muduli', '9999999018', 'basanti.muduli.anc@gmail.com', 'v-pipili', 'or'),
   farmer(19, 'Prakash Mishra', '9999999019', 'prakash.mishra.anc@gmail.com', 'v-nandankanan', 'en'),
   farmer(20, 'Kailash Pradhan', '9999999020', 'kailash.pradhan.anc@gmail.com', 'v-mendhasala', 'or'),
+  // ── Cuttack ──
+  farmer(21, 'Debendra Biswal', '9999999021', 'debendra.biswal.anc@gmail.com', 'v-banki', 'or', 'Cuttack'),
+  farmer(22, 'Sasmita Sahoo', '9999999022', 'sasmita.sahoo.anc@gmail.com', 'v-salepur', 'hi', 'Cuttack'),
+  farmer(23, 'Niranjan Ojha', '9999999023', 'niranjan.ojha.anc@gmail.com', 'v-niali', 'or', 'Cuttack'),
+  // ── Puri ──
+  farmer(24, 'Banamali Panda', '9999999024', 'banamali.panda.anc@gmail.com', 'v-brahmagiri', 'or', 'Puri'),
+  farmer(25, 'Rashmita Behera', '9999999025', 'rashmita.behera.anc@gmail.com', 'v-konark', 'en', 'Puri'),
+  // ── Ganjam ──
+  farmer(26, 'Surendra Gouda', '9999999026', 'surendra.gouda.anc@gmail.com', 'v-chhatrapur', 'or', 'Ganjam'),
+  farmer(27, 'Urmila Sahu', '9999999027', 'urmila.sahu.anc@gmail.com', 'v-hinjili', 'hi', 'Ganjam'),
+  // ── Sambalpur ──
+  farmer(28, 'Jagannath Kujur', '9999999028', 'jagannath.kujur.anc@gmail.com', 'v-kuchinda', 'or', 'Sambalpur'),
+  farmer(29, 'Tapaswini Rana', '9999999029', 'tapaswini.rana.anc@gmail.com', 'v-rengali', 'en', 'Sambalpur'),
+  // ── Balasore ──
+  farmer(30, 'Bishnu Charan Sethi', '9999999030', 'bishnu.sethi.anc@gmail.com', 'v-nilgiri', 'or', 'Balasore'),
 ];
 
 export const USERS = [
@@ -303,6 +513,36 @@ export const USERS = [
     district: 'Khordha',
   },
   {
+    id: 'officer-cuttack',
+    role: 'officer',
+    name: 'Pratap Keshari Das',
+    phone: '9999999104',
+    email: 'pratap.das.anc@gmail.com',
+    password: 'Officer@123',
+    centreId: 'centre-cuttack-choudwar',
+    district: 'Cuttack',
+  },
+  {
+    id: 'officer-puri',
+    role: 'officer',
+    name: 'Lopamudra Mohanty',
+    phone: '9999999105',
+    email: 'lopamudra.mohanty.anc@gmail.com',
+    password: 'Officer@123',
+    centreId: 'centre-puri-brahmagiri',
+    district: 'Puri',
+  },
+  {
+    id: 'officer-ganjam',
+    role: 'officer',
+    name: 'Bijay Kumar Padhi',
+    phone: '9999999106',
+    email: 'bijay.padhi.anc@gmail.com',
+    password: 'Officer@123',
+    centreId: 'centre-ganjam-chhatrapur',
+    district: 'Ganjam',
+  },
+  {
     id: 'authority-demo',
     role: 'authority',
     name: 'Suresh Patnaik',
@@ -310,5 +550,15 @@ export const USERS = [
     email: 'district.admin.anc@gmail.com',
     password: 'Authority@123',
     district: 'Khordha',
+  },
+  {
+    id: 'authority-state',
+    role: 'authority',
+    name: 'Anita Meher',
+    phone: '9999999202',
+    email: 'state.admin.anc@gmail.com',
+    password: 'Authority@123',
+    district: null,
+    stateWide: true,
   },
 ];
