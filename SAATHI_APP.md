@@ -1,9 +1,9 @@
-# Annadata Saathi — the Android app frontend
+# Annadata Connect — the Android app frontend
 
-**Annadata Saathi** (`अन्नदाता साथी`, "Harvest Companion") is the bespoke UI that ships
+**Annadata Connect** (`अन्नदाता कनेक्ट` · `ଅନ୍ନଦାତା କନେକ୍ଟ`) is the bespoke UI that ships
 inside the Android APK. It is a *different frontend* from the website on purpose:
 same product, same backend, same green-gold-cream theme — but its own design
-language, its own name, its own typography and its own components, tuned for a
+language, its own typography and its own components, tuned for a
 ₹8,000 phone held in one hand in bright sunlight.
 
 The website is untouched. One codebase, two frontends:
@@ -12,7 +12,7 @@ The website is untouched. One codebase, two frontends:
 |---|---|---|
 | Boots in | Browsers (default) | Capacitor APK (always), or any browser with `?app=1` |
 | Navigation | Top header + nav bar + mobile tab bar | Bottom tab bar with a raised gold **+** button |
-| Name / wordmark | Annadata Connect | **Annadata Saathi** · Harvest Companion |
+| Name / wordmark | Annadata Connect | **Annadata Connect** · emblem + gold "Connect" wordmark, animated splash on boot |
 | Typography | System UI stack | **Baloo 2** display + **Mukta** body (Devanagari + Latin, bundled offline) |
 | Cards | Flat bordered cards | Rounded "passbook" cards, perforated token tickets, toran scallop strips |
 | Illustration | Line icons only | Hand-drawn folk-art SVG kit (`src/mobile/art.jsx`) — sun, farmer, cow, tractor, mandi, scales |

@@ -1116,7 +1116,7 @@
 .m-root .form-banner { border-radius: var(--m-r-md); }
 .m-root .form-banner.error { background: var(--m-red-soft); color: var(--m-red); }
 
-/* the OTP flow's classic buttons become Saathi pill buttons */
+/* the OTP flow's classic buttons become Connect pill buttons */
 .m-root .btn {
   border-radius: var(--m-r-pill);
   min-height: 52px;

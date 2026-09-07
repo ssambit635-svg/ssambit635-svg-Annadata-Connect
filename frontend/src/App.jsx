@@ -30,7 +30,7 @@ import { isAppMode, consumePreviewOverride } from './mobile/isApp.js';
 import { MobileApp } from './mobile/MobileApp.jsx';
 
 // Which frontend boots is decided once per load: the website in browsers,
-// the bespoke Android app UI ("Annadata Saathi") inside the Capacitor APK
+// the bespoke Android app UI ("Annadata Connect") inside the Capacitor APK
 // (or in a browser with the ?app=1 preview flag).
 consumePreviewOverride();
 

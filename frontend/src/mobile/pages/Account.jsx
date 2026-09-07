@@ -9,7 +9,7 @@ import { OtpVerification } from '../../components/OtpVerification.jsx';
 import { authErrorMessage } from '../../utils/auth.js';
 import { API_BASE, setApiBaseOverride } from '../../services/api/client.js';
 import Icon from '../../components/Icon.jsx';
-import { ArtFarmer, ArtLogo, ArtSun } from '../art.jsx';
+import { BrandLogo } from '../../components/BrandLogo.jsx';
 import { MCard, MBtn, MField, MInput, Sheet, MConfirm, MLangPills } from '../ui.jsx';
 
 export default function Account() {
@@ -61,7 +61,7 @@ export default function Account() {
 
       {/* ── language ── */}
       <MCard plain>
-        <div className="m-card-h"><Icon name="chat" size={19} /> {t('nav.more')} · {t('idCard.govLine')}</div>
+        <div className="m-card-h"><Icon name="chat" size={19} /> {t('landing.languageLabel')}</div>
         <MLangPills variant="light" />
       </MCard>
 
@@ -101,9 +101,9 @@ export default function Account() {
       {/* ── sign out ── */}
       <MCard plain>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <ArtSun size={44} />
+          <BrandLogo size={44} />
           <div style={{ flex: 1 }}>
-            <div className="m-display" style={{ fontWeight: 650, fontSize: 16, color: 'var(--m-green-forest)' }}>{t('saathi.name')}</div>
+            <div className="m-display" style={{ fontWeight: 800, fontSize: 16, color: 'var(--m-green-forest)' }}>{t('saathi.name')}</div>
             <div style={{ fontSize: 12.5, color: 'var(--m-ink-soft)' }}>{t('saathi.madeWith')}</div>
           </div>
           {isNative && (
@@ -116,7 +116,6 @@ export default function Account() {
       </MCard>
 
       <div style={{ textAlign: 'center', margin: '6px 0 10px' }}>
-        <ArtLogo size={34} />
         <p style={{ fontSize: 11.5, color: 'var(--m-ink-faint)', marginTop: 6 }}>
           {t('app.name')} · {t('app.tagline')} · v1.0
         </p>

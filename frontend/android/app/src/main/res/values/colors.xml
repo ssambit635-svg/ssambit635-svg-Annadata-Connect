@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Annadata Saathi theme: forest green + MSP gold -->
+    <!-- Annadata Connect theme: forest green + MSP gold -->
     <color name="colorPrimary">#14532D</color>
     <color name="colorPrimaryDark">#0F3D22</color>
     <color name="colorAccent">#FBBF24</color>

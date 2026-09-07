@@ -14,6 +14,12 @@ const ICONS = {
     </>
   ),
   chevronDown: <path d="m6 9 6 6 6-6" />,
+  arrowLeft: (
+    <>
+      <path d="M19 12H5" />
+      <path d="m12 19-7-7 7-7" />
+    </>
+  ),
   more: (
     <>
       <circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none" />

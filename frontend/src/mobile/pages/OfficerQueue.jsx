@@ -41,23 +41,24 @@ export default function OfficerQueue() {
         <MEmpty art={<ArtQueue size={110} className="m-anim-pop" />} title={t('officer.noPending')} />
       ) : (
         data.queue.map((r) => (
-          <MCard key={r.id} plain tight>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-              <span className={`m-row-ico ${r.status === 'WAITING' ? 'gold' : 'blue'}`}>#{r.position}</span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                  <strong style={{ fontFamily: 'var(--m-f-display)', fontSize: 16.5, color: 'var(--m-green-forest)' }}>{r.tokenNumber}</strong>
-                  <MBadge status={r.status} />
-                </div>
-                <div style={{ fontSize: 13.5, color: 'var(--m-ink-soft)', marginTop: 2 }}>
-                  {r.farmer?.name} · {r.farmer?.phone}
-                </div>
-                <div style={{ fontSize: 13, color: 'var(--m-ink-soft)' }}>
-                  {pick(r.crop, 'name')} · {r.quantityQuintals} {t('common.quintalShort')}
-                </div>
-              </div>
+          <MCard key={r.id} plain className={`m-req-card m-queue-card ${r.status === 'PROCESSING' ? 'is-processing' : ''}`}>
+            <div className="m-req-top">
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                <span className={`m-queue-pos ${r.status === 'WAITING' ? '' : 'is-live'}`}>{r.position}</span>
+                <span className="m-token-chip">{r.tokenNumber}</span>
+              </span>
+              <MBadge status={r.status} />
             </div>
-            <div className="m-btn-row" style={{ marginTop: 10 }}>
+            <div className="m-req-body">
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="m-req-name">{r.farmer?.name}</div>
+                <div className="m-req-crop">{pick(r.crop, 'name')} · {r.quantityQuintals} {t('common.quintalShort')}</div>
+              </div>
+              <a className="m-req-phone" href={`tel:${r.farmer?.phone}`} aria-label={r.farmer?.phone}>
+                <Icon name="phone" size={14} /> {r.farmer?.phone}
+              </a>
+            </div>
+            <div className="m-btn-row" style={{ marginTop: 12 }}>
               {r.status === 'WAITING' && (
                 <MBtn size="sm" variant="primary" disabled={busyId === r.id} onClick={() => act(r.id, 'CALL')} icon={<Icon name="megaphone" size={15} />}>
                   {t('officer.call')}

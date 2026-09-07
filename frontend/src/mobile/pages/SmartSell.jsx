@@ -345,7 +345,7 @@ export default function SmartSell() {
               const active = b.status === 'CONFIRMED';
               return (
                 <div key={b.id} className="m-row" style={{ marginBottom: 10 }}>
-                  <span className="m-row-ico gold">{b.reference?.slice(0, 4)}</span>
+                  <span className="m-row-ico m-row-ico-token gold">{b.reference?.slice(0, 4)}</span>
                   <div className="m-row-main">
                     <div className="m-row-title">{pick(b.buyer, 'name')} <MBadge tone={active ? 'success' : 'neutral'}>{t(`smartSell.bookingStatus.${b.status}`)}</MBadge></div>
                     <div className="m-row-sub">

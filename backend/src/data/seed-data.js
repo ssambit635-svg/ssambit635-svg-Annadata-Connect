@@ -229,31 +229,49 @@ export const BUYERS = [
 
 // Sample (mock) accounts. Passwords are hashed at seed time (see seed-cli / store).
 // Their emails double as the mock Google picker identities (services/auth-mock.service.js).
+//
+// Farmers are spread across the Khordha villages so every centre queue, the
+// officer request lists and the authority overview look like a real district
+// in the middle of a procurement season — not one farmer booking everything.
+const FARMER_PASSWORD = 'Farmer@123';
+const farmer = (n, name, phone, email, villageId, preferredLanguage = 'en') => ({
+  id: n === 1 ? 'farmer-demo' : n === 2 ? 'farmer-demo-2' : `farmer-${String(n).padStart(3, '0')}`,
+  role: 'farmer',
+  farmerId: `ANC-F-${String(n).padStart(4, '0')}`,
+  name,
+  phone,
+  email,
+  password: FARMER_PASSWORD,
+  villageId,
+  district: 'Khordha',
+  preferredLanguage,
+});
+
+export const FARMERS = [
+  farmer(1, 'Bijay Pradhan', '9999999001', 'bijay.pradhan.anc@gmail.com', 'v-baranga', 'en'),
+  farmer(2, 'Kuni Sahoo', '9999999002', 'kuni.sahoo.anc@gmail.com', 'v-harirajpur', 'hi'),
+  farmer(3, 'Ramesh Patra', '9999999003', 'ramesh.patra.anc@gmail.com', 'v-balakati', 'or'),
+  farmer(4, 'Balaram Jena', '9999999004', 'balaram.jena.anc@gmail.com', 'v-pahala', 'or'),
+  farmer(5, 'Bikram Mohanty', '9999999005', 'bikram.mohanty.anc@gmail.com', 'v-nandankanan', 'en'),
+  farmer(6, 'Sarat Chandra Jena', '9999999006', 'sarat.jena.anc@gmail.com', 'v-chandaka', 'or'),
+  farmer(7, 'Duryodhan Behera', '9999999007', 'duryodhan.behera.anc@gmail.com', 'v-daruthenga', 'or'),
+  farmer(8, 'Sanjukta Nayak', '9999999008', 'sanjukta.nayak.anc@gmail.com', 'v-mendhasala', 'hi'),
+  farmer(9, 'Pramila Swain', '9999999009', 'pramila.swain.anc@gmail.com', 'v-shankarpur', 'or'),
+  farmer(10, 'Gopal Barik', '9999999010', 'gopal.barik.anc@gmail.com', 'v-godi', 'en'),
+  farmer(11, 'Laxmidhar Rout', '9999999011', 'laxmidhar.rout.anc@gmail.com', 'v-uttara', 'or'),
+  farmer(12, 'Minati Parida', '9999999012', 'minati.parida.anc@gmail.com', 'v-pipili', 'hi'),
+  farmer(13, 'Akshaya Mallick', '9999999013', 'akshaya.mallick.anc@gmail.com', 'v-baranga', 'en'),
+  farmer(14, 'Sudarsan Samal', '9999999014', 'sudarsan.samal.anc@gmail.com', 'v-balakati', 'or'),
+  farmer(15, 'Jyotirmayee Dash', '9999999015', 'jyoti.dash.anc@gmail.com', 'v-pahala', 'en'),
+  farmer(16, 'Harekrushna Sethi', '9999999016', 'harekrushna.sethi.anc@gmail.com', 'v-harirajpur', 'or'),
+  farmer(17, 'Rabindra Lenka', '9999999017', 'rabindra.lenka.anc@gmail.com', 'v-chandaka', 'hi'),
+  farmer(18, 'Basanti Muduli', '9999999018', 'basanti.muduli.anc@gmail.com', 'v-pipili', 'or'),
+  farmer(19, 'Prakash Mishra', '9999999019', 'prakash.mishra.anc@gmail.com', 'v-nandankanan', 'en'),
+  farmer(20, 'Kailash Pradhan', '9999999020', 'kailash.pradhan.anc@gmail.com', 'v-mendhasala', 'or'),
+];
+
 export const USERS = [
-  {
-    id: 'farmer-demo',
-    role: 'farmer',
-    farmerId: 'ANC-F-0001',
-    name: 'Bijay Pradhan',
-    phone: '9999999001',
-    email: 'bijay.pradhan.anc@gmail.com',
-    password: 'Farmer@123',
-    villageId: 'v-baranga',
-    district: 'Khordha',
-    preferredLanguage: 'en',
-  },
-  {
-    id: 'farmer-demo-2',
-    role: 'farmer',
-    farmerId: 'ANC-F-0002',
-    name: 'Kuni Sahoo',
-    phone: '9999999002',
-    email: 'kuni.sahoo.anc@gmail.com',
-    password: 'Farmer@123',
-    villageId: 'v-harirajpur',
-    district: 'Khordha',
-    preferredLanguage: 'hi',
-  },
+  ...FARMERS,
   {
     id: 'officer-demo',
     role: 'officer',
@@ -272,6 +290,16 @@ export const USERS = [
     email: 'manoj.behera.anc@gmail.com',
     password: 'Officer@123',
     centreId: 'centre-jatni',
+    district: 'Khordha',
+  },
+  {
+    id: 'officer-khordha',
+    role: 'officer',
+    name: 'Sasmita Mohapatra',
+    phone: '9999999103',
+    email: 'sasmita.mohapatra.anc@gmail.com',
+    password: 'Officer@123',
+    centreId: 'centre-khordha',
     district: 'Khordha',
   },
   {

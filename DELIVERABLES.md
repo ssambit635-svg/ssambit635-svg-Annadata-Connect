@@ -130,7 +130,7 @@
   redirect of the excess load (quintals + ≈farmers) to the intake-open centre with the most free
   capacity, down to 90% utilization, showing the state "after suggested redirect" for every centre;
   if no centre has space a NO_SPARE_CAPACITY warning is shown.
-- ✅ UI (web + Saathi mobile, trilingual EN/हिंदी/ଓଡ଼ିଆ): scenario input panel with quick presets,
+- ✅ UI (web + Connect mobile app, trilingual EN/हिंदी/ଓଡ଼ିଆ): scenario input panel with quick presets,
   district KPI tiles, overload-warning and recommended-action cards, centre impact cards with
   CURRENT vs SIMULATED storage bars, queue/arrival/wait comparisons, available-capacity list and a
   centre-wise current-vs-simulated table. An explicit note states the simulator is a planning

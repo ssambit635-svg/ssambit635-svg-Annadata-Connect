@@ -1,5 +1,5 @@
 // Farmer home — greeting hero, live token ticket, quick actions,
-// notifications and a rotating "Saathi says" tip.
+// notifications and a rotating "Connect says" tip.
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext.jsx';
@@ -118,7 +118,7 @@ export default function Home() {
         title={t('farmer.notifications')}
         hint={unread > 0 ? `${unread}` : undefined}
       />
-      <MCard plain>
+      <MCard plain id="inbox">
         {notifications.length === 0 ? (
           <MEmpty
             art={<ArtField size={150} />}

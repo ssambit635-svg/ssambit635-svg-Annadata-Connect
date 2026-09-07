@@ -1,4 +1,4 @@
-// Welcome / sign-in — the first screen of Annadata Saathi.
+// Welcome / sign-in — the first screen of Annadata Connect.
 // Full auth parity with the website (OTP, password, mock Google, demo
 // accounts, farmer registration) wrapped in the app's own design.
 import { useEffect, useState } from 'react';
@@ -11,13 +11,13 @@ import { GoogleG } from '../../components/GoogleSignIn.jsx';
 import { authErrorMessage, normalizeMobileInput } from '../../utils/auth.js';
 import { referenceService } from '../../services/api/farmerService.js';
 import Icon from '../../components/Icon.jsx';
-import { ArtFarmer, ArtField, ArtDivider, ArtLogo } from '../art.jsx';
+import { BrandLogo } from '../../components/BrandLogo.jsx';
 import { MBtn, MCard, MField, MInput, MSelect, Sheet, MLangPills, MLoader } from '../ui.jsx';
 
 const ROLES = [
-  { id: 'farmer', icon: 'wheat' },
-  { id: 'officer', icon: 'clipboard' },
-  { id: 'authority', icon: 'flag' },
+  { id: 'farmer', icon: 'wheat', sub: 'saathi.roleFarmerSub' },
+  { id: 'officer', icon: 'clipboard', sub: 'saathi.roleOfficerSub' },
+  { id: 'authority', icon: 'flag', sub: 'saathi.roleAuthoritySub' },
 ];
 const METHODS = [
   { id: 'sms', icon: 'phone' },
@@ -122,26 +122,21 @@ export default function Welcome({ registration = false }) {
 
       {/* ── hero ── */}
       <div className="m-welcome-hero">
-        <div style={{ marginBottom: 10 }}>
+        <div className="m-welcome-arcs" aria-hidden="true" />
+        <div style={{ marginBottom: 14, position: 'relative' }}>
           <MLangPills />
         </div>
         <span className="m-gov-line">
-          <Icon name="wheat" size={14} /> {t('idCard.govLine')}
+          {t('saathi.govChip')} <i className="m-gov-dot" aria-hidden="true" />
         </span>
-        <h1 className="m-welcome-title m-anim-pop">
-          {lang === 'en' ? <>Annadata <span className="m-gold">Saathi</span></> : t('saathi.name')}
+        <h1 className="m-welcome-title">
+          <span>{t('saathi.brandFirst')}</span> <span className="m-gold">{t('saathi.brandSecond')}</span>
         </h1>
-        <p className="m-welcome-tag">{t('saathi.tagline')} · {t('app.tagline')}</p>
-        <div className="m-welcome-art">
-          <div className="m-emblem-stack">
-            <ArtFarmer size={96} className="m-anim-pop" />
-            <ArtDivider className="m-emblem-rule" />
-          </div>
-          <ArtField size={240} className="m-emblem-field" />
+        <p className="m-welcome-tag">{t('saathi.tagline')}</p>
+        <div className="m-welcome-badge">
+          <BrandLogo size={92} title={t('saathi.name')} />
         </div>
       </div>
-
-      <div className="m-scallops" style={{ color: 'var(--m-gold)', marginTop: -12, marginBottom: 4 }} aria-hidden="true" />
 
       {/* ── profile completion after first OTP/Google sign-in ── */}
       {profileTicket ? (
@@ -179,18 +174,23 @@ export default function Welcome({ registration = false }) {
       ) : (
         <>
           {/* ── role picker ── */}
-          <MCard plain className="m-stagger">
-            <div className="m-card-h"><Icon name="users" size={18} /> {t('auth.loginAs')}</div>
+          <MCard plain className="m-stagger m-signin-card">
+            <div className="m-card-h m-card-h-split">
+              <span><Icon name="users" size={18} /> {t('auth.loginAs')}</span>
+              <span className="m-step-chip">{t('saathi.stepOf', { n: 1, total: 2 })}</span>
+            </div>
             <div className="m-role-grid" role="group" aria-label={t('auth.loginAs')}>
               {ROLES.filter((r) => !registration || r.id === 'farmer').map((r) => (
                 <button key={r.id} type="button" className={`m-role ${role === r.id ? 'active' : ''}`} onClick={() => { setRole(r.id); setError(null); setPassword(''); }}>
-                  <Icon name={r.icon} size={22} />
-                  <span>{t(`common.${r.id}`)}</span>
+                  <span className="m-role-ico"><Icon name={r.icon} size={22} /></span>
+                  <span className="m-role-name">{t(`common.${r.id}`)}</span>
+                  <span className="m-role-sub">{t(r.sub)}</span>
                 </button>
               ))}
             </div>
-            <p style={{ fontSize: 13, color: 'var(--m-ink-faint)', textAlign: 'center', marginTop: 10, marginBottom: 0 }}>
-              {t(role === 'farmer' ? 'auth.farmerTabHint' : 'auth.staffTabHint')}
+            <p className="m-role-hint">
+              <Icon name="info" size={15} />
+              <span>{t(role === 'farmer' ? 'auth.farmerTabHint' : 'auth.staffTabHint')}</span>
             </p>
           </MCard>
 
@@ -204,7 +204,11 @@ export default function Welcome({ registration = false }) {
           )}
 
           {/* ── method segmented control + forms ── */}
-          <MCard plain>
+          <MCard plain className="m-signin-card">
+            <div className="m-card-h m-card-h-split">
+              <span><Icon name="shield" size={18} /> {t('auth.signinMethod')}</span>
+              <span className="m-step-chip">{t('saathi.stepOf', { n: 2, total: 2 })}</span>
+            </div>
             <div className="m-seg" role="group" aria-label={t('auth.signinMethod')}>
               {METHODS.filter((m) => !registration || m.id !== 'password').map((m) => (
                 <button key={m.id} type="button" className={method === m.id ? 'active' : ''} onClick={() => { setMethod(m.id); setError(null); setPassword(''); }}>
@@ -295,31 +299,49 @@ export default function Welcome({ registration = false }) {
             </>
           )}
 
-          {/* ── footer art ── */}
-          <div style={{ textAlign: 'center', margin: '26px 0 8px' }}>
-            <ArtLogo size={40} />
-            <p style={{ fontSize: 13, color: 'var(--m-ink-faint)', marginTop: 8 }}>
-              {t('saathi.madeWith')} · {t('auth.footerNote')}
-            </p>
+          {/* ── help card ── */}
+          <div className="m-help-card">
+            <span className="m-help-ico"><Icon name="phone" size={20} /></span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="m-help-title">{t('saathi.helpTitle')}</div>
+              <p className="m-help-body">{t('saathi.helpBody')}</p>
+              <a className="m-help-call" href="tel:155261">{t('saathi.helpCall')}</a>
+            </div>
+          </div>
+
+          {/* ── trust footer ── */}
+          <div className="m-trust-row" aria-label={t('auth.footerNote')}>
+            <span><Icon name="shield" size={13} /> {t('saathi.trustNic')}</span>
+            <span><Icon name="check" size={13} /> {t('saathi.trustDbt')}</span>
+            <span><Icon name="rupee" size={13} /> {t('saathi.trustMsp')}</span>
+          </div>
+          <div className="m-welcome-foot">
+            <BrandLogo size={34} />
+            <p>{t('saathi.madeWith')} · {t('auth.footerNote')}</p>
           </div>
         </>
       )}
 
       {/* ── Google account picker sheet ── */}
       <Sheet open={googleOpen} onClose={() => setGoogleOpen(false)} title={t('auth.chooseAccount')} sub={t('auth.chooseAccountHint')}>
-        {googleAccounts.map((account) => (
-          <button key={account.sub} type="button" className="m-account-row" onClick={() => googleSignIn(account)} disabled={busy}>
-            <span className="m-avatar">{account.name.trim().charAt(0).toUpperCase()}</span>
-            <span style={{ flex: 1, minWidth: 0 }}>
-              <strong>{account.name}</strong>
-              <small>{account.email}{account.detail ? ` · ${account.detail}` : ''}</small>
-            </span>
-            <Icon name="arrowUpRight" size={18} style={{ color: 'var(--m-ink-faint)' }} />
-          </button>
-        ))}
-        <p className="auth-small-note" style={{ marginTop: 10 }}>
-          <span className="m-mock-tag" style={{ background: 'var(--m-amber-soft)', color: 'var(--m-amber)', padding: '2px 8px', borderRadius: 6, fontWeight: 800, fontSize: 10 }}>{t('auth.mockDataBadge')}</span>
-        </p>
+        <div className="m-gpicker-head">
+          <GoogleG size={22} />
+          <span>{t('auth.googleButton')}</span>
+          <span className="m-mock-tag">{t('auth.mockDataBadge')}</span>
+        </div>
+        <div className="m-gpicker-list">
+          {googleAccounts.map((account, i) => (
+            <button key={account.sub} type="button" className="m-account-row" onClick={() => googleSignIn(account)} disabled={busy}>
+              <span className={`m-avatar m-avatar-${i % 6}`}>{account.name.trim().charAt(0).toUpperCase()}</span>
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <strong>{account.name}</strong>
+                <small className="m-account-mail">{account.email}</small>
+                {account.detail && <small className="m-account-detail">{account.detail}</small>}
+              </span>
+              <Icon name="arrowUpRight" size={18} style={{ color: 'var(--m-ink-faint)', flex: 'none' }} />
+            </button>
+          ))}
+        </div>
       </Sheet>
 
       {/* ── demo accounts sheet ── */}

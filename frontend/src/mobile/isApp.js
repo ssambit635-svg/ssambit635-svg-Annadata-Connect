@@ -1,5 +1,5 @@
 // Which frontend should boot: the website (default in browsers) or the bespoke
-// native app UI ("Annadata Saathi") that ships inside the Android APK.
+// native app UI ("Annadata Connect") that ships inside the Android APK.
 //
 // - Inside the Capacitor shell it is ALWAYS the app UI.
 // - In a normal browser it is the website, but `?app=1` flips a stored preview

@@ -1,7 +1,7 @@
-// Annadata Saathi — the Android app frontend.
+// Annadata Connect — the Android app frontend.
 //
 // A completely separate UI from the website: bottom tab navigation,
-// flat document-style surfaces, monoline emblems, Inter/IBM Plex Mono type.
+// soft layered cards, the brand emblem kit, Plus Jakarta Sans / Inter type.
 // It reuses the same auth, i18n, polling hooks and API services, so the
 // app and website stay feature-identical by construction.
 import { useEffect, useRef, useState } from 'react';
@@ -11,7 +11,11 @@ import { I18nProvider, useI18n } from '../i18n/I18nContext.jsx';
 import { ErrorBoundary } from '../components/ErrorBoundary.jsx';
 import Icon from '../components/Icon.jsx';
 import { answer } from '../assistant/brain.js';
-import { ArtLogo, ArtSun } from './art.jsx';
+import { ArtSun } from './art.jsx';
+import { BrandLogo } from '../components/BrandLogo.jsx';
+import { SplashScreen } from '../components/SplashScreen.jsx';
+import { notificationService } from '../services/api/farmerService.js';
+import { usePoll } from '../hooks/usePoll.js';
 import { MLoader, Sheet, useOffline } from './ui.jsx';
 
 import Welcome from './pages/Welcome.jsx';
@@ -103,10 +107,8 @@ function AppBar() {
   const isHome = location.pathname === home;
   const title = headerTitle(location.pathname, t);
   const avatar = (
-    <Link to="/account" className="m-icon-btn" aria-label={t('nav.more')} style={{ borderRadius: '50%' }}>
-      <span className="m-display" style={{ fontWeight: 800, color: 'var(--m-green-deep)' }}>
-        {(user?.name || '?').trim().charAt(0).toUpperCase()}
-      </span>
+    <Link to="/account" className="m-avatar" aria-label={t('nav.more')}>
+      {(user?.name || '?').trim().charAt(0).toUpperCase()}
     </Link>
   );
   const goBack = () => {
@@ -116,26 +118,45 @@ function AppBar() {
   };
 
   return (
-    <header className="m-appbar">
+    <header className={`m-appbar${isHome ? ' is-home' : ''}`}>
       {isHome ? (
         <>
-          <ArtLogo size={38} />
+          <span className="m-appbar-mark"><BrandLogo size={30} /></span>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div className="m-appbar-title">{t('saathi.name')}</div>
-            <div className="m-appbar-sub">{t('saathi.tagline')}</div>
+            <div className="m-appbar-title">
+              <span className="m-appbar-brand">{t('saathi.brandFirst')} <span className="m-appbar-brand-accent">{t('saathi.brandSecond')}</span></span>
+            </div>
+            <div className="m-appbar-sub">
+              <span className="m-live-pill"><i /> {t('saathi.livePill')}</span>
+              <span className="m-appbar-tag">{title}</span>
+            </div>
           </div>
+          {role === 'farmer' && <NotificationBell />}
           {avatar}
         </>
       ) : (
         <>
           <button type="button" className="m-back" onClick={goBack} aria-label={t('common.back')}>
-            <Icon name="arrowUpRight" size={20} style={{ transform: 'rotate(-135deg)' }} />
+            <Icon name="arrowLeft" size={20} strokeWidth={2.2} />
           </button>
-          <div className="m-appbar-title">{title}</div>
+          <div className="m-appbar-title m-appbar-page-title">{title}</div>
           {avatar}
         </>
       )}
     </header>
+  );
+}
+
+/* Unread-count bell — a glanceable indicator; taps jump to the inbox on Home. */
+function NotificationBell() {
+  const { t } = useI18n();
+  const { data } = usePoll(() => notificationService.list(), { intervalMs: 20000 });
+  const unread = data?.unreadCount || 0;
+  return (
+    <Link to="/farmer#inbox" className="m-bell" aria-label={`${t('farmer.notifications')}${unread ? ` (${unread})` : ''}`}>
+      <Icon name="bell" size={20} strokeWidth={2} />
+      {unread > 0 && <span className="m-bell-dot" aria-hidden="true" />}
+    </Link>
   );
 }
 
@@ -263,6 +284,7 @@ export function MobileApp() {
   return (
     <div className="m-root">
       <I18nProvider>
+        <SplashScreen />
         <AuthProvider>
           <ErrorBoundary>
             <BrowserRouter>

@@ -44,7 +44,7 @@ export default function History() {
           {rows.map((r) => (
             <Link key={r.id} to={`/requests/${r.id}`} style={{ textDecoration: 'none' }}>
               <div className="m-row">
-                <span className="m-row-ico">{r.tokenNumber}</span>
+                <span className="m-row-ico m-row-ico-token">{r.tokenNumber}</span>
                 <div className="m-row-main">
                   <div className="m-row-title">{pick(r.crop, 'name')} · {r.quantityQuintals}{t('common.quintalShort')}</div>
                   <div className="m-row-sub">

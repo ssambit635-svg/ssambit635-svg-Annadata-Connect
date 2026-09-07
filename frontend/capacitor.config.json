@@ -1,6 +1,6 @@
 {
   "appId": "in.annadata.connect",
-  "appName": "Annadata Saathi",
+  "appName": "Annadata Connect",
   "webDir": "dist",
   "bundledWebRuntime": false,
   "android": {
