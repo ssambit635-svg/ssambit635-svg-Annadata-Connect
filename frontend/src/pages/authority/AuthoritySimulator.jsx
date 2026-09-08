@@ -363,7 +363,7 @@ function ActionsCard({ result }) {
 function ComparisonTable({ result }) {
   const { t, pick } = useI18n();
   return (
-    <div className="table-wrap">
+    <div className="table-wrap queue-table">
       <table className="data">
         <thead>
           <tr>
@@ -378,15 +378,17 @@ function ComparisonTable({ result }) {
         <tbody>
           {result.centres.map((c) => (
             <tr key={c.centre.id}>
-              <td>
-                {pick(c.centre, 'name')}
-                <div className="sim-table-pill-row"><LevelPill level={c.simulated.level} />{!c.intake && <StatusBadge status={c.centre.status} />}</div>
+              <td data-label={t('authority.centreCol')}>
+                <div>
+                  {pick(c.centre, 'name')}
+                  <div className="sim-table-pill-row"><LevelPill level={c.simulated.level} />{!c.intake && <StatusBadge status={c.centre.status} />}</div>
+                </div>
               </td>
-              <td className="mono">{c.current.arrivals} <span className="sim-arrow">→</span> {c.simulated.arrivals}</td>
-              <td className="mono">{c.current.queue} <span className="sim-arrow">→</span> {c.intake ? c.simulated.queue : '—'}</td>
-              <td className="mono">{fmtQ(c.current.stockQuintals)} <span className="sim-arrow">→</span> <b className={c.simulated.overloaded ? 'sim-worse' : ''}>{fmtQ(c.simulated.stockQuintals)}</b></td>
-              <td className="mono">{c.current.utilizationPct}% <span className="sim-arrow">→</span> <b className={c.simulated.overloaded ? 'sim-worse' : ''}>{c.simulated.utilizationPct}%</b></td>
-              <td className="mono">{waitText(c.current.waitMinutes, t)} <span className="sim-arrow">→</span> {c.intake ? waitText(c.simulated.waitMinutes, t) : '—'}</td>
+              <td className="mono nowrap" data-label={t('simulator.arrivals')}>{c.current.arrivals} <span className="sim-arrow">→</span> {c.simulated.arrivals}</td>
+              <td className="mono nowrap" data-label={t('simulator.queue')}>{c.current.queue} <span className="sim-arrow">→</span> {c.intake ? c.simulated.queue : '—'}</td>
+              <td className="mono nowrap" data-label={`${t('simulator.storage')} (${t('common.quintalShort')})`}>{fmtQ(c.current.stockQuintals)} <span className="sim-arrow">→</span> <b className={c.simulated.overloaded ? 'sim-worse' : ''}>{fmtQ(c.simulated.stockQuintals)}</b></td>
+              <td className="mono nowrap" data-label={t('simulator.utilization')}>{c.current.utilizationPct}% <span className="sim-arrow">→</span> <b className={c.simulated.overloaded ? 'sim-worse' : ''}>{c.simulated.utilizationPct}%</b></td>
+              <td className="mono nowrap" data-label={t('simulator.wait')}>{waitText(c.current.waitMinutes, t)} <span className="sim-arrow">→</span> {c.intake ? waitText(c.simulated.waitMinutes, t) : '—'}</td>
             </tr>
           ))}
         </tbody>

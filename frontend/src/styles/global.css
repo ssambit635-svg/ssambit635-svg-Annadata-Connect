@@ -47,40 +47,6 @@ input, select, textarea { font: inherit; }
 
 :focus-visible { outline: 3px solid #7fb98f; outline-offset: 2px; border-radius: 4px; }
 
-/* ---------- Layout ---------- */
-.app-header {
-  background: var(--c-primary-dark);
-  color: #fff;
-  min-height: var(--header-h);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0 1rem;
-  flex-wrap: wrap;
-}
-.app-header .brand { display: flex; align-items: baseline; gap: 0.5rem; margin-right: auto; text-decoration: none; color: #fff; }
-.app-header .brand .hi { font-weight: 700; font-size: 1.3rem; }
-.app-header .brand .en { font-size: 0.85rem; opacity: 0.85; letter-spacing: 0.04em; }
-.user-chip { font-size: 0.9rem; opacity: 0.95; }
-
-.app-nav {
-  background: var(--c-primary-darker);
-  display: flex;
-  gap: 0.25rem;
-  padding: 0 0.75rem;
-  overflow-x: auto;
-}
-.app-nav a {
-  color: #d8e8dd;
-  text-decoration: none;
-  padding: 0.65rem 0.9rem;
-  font-size: 0.95rem;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap;
-}
-.app-nav a:hover { color: #fff; background: rgba(255, 255, 255, 0.07); }
-.app-nav a.active { color: #fff; border-bottom-color: #fbbf24; font-weight: 600; }
-
 .page { max-width: 1080px; margin: 0 auto; padding: 1.25rem 1rem 5rem; }
 .page.narrow { max-width: 560px; }
 .page-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
@@ -216,6 +182,7 @@ input, select, textarea { font: inherit; }
 .journey li .at { font-size: 0.8rem; color: var(--c-text-soft); }
 
 /* ---------- Tables ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--c-border); border-radius: var(--radius); }
 table.data { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 560px; }
 table.data th, table.data td { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid #e7ece7; }
@@ -301,18 +268,9 @@ table.data tr:last-child td { border-bottom: none; }
 .steps .step.active { color: var(--c-primary-dark); font-weight: 700; border-top-color: var(--c-primary); }
 .steps .step.done { border-top-color: #7fb98f; color: var(--c-text); }
 
-/* ---------- Auth pages ---------- */
-.auth-layout { min-height: 100%; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
-.auth-card { width: 100%; max-width: 440px; background: #fff; border: 1px solid var(--c-border); border-radius: 12px; box-shadow: var(--shadow); padding: 1.5rem; }
 .auth-card .logo { text-align: center; margin-bottom: 1rem; }
 .auth-card .logo .hi { font-size: 1.7rem; font-weight: 800; color: var(--c-primary-dark); }
 .auth-card .logo .tag { color: var(--c-text-soft); font-size: 0.9rem; }
-.demo-box { background: #f3f8f4; border: 1px dashed #a7c4ae; border-radius: 8px; padding: 0.75rem 0.9rem; margin-top: 1.25rem; font-size: 0.85rem; }
-.demo-box table { width: 100%; border-collapse: collapse; }
-.demo-box td { padding: 0.15rem 0.2rem; }
-.demo-box td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
-.demo-box button { margin-left: 0.4rem; }
-.auth-topbar { max-width: 440px; width: 100%; display: flex; justify-content: flex-end; margin-bottom: 0.5rem; }
 
 @media (max-width: 640px) {
   h1 { font-size: 1.3rem; }
@@ -323,87 +281,12 @@ table.data tr:last-child td { border-bottom: none; }
 
 /* ---------- Public landing page ---------- */
 .landing { min-height: 100vh; background: var(--c-bg); }
-.landing-container { max-width: 1080px; margin: 0 auto; padding: 0 1rem; }
 
-.flag-strip { display: flex; height: 4px; }
-.flag-strip span { flex: 1; }
-.flag-strip span:nth-child(1) { background: #ff9933; }
-.flag-strip span:nth-child(2) { background: #ffffff; }
-.flag-strip span:nth-child(3) { background: #138808; }
-
-.gov-strip {
-  background: var(--c-primary-darker); color: #cfe4d3;
-  font-size: 0.8rem; display: flex; align-items: center; justify-content: space-between;
-  padding: 0.3rem 1rem; gap: 1rem; flex-wrap: wrap;
-}
 .lang-toggle { display: inline-flex; border: 1px solid rgba(255,255,255,0.35); border-radius: 6px; overflow: hidden; }
 .lang-toggle button { background: transparent; color: #cfe4d3; border: 0; padding: 0.15rem 0.65rem; font-size: 0.78rem; }
 .lang-toggle button.active, .lang-toggle button:hover { background: #ffffff; color: var(--c-primary-darker); }
 
-.landing-header { background: var(--c-primary-dark); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 20; }
-.landing-header-in { display: flex; align-items: center; gap: 1.25rem; padding: 0.65rem 1rem; flex-wrap: wrap; }
-.landing-brand { display: flex; align-items: center; gap: 0.6rem; color: #fff; text-decoration: none; }
-.landing-brand-icon { font-size: 1.6rem; background: #fff; border-radius: 50%; width: 44px; height: 44px; display: grid; place-items: center; }
-.landing-brand strong { display: block; font-size: 1.15rem; }
-.landing-brand small { display: block; color: #cfe4d3; font-size: 0.75rem; }
-.landing-nav { display: flex; gap: 1.1rem; flex: 1; justify-content: center; flex-wrap: wrap; }
-.landing-nav a { color: #eaf3ec; text-decoration: none; font-size: 0.92rem; font-weight: 500; }
-.landing-nav a:hover { color: #fff; text-decoration: underline; }
-.landing-header-cta { display: flex; gap: 0.5rem; align-items: center; }
-
-.btn-login { background: #fbbf24; color: #3a2d02; border: 1px solid #d99f0b; border-radius: var(--radius); padding: 0.45rem 1rem; font-weight: 700; text-decoration: none; display: inline-block; }
-.btn-login:hover { background: #f5b70f; }
-.btn-xl { font-size: 1.05rem; padding: 0.7rem 1.4rem; }
-.btn.light { color: #fff; border: 1px solid rgba(255,255,255,0.55); background: transparent; }
-.btn.light:hover { background: rgba(255,255,255,0.12); }
-.btn-outline.light-outline { color: #fff; border-color: rgba(255,255,255,0.7); }
-.btn-outline.light-outline:hover { background: rgba(255,255,255,0.12); }
-
-.ticker { background: var(--c-warning-bg); border-bottom: 1px solid #e9d9ae; overflow: hidden; }
-.ticker-track { display: inline-flex; white-space: nowrap; padding: 0.4rem 0; font-size: 0.85rem; color: #6b4d09; animation: ticker-scroll 38s linear infinite; }
-@keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-.hero { background: linear-gradient(140deg, var(--c-primary-darker) 0%, var(--c-primary-dark) 45%, var(--c-primary) 100%); color: #fff; padding: 3rem 0 2.75rem; }
-.hero-in { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: center; }
-.hero-kicker { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem; color: #ffd97a; font-weight: 700; margin-bottom: 0.4rem; }
-.hero h1 { font-size: 2.1rem; margin-bottom: 0.6rem; }
-.hero-sub { color: #dcebdd; font-size: 1.02rem; max-width: 34rem; }
-.hero-cta { display: flex; gap: 0.7rem; margin: 1.2rem 0 0.9rem; flex-wrap: wrap; }
-.hero-note { color: #bcd9c2; font-size: 0.88rem; margin: 0; }
-.hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
-.hero-stat { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); border-radius: 10px; padding: 1rem; text-align: center; }
-.hero-stat strong { display: block; font-size: 1.5rem; color: #ffd97a; }
-.hero-stat span { font-size: 0.85rem; color: #dcebdd; }
-
-.landing-section { padding: 2.75rem 0; }
-.landing-section.alt { background: #fff; border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border); }
-.section-title { font-size: 1.45rem; color: var(--c-primary-dark); }
-.section-sub { color: var(--c-text-soft); margin-bottom: 1.4rem; }
 .fine-print { font-size: 0.8rem; color: var(--c-text-soft); margin-top: 0.6rem; }
-
-/* These legacy pre-redesign landing classes (.feature-grid, .centre-grid,
-   .msp-table, .step-num, the grid-card .steps/.step) are no longer used by the
-   current .landing-v2 homepage (which uses home-* classes). They were removed
-   because the unscoped .steps/.step grid rules here were overriding the
-   light flex stepper used by the New Request wizard (NewRequestPage), turning
-   it into boxy cards. The wizard's own .steps/.step flex rules earlier in
-   this file are now the only definition. */
-
-.landing-footer { background: var(--c-primary-darker); color: #cfe4d3; }
-.footer-in { display: flex; justify-content: space-between; gap: 1.5rem; padding: 1.6rem 1rem 1rem; flex-wrap: wrap; }
-.footer-in strong { color: #fff; }
-.footer-in p { margin: 0.3rem 0 0; font-size: 0.88rem; max-width: 26rem; }
-.footer-links { display: flex; gap: 1.2rem; align-items: flex-start; flex-wrap: wrap; }
-.footer-links a { color: #eaf3ec; text-decoration: none; font-size: 0.9rem; }
-.footer-links a:hover { text-decoration: underline; }
-.footer-base { border-top: 1px solid rgba(255,255,255,0.15); padding: 0.7rem 1rem; text-align: center; font-size: 0.82rem; }
-
-@media (max-width: 800px) {
-  .hero-in { grid-template-columns: 1fr; }
-  .hero h1 { font-size: 1.6rem; }
-  .landing-nav { order: 3; width: 100%; justify-content: flex-start; }
-  .hero-stats { grid-template-columns: 1fr 1fr; }
-}
 
 /* ================= UI POLISH (UX / government-portal refinement) =================
    Same color palette; better typography, spacing, elevation and interactions. */
@@ -442,7 +325,7 @@ h1 .icon, h2 .icon { vertical-align: -0.12em; margin-right: 0.35rem; color: var(
 
 /* ---------- Motion base ---------- */
 a, button { transition-duration: 0.16s; }
-.btn, .stat, .alt-row, .badge, table.data tr, .queue-row { transition: all 0.16s var(--ease); }
+.btn, .stat, .alt-row, .badge, table.data tr { transition: all 0.16s var(--ease); }
 
 /* ---------- Buttons ---------- */
 .btn { letter-spacing: 0.01em; box-shadow: none; will-change: transform; }
@@ -451,8 +334,6 @@ a, button { transition-duration: 0.16s; }
 .btn-primary:hover:not(:disabled) { background: var(--c-primary-dark); }
 .btn-outline:hover:not(:disabled) { background: var(--c-success-bg); border-color: var(--c-primary); }
 .btn:focus-visible { box-shadow: var(--ring); outline: none; }
-.btn-login { box-shadow: 0 2px 6px rgba(58, 45, 2, 0.25); }
-.btn-login:hover { background: #f5b70f; box-shadow: 0 6px 14px rgba(58, 45, 2, 0.28); transform: translateY(-1px); }
 
 /* ---------- Elevation & cards ---------- */
 .card { border-radius: 12px; padding: 1.2rem 1.35rem; box-shadow: var(--shadow-sm); border-color: #dfe6df; }
@@ -486,109 +367,15 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .alert-list li { border-radius: 8px; align-items: center; }
 .alert-list li .icon { align-self: center; }
 
-/* ---------- Header / nav ---------- */
-.app-header { box-shadow: 0 1px 0 rgba(0,0,0,0.12), 0 1px 8px rgba(16,40,27,0.18); }
-.app-header .brand { transition: opacity 0.15s; }
-.app-header .brand:hover { opacity: 0.92; }
-.nav-link { border-radius: 6px; padding: 0.35rem 0.6rem; }
-.nav-link:hover { background: rgba(255,255,255,0.1); }
-.nav-link.active { background: rgba(255,255,255,0.16); }
-
 /* ---------- Assistant ---------- */
 .assistant-fab { gap: 0.45rem; box-shadow: var(--shadow-lg); }
 .assistant-fab:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); }
 .assistant-panel { box-shadow: var(--shadow-xl); border-radius: 14px; }
 .assistant-head .icon { color: var(--c-primary-dark); }
 
-/* ---------- Landing: polish ---------- */
-.gov-strip { letter-spacing: 0.02em; }
-.landing-header { box-shadow: 0 2px 10px rgba(16, 40, 27, 0.22); }
-.landing-brand-icon { display: grid; place-items: center; color: var(--c-primary-dark); }
-.landing-nav a { position: relative; padding: 0.2rem 0; }
-.landing-nav a::after { content: ''; position: absolute; left: 0; bottom: -3px; height: 2px; width: 0; background: #ffd97a; transition: width 0.2s var(--ease); }
-.landing-nav a:hover::after { width: 100%; }
-.ticker { display: flex; align-items: stretch; }
-.ticker-label { display: inline-flex; align-items: center; padding: 0 0.7rem; background: rgba(146, 96, 10, 0.12); color: var(--c-warning); flex-shrink: 0; }
-.ticker-track { flex: 1; display: inline-flex; align-items: center; }
-.hero { border-bottom: 4px solid rgba(255, 217, 122, 0.35); }
-.hero-stat { transition: transform 0.18s var(--ease), background 0.18s var(--ease); }
-.hero-stat:hover { transform: translateY(-3px); background: rgba(255,255,255,0.16); }
-.hero-note .icon { vertical-align: -0.15em; margin-right: 0.15rem; }
-
-/* The old pre-redesign landing polish below (.feature-card, .feature-icon,
-   .step, .step-num, .centre-tile, .centre-ico, .msp-table, .assist-banner)
-   was dead code that leaked onto the New Request wizard's .step elements
-   (adding hover transforms/box-shadows) — removed. The current homepage is
-   scoped to .landing-v2 / .home-* classes. */
-.footer-links a { opacity: 0.9; }
-.footer-links a:hover { opacity: 1; }
-.footer-base .icon { vertical-align: -0.12em; }
-
 /* ---------- Token & journey ---------- */
 .token-card { border-radius: 12px; }
 .journey .node { display: inline-grid; place-items: center; }
-
-/* ---------- Footer (NeGD/UX4G-inspired) ---------- */
-.footer-support { position: relative; overflow: hidden; padding: 3.4rem 0 3.2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
-.footer-watermark {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -52%);
-  font-size: clamp(8rem, 22vw, 17rem); font-weight: 800; letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.045); line-height: 1; user-select: none; pointer-events: none; white-space: nowrap;
-}
-.footer-support-in { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-.footer-support-copy h2 { color: #fff; font-size: 2.15rem; margin: 0 0 0.35rem; letter-spacing: -0.015em; }
-.footer-support-copy p { color: #cfe4d3; margin: 0; font-size: 1.02rem; }
-.footer-cta {
-  display: inline-flex; align-items: center; gap: 0.55rem;
-  border: 1.5px solid rgba(255, 255, 255, 0.75); color: #fff; text-decoration: none;
-  border-radius: 999px; padding: 0.65rem 1.35rem; font-weight: 700; font-size: 0.98rem;
-  transition: background 0.18s var(--ease), color 0.18s var(--ease), border-color 0.18s var(--ease), transform 0.18s var(--ease);
-}
-.footer-cta:hover { background: #fbbf24; border-color: #fbbf24; color: #3a2d02; transform: translateY(-2px); }
-
-.footer-cols { display: grid; grid-template-columns: repeat(3, 1fr) 1.5fr; gap: 2rem; padding: 2.6rem 1rem 2.2rem; }
-.footer-col h4 {
-  color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em;
-  margin: 0 0 0.9rem; padding-bottom: 0.6rem; border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-}
-.footer-col a {
-  display: block; color: #cfe4d3; text-decoration: none; padding: 0.3rem 0; font-size: 0.92rem;
-  transition: color 0.16s var(--ease), transform 0.16s var(--ease);
-}
-.footer-col a:hover { color: #fff; transform: translateX(4px); }
-
-.footer-org .org-brand { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.9rem; }
-.org-mark { width: 46px; height: 46px; border-radius: 50%; background: #fbbf24; color: #3a2d02; display: grid; place-items: center; flex-shrink: 0; }
-.org-brand strong { color: #fff; font-size: 1.05rem; display: block; }
-.org-brand small { color: #9dbfa6; font-size: 0.76rem; display: block; }
-.org-addr { color: #9dbfa6; font-size: 0.85rem; line-height: 1.55; margin: 0 0 0.9rem; }
-.org-powered { color: #9dbfa6; font-size: 0.82rem; margin: 0 0 1rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.org-pill { border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; padding: 0.14rem 0.6rem; font-weight: 600; color: #eaf3ec; }
-.org-icons { display: flex; gap: 0.55rem; }
-.org-icons a {
-  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.35); color: #cfe4d3;
-  transition: background 0.17s var(--ease), color 0.17s var(--ease), border-color 0.17s var(--ease), transform 0.17s var(--ease);
-}
-.org-icons a:hover { background: #fbbf24; border-color: #fbbf24; color: #3a2d02; transform: translateY(-2px); }
-
-.footer-base { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; }
-
-/* Back-to-top (landing only) */
-.to-top {
-  position: fixed; left: 1rem; bottom: 1rem; z-index: 45;
-  width: 46px; height: 46px; border-radius: 50%; border: 0;
-  background: var(--c-primary); color: #fff; display: grid; place-items: center;
-  box-shadow: var(--shadow-lg); cursor: pointer;
-  transition: background 0.16s var(--ease), transform 0.16s var(--ease), box-shadow 0.16s var(--ease);
-}
-.to-top:hover { background: var(--c-primary-dark); transform: translateY(-3px); box-shadow: var(--shadow-xl); }
-
-@media (max-width: 800px) {
-  .footer-cols { grid-template-columns: 1fr 1fr; gap: 1.6rem; }
-  .footer-support-in { align-items: flex-start; flex-direction: column; }
-  .footer-support-copy h2 { font-size: 1.7rem; }
-}
 
 /* ---------- Farmer ID Card ---------- */
 .idcard-page { max-width: 760px; margin: 0 auto; }
@@ -639,8 +426,8 @@ table.data tbody tr:hover { background: #f4f8f5; }
 
 /* Print: show only the card */
 @media print {
-  .app-header, .app-nav, .assistant-fab, .assistant-panel, .to-top, .no-print,
-  .bottom-tabs, .more-sheet, .sheet-scrim, .user-menu-pop { display: none !important; }
+  .assistant-fab, .assistant-panel, .to-top, .no-print,
+  .more-sheet, .sheet-scrim, .portal-side, .portal-topbar, .portal-bottom { display: none !important; }
   body { background: #fff; }
   .page, .idcard-page { max-width: none; padding: 0; margin: 0; }
   .idcard-sheet { overflow: visible; padding: 0; }
@@ -1144,84 +931,9 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .price-benchmark { border-left: 4px solid var(--c-primary); }
 .price-benchmark .verdict { display: inline-flex; align-items: center; gap: 0.3rem; }
 
-/* ============================================================================
-   APP SHELL — brand mark, account menu, mobile bottom tab bar (UX overhaul)
-   ============================================================================ */
-
-/* Persistent logo mark so the brand is visible on every portal page. */
-.app-header .brand { gap: 0.6rem; }
-.brand-mark {
-  width: 40px; height: 40px; flex-shrink: 0; border-radius: 11px;
-  background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #14532d;
-  display: grid; place-items: center;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 2px 6px rgba(0, 0, 0, 0.28);
-}
-.brand-text { display: flex; flex-direction: column; line-height: 1.12; min-width: 0; }
-.app-header .brand .hi { font-size: 1.06rem; font-weight: 800; letter-spacing: 0; }
-.app-header .brand .en { font-size: 0.64rem; opacity: 0.78; letter-spacing: 0.09em; text-transform: uppercase; }
-
-.header-tools { display: flex; align-items: center; gap: 0.75rem; margin-left: auto; min-width: 0; }
-.header-desktop-only { display: flex; align-items: center; gap: 0.75rem; }
-
-/* ---------- Account menu (replaces the flat chip + logout button) ---------- */
-.user-menu { position: relative; }
-.user-menu-btn {
-  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 42px;
-  background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff; border-radius: 999px; padding: 0.3rem 0.75rem 0.3rem 0.32rem;
-  cursor: pointer; transition: background 0.15s var(--ease), border-color 0.15s var(--ease);
-}
-.user-menu-btn:hover { background: rgba(255, 255, 255, 0.18); }
-.user-avatar {
-  width: 31px; height: 31px; border-radius: 50%; flex-shrink: 0;
-  background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #14532d;
-  display: grid; place-items: center; font-weight: 800; font-size: 0.95rem;
-}
-.user-menu-name { font-weight: 600; font-size: 0.9rem; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.user-menu-caret { opacity: 0.85; transition: transform 0.18s var(--ease); flex-shrink: 0; }
-.user-menu-caret.is-open { transform: rotate(180deg); }
-
-.user-menu-pop {
-  position: absolute; right: 0; top: calc(100% + 10px); z-index: 80;
-  width: min(280px, calc(100vw - 1.5rem)); background: #fff; color: var(--c-text);
-  border: 1px solid var(--c-border); border-radius: 14px; box-shadow: var(--shadow-xl);
-  padding: 0.9rem; display: grid; gap: 0.75rem; animation: menu-pop 0.16s var(--ease);
-}
-@keyframes menu-pop { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
-.user-menu-id { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; font-size: 0.98rem; }
-.user-menu-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
-.user-menu-row-label { font-size: 0.82rem; color: var(--c-text-soft); font-weight: 600; }
-.user-menu-logout { width: 100%; }
-
 .lang-toggle.on-light { border-color: #b9c4ba; }
 .lang-toggle.on-light button { color: var(--c-text-soft); }
 .lang-toggle.on-light button.active { background: var(--c-primary); color: #fff; }
-
-/* ---------- Mobile bottom tab bar ---------- */
-.bottom-tabs {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
-  display: none; grid-template-columns: repeat(auto-fit, 1fr);
-  background: rgba(255, 255, 255, 0.97); backdrop-filter: blur(10px);
-  border-top: 1px solid var(--c-border);
-  padding: 0.3rem 0.35rem calc(0.45rem + env(safe-area-inset-bottom));
-  box-shadow: 0 -8px 24px rgba(16, 40, 27, 0.1);
-}
-.bottom-tabs .tab {
-  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 0.18rem; min-height: 54px; padding: 0.4rem 0.15rem 0.35rem;
-  background: none; border: 0; border-radius: 10px; cursor: pointer;
-  color: var(--c-text-soft); font-size: 0.64rem; font-weight: 700; line-height: 1.15;
-  text-decoration: none; letter-spacing: 0.01em;
-  transition: color 0.15s var(--ease), background 0.15s var(--ease);
-  -webkit-tap-highlight-color: transparent;
-}
-.bottom-tabs .tab:hover { color: var(--c-primary-dark); background: var(--c-success-bg); }
-.bottom-tabs .tab.active { color: var(--c-primary-dark); }
-.bottom-tabs .tab.active::before {
-  content: ''; position: absolute; top: 0; left: 22%; right: 22%; height: 3px;
-  border-radius: 0 0 4px 4px; background: #fbbf24;
-}
-.bottom-tabs .tab .icon { width: 22px; height: 22px; }
 
 /* ---------- "More" bottom sheet ---------- */
 .sheet-scrim { position: fixed; inset: 0; z-index: 85; background: rgba(8, 24, 16, 0.48); animation: scrim-in 0.18s ease; }
@@ -1251,32 +963,18 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .more-sheet-close { margin-top: 0.8rem; width: 100%; }
 
 @media (prefers-reduced-motion: reduce) {
-  .more-sheet, .sheet-scrim, .user-menu-pop { animation: none; }
+  .more-sheet, .sheet-scrim { animation: none; }
   .more-sheet { transform: translateX(-50%); }
 }
 
 /* ---------- Mobile shell layout ---------- */
 @media (max-width: 860px) {
-  .app-header { padding: 0.55rem 0.8rem; }
-  .app-header .brand .hi { font-size: 1rem; }
-  .app-nav { display: none; }
-  .header-desktop-only { display: none; }
-  .user-menu-name { display: none; }
-  .user-menu-btn { padding: 0.26rem 0.6rem 0.26rem 0.26rem; min-height: 38px; }
-  .bottom-tabs { display: grid; }
   .page { padding: 1rem 0.8rem calc(7.4rem + env(safe-area-inset-bottom)); }
   .assistant-fab { bottom: calc(4.7rem + env(safe-area-inset-bottom)); right: 0.8rem; }
   /* Full-screen chat sheet on mobile — sits above the bottom tab bar. */
   .assistant-panel {
     inset: 0; width: 100%; max-height: 100dvh; border-radius: 0; border: 0; z-index: 95;
   }
-}
-
-@media (max-width: 400px) {
-  .app-header .brand .en { display: none; }
-  .app-header .brand { gap: 0.5rem; }
-  .brand-mark { width: 37px; height: 37px; border-radius: 10px; }
-  .bottom-tabs .tab { font-size: 0.6rem; }
 }
 
 /* ---------- Dashboard de-cluttering ---------- */
@@ -1306,11 +1004,6 @@ table.data tbody tr:hover { background: #f4f8f5; }
 
 /* Auth pages: brand mark above wordmark */
 .auth-card .logo { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
-.auth-logo-mark {
-  width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center;
-  background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #14532d;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 4px 10px rgba(184, 130, 18, 0.3);
-}
 
 /* ---------- Branded loading / error states ---------- */
 .state.splash { padding: 3.5rem 1rem 2rem; }

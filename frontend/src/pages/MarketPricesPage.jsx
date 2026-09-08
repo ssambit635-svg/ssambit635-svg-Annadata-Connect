@@ -193,8 +193,8 @@ export default function MarketPricesPage() {
     <>
       <div className="page-head">
         <div>
-          <h1 style={{ marginBottom: '0.15rem' }}>{t('prices.title')}</h1>
-          <p style={{ margin: 0, color: 'var(--c-text-soft)', fontSize: '0.92rem' }}>{t('prices.subtitle')}</p>
+          <h1>{t('prices.title')}</h1>
+          <p className="page-sub">{t('prices.subtitle')}</p>
         </div>
         <span className="badge info">
           <Icon name="chart" size={14} /> {t('prices.realData')}

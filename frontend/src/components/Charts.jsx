@@ -11,8 +11,8 @@ const RED = '#b42318';
 const BLUE = '#1d4ed8';
 const CLAY = '#e0784f';
 const LINE = '#e5e9dd';
-const INK_SOFT = '#5b6b5f';
-const INK_FAINT = '#8a978c';
+const INK_SOFT = '#52635a';
+const INK_FAINT = '#6b7a70';
 
 const PALETTE = [GREEN, GOLD, BLUE, CLAY, AMBER, '#7c5cbf', RED];
 
@@ -183,18 +183,19 @@ export function PipelineFlow({ stages, ariaLabel }) {
   const toneColor = { green: GREEN, gold: GOLD, blue: BLUE, red: RED, slate: INK_FAINT } ;
   const max = Math.max(...stages.map((s) => s.count), 1);
   return (
-    <div role="img" aria-label={ariaLabel || 'Procurement pipeline'} style={{ display: 'flex', alignItems: 'stretch', gap: 8, flexWrap: 'wrap' }}>
+    <div role="img" aria-label={ariaLabel || 'Procurement pipeline'} className="pipeline-flow">
       {stages.map((s, i) => (
-        <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 130px' }}>
+        <div key={s.key} className="pipeline-stage">
           <div
+            className="pipeline-stage-box"
             style={{
               flex: 1,
+              minWidth: 0,
               background: 'var(--m-paper)',
               border: '1.5px solid var(--m-line)',
               borderRadius: 14,
               padding: '12px 12px 10px',
               borderTop: `4px solid ${toneColor[s.tone] || GREEN}`,
-              minWidth: 120,
             }}
           >
             <div style={{ fontSize: 24, fontWeight: 800, color: toneColor[s.tone] || GREEN, fontVariantNumeric: 'tabular-nums' }}>{s.count}</div>
@@ -204,7 +205,7 @@ export function PipelineFlow({ stages, ariaLabel }) {
             </div>
           </div>
           {i < stages.length - 1 && (
-            <svg width="18" height="18" viewBox="0 0 18 18" style={{ flexShrink: 0, color: 'var(--m-ink-faint)' }} aria-hidden="true">
+            <svg className="pipeline-arrow" width="18" height="18" viewBox="0 0 18 18" style={{ flexShrink: 0, color: 'var(--m-ink-faint)' }} aria-hidden="true">
               <path d="M4 9h9m-3-3.5L14.5 9 10 12.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           )}

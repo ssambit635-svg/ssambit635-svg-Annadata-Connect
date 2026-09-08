@@ -102,7 +102,7 @@ export const orTranslations = {
     queue: 'ଧାଡ଼ି', requests: 'ଅନୁରୋଧ', assisted: 'ସହାୟକ ପ୍ରବିଷ୍ଟି', overview: 'ଜିଲ୍ଲା ସାରାଂଶ', logout: 'ଲଗ୍ ଆଉଟ୍',
     history: 'ମୋ ରେକର୍ଡ', idCard: 'ପରିଚୟ ପତ୍ର', marketPrices: 'ମଣ୍ଡି ଦର', centres: 'କେନ୍ଦ୍ର',
     simulator: 'ସିମୁଲେଟର', monitor: 'ରାଜ୍ୟ ମନିଟର',
-    more: 'ଅଧିକ', accountMenu: 'ଖାତା ମେନୁ',
+    more: 'ଅଧିକ', accountMenu: 'ଖାତା ମେନୁ', account: 'ଖାତା ଓ ସାଇନ୍-ଇନ୍',
   },
   idCard: {
     title: 'ମୋ ଚାଷୀ ପରିଚୟ ପତ୍ର', cardLabel: 'ଚାଷୀ ପରିଚୟ ପତ୍ର', print: 'ପ୍ରିଣ୍ଟ / PDF ସେଭ୍ କରନ୍ତୁ',
@@ -117,7 +117,7 @@ export const orTranslations = {
     loading: 'ଲୋଡ୍ ହେଉଛି…', retry: 'ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ', refresh: 'ରିଫ୍ରେସ୍', save: 'ସେଭ୍ କରନ୍ତୁ', cancel: 'ବାତିଲ୍ କରନ୍ତୁ',
     confirm: 'ନିଶ୍ଚିତ କରନ୍ତୁ', back: 'ପଛକୁ', next: 'ଆଗକୁ ବଢ଼ନ୍ତୁ', submit: 'ଅନୁରୋଧ ପଠାନ୍ତୁ', close: 'ବନ୍ଦ କରନ୍ତୁ',
     quintal: 'କ୍ୱିଣ୍ଟାଲ', quintalShort: 'କ୍ୱି', km: 'କି.ମି.', min: 'ମିନିଟ୍', minutes: 'ମିନିଟ୍',
-    yes: 'ହଁ', no: 'ନା', all: 'ସବୁ', today: 'ଆଜି', viewAll: 'ସବୁ ଦେଖନ୍ତୁ', view: 'ଦେଖନ୍ତୁ',
+    yes: 'ହଁ', no: 'ନା', all: 'ସବୁ', today: 'ଆଜି', date: 'ତାରିଖ', viewAll: 'ସବୁ ଦେଖନ୍ତୁ', view: 'ଦେଖନ୍ତୁ',
     empty: 'ଏଠାରେ କିଛି ନାହିଁ', errorGeneric: 'କିଛି ଭୁଲ ହେଲା। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।',
     errorNetwork: 'ସର୍ଭର ସହ ଯୋଗାଯୋଗ ହୋଇପାରୁନାହିଁ। ସଂଯୋଗ ଯାଞ୍ଚ କରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।',
     offlineHint: 'ସାର୍ବଜନୀନ ପୃଷ୍ଠା କାମ କରୁଛି — ପୋର୍ଟାଲ୍ ପୃଷ୍ଠା ପାଇଁ ସର୍ଭର ସଂଯୋଗ ଦରକାର।',

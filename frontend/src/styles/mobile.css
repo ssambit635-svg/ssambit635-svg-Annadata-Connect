@@ -20,8 +20,8 @@
   --m-gold-deep: #a97f1c;
   --m-gold-soft: #f6efdd;
   --m-ink: #17281d;
-  --m-ink-soft: #5b6b5f;
-  --m-ink-faint: #8a978c;
+  --m-ink-soft: #52635a;
+  --m-ink-faint: #6b7a70;
   --m-line: #e5e9dd;
   --m-red: #b42318;
   --m-red-soft: #fdeceb;
@@ -127,7 +127,6 @@
 }
 
 .m-page-title { font-size: 25px; font-weight: 650; letter-spacing: -0.01em; }
-.m-page-sub { color: var(--m-ink-soft); font-size: 14.5px; margin-top: 2px; }
 
 /* ── Bottom tab bar ────────────────────────────────────────────── */
 
@@ -223,13 +222,6 @@
 .m-card.gold { background: var(--m-gold-soft); border-color: #f3e3ac; }
 .m-card.green { background: linear-gradient(150deg, var(--m-green-deep), var(--m-green-forest)); border-color: var(--m-green-forest); color: var(--m-cream); }
 .m-card.green h2, .m-card.green h3, .m-card.green .m-card-h { color: var(--m-cream); }
-
-/* dotted folk divider inside cards */
-.m-dots-line {
-  border: none;
-  border-top: 2.5px dotted #d8e2d4;
-  margin: 12px 0;
-}
 
 /* ── Buttons ───────────────────────────────────────────────────── */
 
@@ -387,19 +379,6 @@
 
 .m-select { appearance: none; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2314532d' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 46px; }
 
-.m-phone-field { display: flex; }
-.m-phone-field .m-prefix {
-  flex: none;
-  display: grid; place-items: center;
-  min-width: 58px;
-  border: 2px solid var(--m-line);
-  border-right: none;
-  border-radius: var(--m-r-md) 0 0 var(--m-r-md);
-  background: var(--m-leaf);
-  font-weight: 700;
-  color: var(--m-green-deep);
-  font-size: 16px;
-}
 .m-phone-field .m-input { border-radius: 0 var(--m-r-md) var(--m-r-md) 0; }
 
 /* password show/hide */
@@ -864,9 +843,6 @@
 .m-account-row strong { display: block; font-size: 15px; color: var(--m-ink); }
 .m-account-row small { color: var(--m-ink-faint); font-size: 12.5px; }
 
-/* demo chips */
-.m-demo-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-
 /* language pills */
 .m-lang-row { display: flex; gap: 8px; justify-content: center; }
 .m-lang-pill {
@@ -967,23 +943,6 @@
 .m-section-h .m-section-title { font-family: var(--m-f-display); font-weight: 650; font-size: 18.5px; color: var(--m-green-forest); }
 .m-section-h .m-section-hint { margin-left: auto; font-size: 12.5px; font-weight: 700; color: var(--m-green); white-space: nowrap; }
 
-/* stamp badge (govt seal feel) */
-.m-stamp {
-  display: grid; place-items: center;
-  width: 74px; height: 74px;
-  border-radius: 50%;
-  border: 2.5px dashed var(--m-green);
-  color: var(--m-green);
-  font-family: var(--m-f-display);
-  font-weight: 650;
-  font-size: 11px;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  transform: rotate(-8deg);
-  opacity: 0.85;
-}
-
 /* preview banner (browser preview only) */
 .m-preview-banner {
   position: sticky;
@@ -1033,9 +992,6 @@
   to { background-position: 280% 0; }
 }
 
-/* Motion policy: entrances and state changes only — nothing loops
-   decoratively. Loops are reserved for genuine "live data" affordances. */
-.m-anim-bob { animation: m-reveal 0.45s var(--m-ease) both; }
 .m-anim-sway { animation: m-spin 1s linear infinite; transform-origin: center; }
 .m-anim-pop { animation: m-pop 0.28s var(--m-ease) both; }
 

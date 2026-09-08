@@ -197,7 +197,7 @@ export default function NewRequestPage() {
               </div>
               <div className="cell">
                 <div className="k">{t('farmer.centre')}</div>
-                <div className="v" style={{ fontSize: '0.95rem' }}>{pick(result.request.centre, 'name')}</div>
+                <div className="v v-text">{pick(result.request.centre, 'name')}</div>
               </div>
             </div>
           </div>

@@ -425,7 +425,7 @@ function ResultStage({ result, crop, t, pick, lang, onReset }) {
             </div>
             <div className="cell">
               <div className="k">{t('farmer.centre')}</div>
-              <div className="v" style={{ fontSize: '0.95rem' }}>{pick(item.centre, 'name')}</div>
+              <div className="v v-text">{pick(item.centre, 'name')}</div>
             </div>
           </div>
         </div>
@@ -440,10 +440,10 @@ function ResultStage({ result, crop, t, pick, lang, onReset }) {
             </div>
             <div className="cell">
               <div className="k">{t('farmer.centre')}</div>
-              <div className="v" style={{ fontSize: '0.9rem' }}>{pick(item.buyer, 'name')}</div>
+              <div className="v v-text">{pick(item.buyer, 'name')}</div>
             </div>
           </div>
-          <p style={{ margin: '0.5rem 0 0', color: 'var(--c-text-soft)', fontSize: '0.9rem' }}>
+          <p className="token-centre">
             {pick(item.buyer, 'settlement')}
           </p>
         </div>

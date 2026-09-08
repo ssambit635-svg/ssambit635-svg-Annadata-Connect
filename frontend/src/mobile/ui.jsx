@@ -152,7 +152,7 @@ export function MOption({ selected, onSelect, disabled, title, sub, chips, child
 export function SectionH({ title, hint, art }) {
   return (
     <div className="m-section-h">
-      {art}
+      {art && <span className="m-section-art">{art}</span>}
       <span className="m-section-title">{title}</span>
       {hint && <span className="m-section-hint">{hint}</span>}
     </div>

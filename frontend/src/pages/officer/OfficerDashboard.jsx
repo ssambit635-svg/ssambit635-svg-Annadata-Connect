@@ -79,13 +79,13 @@ export default function OfficerDashboard() {
     <>
       <div className="page-head">
         <div>
-          <h1 style={{ marginBottom: 0 }}>{t('officer.dashboard')}</h1>
-          <p style={{ margin: 0, color: 'var(--c-text-soft)' }}>{pick(centre, 'name')} · {centre.operatingHours}</p>
+          <h1>{t('officer.dashboard')}</h1>
+          <p className="page-sub">{pick(centre, 'name')} · {centre.operatingHours}</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="page-head-actions">
           <StatusBadge status={centre.status} />
-          <button className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}><Icon name="refresh" size={14} /> {t('common.refresh')}</button>
-          <button className="btn btn-danger btn-sm" onClick={toggleCentre} disabled={busy}>
+          <button type="button" className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}><Icon name="refresh" size={14} /> {t('common.refresh')}</button>
+          <button type="button" className={`btn btn-sm ${centre.status === 'OPEN' ? 'btn-danger' : 'btn-primary'}`} onClick={toggleCentre} disabled={busy}>
             {centre.status === 'OPEN' ? (<><Icon name="ban" size={15} /> {t('officer.pauseIntake')}</>) : (<><Icon name="check" size={15} /> {t('officer.resumeIntake')}</>)}
           </button>
         </div>
@@ -93,7 +93,7 @@ export default function OfficerDashboard() {
 
       {centre.status !== 'OPEN' && <div className="form-banner error">{t('officer.intakePaused')}</div>}
 
-      <div className="grid stats" style={{ marginBottom: '1rem' }}>
+      <div className="grid stats">
         <div className="stat"><div className="num">{stats.farmersToday}</div><div className="lbl">{t('officer.farmersToday')}</div></div>
         <div className="stat warn"><div className="num">{stats.waiting}</div><div className="lbl">{t('officer.waiting')}</div></div>
         <div className="stat info"><div className="num">{stats.called + stats.processing}</div><div className="lbl">{t('officer.processing')}</div></div>
@@ -105,17 +105,17 @@ export default function OfficerDashboard() {
       <div className="grid two">
         <div>
           <div className="card">
-            <h2 style={{ marginTop: 0 }}>{t('officer.storage')}</h2>
+            <h2>{t('officer.storage')}</h2>
             <div className={`bar ${barCls}`}><span style={{ width: `${stats.capacityPct}%` }} /></div>
-            <p style={{ margin: '0.5rem 0 0', color: 'var(--c-text-soft)' }}>
+            <p className="card-note">
               {centre.currentStockQuintals} / {centre.capacityQuintals} {t('officer.stockOf')}
             </p>
           </div>
 
           <div className="card">
-            <h2 style={{ marginTop: 0 }}>{t('officer.alerts')}</h2>
+            <h2>{t('officer.alerts')}</h2>
             {alerts.length === 0 ? (
-              <p style={{ margin: 0, color: 'var(--c-text-soft)' }}><Icon name="checkCircle" size={16} /> {t('officer.noAlerts')}</p>
+              <p className="card-note ok"><Icon name="checkCircle" size={16} /> {t('officer.noAlerts')}</p>
             ) : (
               <ul className="alert-list">
                 {alerts.map((a) => (
@@ -126,46 +126,43 @@ export default function OfficerDashboard() {
           </div>
 
           <div className="card">
-            <h2 style={{ marginTop: 0 }}><Icon name="rupee" size={18} /> {t('officer.paymentsToSettle')}</h2>
-            {pendingPayments.length === 0 && <p style={{ color: 'var(--c-text-soft)', margin: 0 }}><Icon name="checkCircle" size={16} /> {t('officer.settleAllDone')}</p>}
+            <h2><Icon name="rupee" size={18} /> {t('officer.paymentsToSettle')}</h2>
+            {pendingPayments.length === 0 && <p className="card-note ok"><Icon name="checkCircle" size={16} /> {t('officer.settleAllDone')}</p>}
             {pendingPayments.slice(0, 5).map((r) => (
               <div key={r.id} className="alt-row">
-                <span>
-                  <span className="mono">{r.tokenNumber}</span> · {r.farmer?.name} · {pick(r.crop, 'name')}
-                  <strong style={{ marginLeft: '0.5rem' }}>{formatInr(r.payment.amountInr)}</strong>
+                <span className="alt-row-copy">
+                  <span className="mono">{r.tokenNumber}</span>
+                  <span className="alt-row-sub">{r.farmer?.name} · {pick(r.crop, 'name')}</span>
+                  <strong className="alt-row-amount">{formatInr(r.payment.amountInr)}</strong>
                 </span>
                 {payFor === r.id ? (
-                  <span style={{ display: 'inline-flex', gap: '0.3rem', flexWrap: 'wrap' }}>
-                    <input className="input" style={{ minHeight: 36, width: 150 }} placeholder={t('officer.refPlaceholder')} value={ref} onChange={(e) => setRef(e.target.value)} />
-                    <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => markPaid(r.id, ref)}>{t('common.confirm')}</button>
-                    <button className="btn btn-outline btn-sm" onClick={() => setPayFor(null)}>{t('common.cancel')}</button>
+                  <span className="inline-form">
+                    <input className="input" placeholder={t('officer.refPlaceholder')} value={ref} autoFocus onChange={(e) => setRef(e.target.value)} aria-label={t('officer.refPlaceholder')} />
+                    <button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={() => markPaid(r.id, ref)}>{t('common.confirm')}</button>
+                    <button type="button" className="btn btn-ghost btn-sm" onClick={() => setPayFor(null)} aria-label={t('common.cancel')}><Icon name="x" size={15} /></button>
                   </span>
                 ) : (
-                  <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => { setPayFor(r.id); setRef(''); }}>₹ {t('officer.markPaid')}</button>
+                  <button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={() => { setPayFor(r.id); setRef(''); }}><Icon name="rupee" size={14} /> {t('officer.markPaid')}</button>
                 )}
               </div>
             ))}
-            {pendingPayments.length > 5 && <Link to="/officer/requests">{t('common.viewAll')} →</Link>}
+            {pendingPayments.length > 5 && <Link className="card-link" to="/officer/requests">{t('common.viewAll')} →</Link>}
           </div>
 
           <div className="card">
-            <h2 style={{ marginTop: 0 }}><Icon name="mail" size={18} /> {t('officer.smsOutbox')}</h2>
-            <p style={{ fontSize: '0.85rem', color: 'var(--c-text-soft)', margin: '0 0 0.5rem' }}>
-              {t('officer.smsHint')}{' '}
-              {smsProvider === 'sim' ? (
-                <span className="badge warning">{t('officer.smsSimulated')}</span>
-              ) : (
-                <span className="badge success">{t('officer.providerMode')}: {smsProvider}</span>
-              )}
-            </p>
-            {smsLog.length === 0 && <p style={{ color: 'var(--c-text-soft)', margin: 0 }}>{t('officer.smsEmpty')}</p>}
+            <h2><Icon name="mail" size={18} /> {t('officer.smsOutbox')}</h2>
+            <p className="card-note">{t('officer.smsHint')}</p>
+            {smsProvider === 'sim' ? (
+              <p className="form-banner warning sms-mode"><Icon name="info" size={15} /> {t('officer.smsSimulated')}</p>
+            ) : (
+              <p className="card-note"><span className="badge success">{t('officer.providerMode')}: {smsProvider}</span></p>
+            )}
+            {smsLog.length === 0 && <p className="card-note">{t('officer.smsEmpty')}</p>}
             {smsLog.slice(0, 5).map((s) => (
-              <div key={s.id} className="alt-row" style={{ alignItems: 'flex-start' }}>
-                <div>
-                  <div style={{ fontSize: '0.95rem' }}>{s.text}</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--c-text-soft)' }}>
-                    {t('officer.smsTo')}: {s.to} · {formatDate(s.createdAt, lang)}
-                  </div>
+              <div key={s.id} className="alt-row sms-row">
+                <div className="alt-row-copy">
+                  <div className="sms-text">{s.text}</div>
+                  <div className="alt-row-sub">{t('officer.smsTo')}: {s.to} · {formatDate(s.createdAt, lang)}</div>
                 </div>
                 <span className={`badge ${s.status === 'SENT' ? 'success' : s.status === 'SIMULATED' ? 'info' : 'neutral'}`}>{s.status}</span>
               </div>
@@ -173,15 +170,18 @@ export default function OfficerDashboard() {
           </div>
 
           <div className="card">
-            <h2 style={{ marginTop: 0 }}>{t('officer.servingNow')}</h2>
-            {serving.length === 0 && <p style={{ color: 'var(--c-text-soft)', margin: 0 }}>{t('officer.noPending')}</p>}
+            <h2>{t('officer.servingNow')}</h2>
+            {serving.length === 0 && <p className="card-note">{t('officer.noPending')}</p>}
             {serving.map((r) => (
               <div key={r.id} className="alt-row">
-                <span><span className="mono">{r.tokenNumber}</span> · {r.farmer?.name} · {pick(r.crop, 'name')} {r.quantityQuintals}{t('common.quintalShort')}</span>
-                <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+                <span className="alt-row-copy">
+                  <span className="mono">{r.tokenNumber}</span>
+                  <span className="alt-row-sub">{r.farmer?.name} · {pick(r.crop, 'name')} · {r.quantityQuintals} {t('common.quintalShort')}</span>
+                </span>
+                <span className="row-actions">
                   <StatusBadge status={r.status} />
-                  {r.status === 'CALLED' && <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => quick(r.id, 'START')}>{t('officer.start')}</button>}
-                  {r.status === 'PROCESSING' && <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => quick(r.id, 'COMPLETE')}><Icon name="check" size={15} strokeWidth={2.6} /> {t('officer.complete')}</button>}
+                  {r.status === 'CALLED' && <button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={() => quick(r.id, 'START')}>{t('officer.start')}</button>}
+                  {r.status === 'PROCESSING' && <button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={() => quick(r.id, 'COMPLETE')}><Icon name="check" size={15} strokeWidth={2.6} /> {t('officer.complete')}</button>}
                 </span>
               </div>
             ))}
@@ -189,18 +189,21 @@ export default function OfficerDashboard() {
         </div>
 
         <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-            <h2 style={{ marginTop: 0 }}>{t('officer.nextInLine')}</h2>
-            <Link to="/officer/queue">{t('common.viewAll')} →</Link>
+          <div className="card-head">
+            <h2>{t('officer.nextInLine')}</h2>
+            <Link className="card-link" to="/officer/queue">{t('common.viewAll')} →</Link>
           </div>
-          {nextWaiting.length === 0 && <p style={{ color: 'var(--c-text-soft)' }}>{t('officer.noPending')}</p>}
+          {nextWaiting.length === 0 && <p className="card-note">{t('officer.noPending')}</p>}
           {nextWaiting.map((r, i) => (
             <div key={r.id} className="alt-row">
-              <span><strong>#{i + 1}</strong> <span className="mono">{r.tokenNumber}</span> · {r.farmer?.name} · {pick(r.crop, 'name')} {r.quantityQuintals}{t('common.quintalShort')}</span>
-              <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => quick(r.id, 'CALL')}><Icon name="megaphone" size={15} /> {t('officer.call')}</button>
+              <span className="alt-row-copy">
+                <span className="mono"><span className="alt-row-pos">#{i + 1}</span> {r.tokenNumber}</span>
+                <span className="alt-row-sub">{r.farmer?.name} · {pick(r.crop, 'name')} · {r.quantityQuintals} {t('common.quintalShort')}</span>
+              </span>
+              <button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={() => quick(r.id, 'CALL')}><Icon name="megaphone" size={15} /> {t('officer.call')}</button>
             </div>
           ))}
-          <div style={{ display: 'flex', gap: '0.6rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+          <div className="dash-actions">
             <Link className="btn btn-outline" to="/officer/assisted"><Icon name="clipboard" size={16} /> {t('nav.assisted')}</Link>
             <Link className="btn btn-outline" to="/officer/requests"><Icon name="fileText" size={16} /> {t('officer.pendingRequests')}</Link>
           </div>

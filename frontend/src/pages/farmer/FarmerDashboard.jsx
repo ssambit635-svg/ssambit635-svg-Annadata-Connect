@@ -52,16 +52,12 @@ export default function FarmerDashboard() {
   return (
     <div>
       {/* ── greeting hero ── */}
-      <MCard plain className="green" style={{ marginBottom: 14, padding: '1.4rem 1.5rem', position: 'relative', overflow: 'hidden' }}>
-        <ArtSun size={64} style={{ position: 'absolute', right: 18, top: 14, opacity: 0.9 }} />
-        <div style={{ position: 'relative' }}>
-          <div className="m-hero-eyebrow" style={{ color: 'rgba(255,255,255,0.75)' }}>{t('app.name')}</div>
-          <h1 style={{ color: '#fff', margin: '2px 0 4px', fontFamily: 'var(--m-f-display)', fontSize: 27, fontWeight: 800, letterSpacing: '-0.02em' }}>
-            {t(greetingKey())}, {profile.name.split(' ')[0]}
-          </h1>
-          <p style={{ color: 'rgba(255,255,255,0.82)', margin: 0, fontSize: 13.5 }}>
-            {profile.village ? pick(profile.village, 'name') : ''} · {dateStr}
-          </p>
+      <MCard plain className="green dash-hero">
+        <ArtSun size={64} className="dash-hero-art" />
+        <div className="dash-hero-copy">
+          <div className="m-hero-eyebrow">{t('app.name')}</div>
+          <h1>{t(greetingKey())}, {profile.name.split(' ')[0]}</h1>
+          <p>{profile.village ? pick(profile.village, 'name') : ''} · {dateStr}</p>
         </div>
       </MCard>
 

@@ -19,7 +19,7 @@
   --c-surface: #fffdf8;
   --c-border: #e6dfcc;
   --c-text: #17382d;
-  --c-text-soft: #5c6b5e;
+  --c-text-soft: #52635a;
   --c-neutral-bg: #f3efe1;
   --p-cream: #fbfaf5;
   --p-cream-deep: #f6f1e2;
@@ -41,22 +41,6 @@ body {
     radial-gradient(900px 420px at -8% -160px, rgba(14, 91, 59, 0.05), transparent 55%),
     var(--p-cream);
 }
-
-/* ---------- App header: deep forest with a gold hairline ---------- */
-.app-header {
-  background: linear-gradient(120deg, #052c22 0%, #07382a 45%, #0e5b3b 100%);
-  border-bottom: 3px solid var(--p-gold);
-  box-shadow: 0 2px 14px rgba(9, 48, 32, 0.22);
-}
-
-/* ---------- Nav strip: warm cream like the landing header ---------- */
-.app-nav {
-  background: var(--p-cream-deep);
-  border-bottom: 1px solid var(--c-border);
-}
-.app-nav a { color: #4c5b4f; }
-.app-nav a:hover { color: var(--c-primary-dark); background: rgba(14, 91, 59, 0.07); }
-.app-nav a.active { color: var(--c-primary-dark); border-bottom-color: var(--p-gold); }
 
 /* ---------- Cards, stats, grids ---------- */
 .card { background: var(--c-surface); border-color: var(--c-border); }
@@ -123,45 +107,15 @@ table.data tbody tr:hover { background: var(--p-cream-soft); }
 .msg.bot { background: #f1ecdc; }
 .chips button { background: var(--c-surface); border-color: var(--c-primary); color: var(--c-primary-dark); }
 
-/* ---------- Account menu / mobile chrome ---------- */
-.user-menu-pop { background: var(--c-surface); }
-.bottom-tabs {
-  background: rgba(255, 253, 248, 0.96);
-  border-top: 1px solid var(--c-border);
-  box-shadow: 0 -8px 24px rgba(9, 48, 32, 0.09);
-}
-.bottom-tabs .tab:hover { color: var(--c-primary-dark); background: var(--p-cream-soft); }
-.bottom-tabs .tab.active::before { background: var(--p-gold); }
 .more-sheet { background: var(--c-surface); }
 .more-sheet-row:hover { background: var(--p-cream-soft); }
 .more-sheet-row.active { background: var(--p-cream-soft); color: var(--c-primary-dark); }
 .more-sheet-icon { background: var(--p-cream-deep); color: var(--c-primary-dark); }
 .more-sheet-handle { background: #ddd5bd; }
 
-/* ---------- Demo box (login page) ---------- */
-.demo-box { background: var(--p-cream-soft); border: 1px dashed #d9c99a; }
-
 /* ============================================================================
    AUTH PAGES — cream stage, role toggle, phone field, Google sign-in
    ========================================================================= */
-
-.auth-layout {
-  min-height: 100vh;
-  padding: 1.75rem 1rem 3rem;
-  background:
-    radial-gradient(900px 430px at 82% -8%, rgba(242, 182, 50, 0.12), transparent 62%),
-    radial-gradient(820px 400px at -6% 2%, rgba(14, 91, 59, 0.08), transparent 56%),
-    linear-gradient(180deg, #f7f3e7 0%, #fbfaf5 46%);
-}
-.auth-wrap { width: 100%; max-width: 452px; }
-.auth-card {
-  background: var(--c-surface);
-  border: 1px solid #e6ddc6;
-  border-radius: 18px;
-  box-shadow: 0 2px 6px rgba(9, 48, 32, 0.05), 0 18px 44px rgba(9, 48, 32, 0.12);
-  padding: 1.6rem 1.5rem 1.4rem;
-}
-.auth-card .logo .hi { color: var(--c-primary-dark); }
 
 /* Role toggle — farmer / officer / authority */
 .role-toggle {
@@ -240,30 +194,6 @@ table.data tbody tr:hover { background: var(--p-cream-soft); }
 }
 .auth-alt-link:hover { color: var(--c-primary); text-decoration: underline; }
 
-/* New-number profile step */
-.auth-new-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: fit-content;
-  margin: 0.1rem auto 0.95rem;
-  padding: 0.32rem 0.85rem;
-  background: #e7f2e7;
-  border: 1px solid #bfe0c6;
-  border-radius: 999px;
-  color: var(--c-primary);
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-.auth-new-badge button {
-  background: none;
-  border: 0;
-  padding: 0;
-  color: #5c6b5e;
-  font-size: 0.8rem;
-  text-decoration: underline;
-  min-height: auto;
-}
 .auth-step-title {
   font-size: 1.08rem;
   color: var(--c-primary-dark);
@@ -278,14 +208,6 @@ table.data tbody tr:hover { background: var(--p-cream-soft); }
 }
 .auth-register-line { text-align: center; margin: 1.05rem 0 0; }
 
-/* Google sign-in zone */
-.auth-google-zone {
-  display: grid;
-  justify-items: center;
-  gap: 0.15rem;
-  padding: 0.4rem 0 0.15rem;
-}
-.google-gis-wrap { min-height: 44px; display: grid; place-items: center; }
 .google-btn {
   display: inline-flex;
   align-items: center;

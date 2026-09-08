@@ -32,8 +32,9 @@ export function AssistantWidget() {
 
   if (!open) {
     return (
-      <button className="assistant-fab" onClick={() => setOpen(true)} aria-label={t('assistant.title')}>
-        <Icon name="chat" size={16} /> {t('assistant.fab')}
+      <button type="button" className="assistant-fab" onClick={() => setOpen(true)} aria-label={t('assistant.title')} title={t('assistant.title')}>
+        <Icon name="chat" size={18} strokeWidth={2.2} />
+        <span className="assistant-fab-label">{t('assistant.fab')}</span>
       </button>
     );
   }
@@ -42,12 +43,12 @@ export function AssistantWidget() {
   return (
     <div className="assistant-panel" role="dialog" aria-label={t('assistant.title')}>
       <div className="assistant-head">
-        <div>
-          <div style={{ fontWeight: 700 }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}><Icon name="wheat" size={18} /> {t('assistant.title')}</span></div>
+        <div className="assistant-head-copy">
+          <div className="assistant-title"><Icon name="wheat" size={18} /> {t('assistant.title')}</div>
           <div className="sub">{t('assistant.subtitle')}</div>
         </div>
-        <button className="btn btn-ghost btn-sm" onClick={() => setOpen(false)} aria-label={t('common.close')}aria-hidden="true">
-          <Icon name="x" size={16} />
+        <button type="button" className="btn btn-ghost btn-sm assistant-close" onClick={() => setOpen(false)} aria-label={t('common.close')}>
+          <Icon name="x" size={18} />
         </button>
       </div>
       <div className="assistant-body" ref={bodyRef}>
@@ -59,7 +60,7 @@ export function AssistantWidget() {
         <div className="chips">
           {Array.isArray(chips) &&
             chips.map((c) => (
-              <button key={c} onClick={() => send(c)}>
+              <button key={c} type="button" onClick={() => send(c)}>
                 {c}
               </button>
             ))}

@@ -83,10 +83,6 @@ html[data-lang='or'] .home-hero h1, html[data-lang='hi'] .home-hero h1 { letter-
 .lang-toggle.on-light button:hover { background: rgba(11, 90, 58, 0.08); color: var(--c-primary-dark); }
 .lang-toggle.on-light button.active, .lang-toggle.on-light button.active:hover { background: var(--c-primary); color: #fff; box-shadow: 0 2px 8px rgba(11, 90, 58, 0.28); }
 
-/* ---------- Header brand: show name in the active script ---------- */
-.app-header .brand-text .hi { font-size: 1.15rem; letter-spacing: 0.005em; }
-.app-header .brand-text .en { letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.68rem; opacity: 0.8; }
-
 /* ---------- Cards, stats, buttons: warmer & crisper ---------- */
 .card { border-color: var(--c-border); transition: box-shadow 0.2s ease, transform 0.2s ease; }
 .card:hover { box-shadow: var(--shadow-lg); }
@@ -99,25 +95,16 @@ html[data-lang='or'] .home-hero h1, html[data-lang='hi'] .home-hero h1 { letter-
 .badge { border-radius: 999px; font-weight: 700; letter-spacing: 0.01em; }
 
 /* Inputs: bigger tap targets on phones, visible focus ring. */
-input.input, select.select, .input, .select, textarea.textarea {
+input.input, select.select, .input, .select {
   min-height: 44px; border-radius: 10px; border: 1.5px solid var(--c-border); background: #fff;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-input.input:focus, select.select:focus, .input:focus, .select:focus, textarea.textarea:focus {
+input.input:focus, select.select:focus, .input:focus, .select:focus {
   border-color: var(--c-primary); box-shadow: 0 0 0 4px rgba(11, 90, 58, 0.14); outline: none;
 }
 
-/* App nav: gold underline slides in. */
-.app-nav a { position: relative; border-bottom: 0; font-weight: 600; }
-.app-nav a::after { content: ''; position: absolute; left: 0.9rem; right: 0.9rem; bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--p-gold); transform: scaleX(0); transition: transform 0.2s ease; }
-.app-nav a.active::after { transform: scaleX(1); }
-
-/* Bottom tabs: stronger active state. */
-.bottom-tabs a.active { color: var(--c-primary-dark); }
-.bottom-tabs a.active svg { color: var(--p-gold-deep); }
-
 /* Token number: unmistakable. */
-.token-number, .token-big { letter-spacing: 0.06em; }
+.token-number { letter-spacing: 0.06em; }
 
 /* ---------- Landing: richer hero contrast ---------- */
 .landing-v2 .home-utility-bar { background: linear-gradient(90deg, #04271c, #063526 60%, #0b5a3a); }
@@ -128,10 +115,6 @@ input.input:focus, select.select:focus, .input:focus, .select:focus, textarea.te
 @media (prefers-reduced-motion: reduce) {
   .lang-toggle button, .home-language button, .btn, .card, .app-nav a::after { transition: none !important; }
 }
-
-/* ---------- Native app (Capacitor) safe areas ---------- */
-.app-header { padding-top: max(0px, env(safe-area-inset-top)); }
-.bottom-tabs { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
 
 /* ---------- Offline / backend-sleeping banner ---------- */
 .net-banner {

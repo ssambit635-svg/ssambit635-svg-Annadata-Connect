@@ -24,7 +24,7 @@ export function TokenCard({ request, queue }) {
         </div>
         <div className="cell">
           <div className="k">{t('farmer.crop')}</div>
-          <div className="v" style={{ fontSize: '1rem' }}>{pick(request.crop, 'name')}</div>
+          <div className="v v-text">{pick(request.crop, 'name')}</div>
         </div>
         <div className="cell">
           <div className="k">{t('farmer.quantity')}</div>
@@ -33,7 +33,7 @@ export function TokenCard({ request, queue }) {
           </div>
         </div>
       </div>
-      <p style={{ margin: '0.75rem 0 0', fontSize: '0.9rem', color: 'var(--c-text-soft)' }}>
+      <p className="token-centre">
         {t('farmer.centre')}: {pick(request.centre, 'name')}
       </p>
     </div>
