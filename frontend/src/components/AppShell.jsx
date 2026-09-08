@@ -4,13 +4,14 @@ import { useAuth, homeFor } from '../auth/AuthContext.jsx';
 import { useI18n } from '../i18n/I18nContext.jsx';
 import { AssistantWidget } from './AssistantWidget.jsx';
 import { ArtLogo } from '../mobile/art.jsx';
-import { MLangPills } from '../mobile/ui.jsx';
 import Icon from './Icon.jsx';
 
-// Portal navigation, identical feature set to the Android app, laid out for
-// laptops: a sidebar on desktop, the app's bottom tabs + top bar on mobile.
-// The whole shell is wrapped in .m-root so the website interior speaks the
-// exact same design language as the APK.
+// Portal chrome shared by every signed-in page.
+//   • ≥1024px  — a fixed sidebar: brand, role nav, and an account block with
+//                the language switch, an "Account" row and a Sign out row.
+//   • <1024px  — a compact top bar with an avatar menu, plus the app's bottom
+//                tab bar (max 5 tabs, the rest in a "More" sheet).
+// Everything lives under .m-root.portal-shell so the app design tokens apply.
 const NAV = {
   farmer: [
     { to: '/farmer', key: 'nav.dashboard', icon: 'home', end: true },
@@ -32,13 +33,34 @@ const NAV = {
   authority: [
     { to: '/authority', key: 'nav.overview', icon: 'grid', end: true },
     { to: '/authority/state', key: 'nav.monitor', icon: 'activity', gold: true },
-    { to: '/authority/simulator', key: 'nav.simulator', icon: 'activity' },
+    { to: '/authority/simulator', key: 'nav.simulator', icon: 'target' },
     { to: '/centres', key: 'nav.centres', icon: 'store' },
     { to: '/market-prices', key: 'nav.marketPrices', icon: 'chart' },
   ],
 };
 
 const MAX_TABS = 5;
+
+function LangSwitch({ compact }) {
+  const { lang, setLang, languages } = useI18n();
+  return (
+    <div className={`portal-lang${compact ? ' compact' : ''}`} role="group" aria-label="Language">
+      {languages.map((l) => (
+        <button
+          key={l.code}
+          type="button"
+          lang={l.code}
+          className={lang === l.code ? 'active' : ''}
+          aria-pressed={lang === l.code}
+          title={l.native}
+          onClick={() => setLang(l.code)}
+        >
+          {l.label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function AppShell() {
   const { user, role, logout } = useAuth();
@@ -71,11 +93,25 @@ export function AppShell() {
     setMenuOpen(false);
   }, [location.pathname]);
 
+  // Lock page scroll while the More sheet is open (matches the app's sheets).
+  useEffect(() => {
+    if (!moreOpen) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') setMoreOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [moreOpen]);
+
   const tabs = navItems.slice(0, MAX_TABS - (navItems.length > MAX_TABS ? 1 : 0));
   const overflow = navItems.slice(tabs.length);
   const initial = (user?.name || '?').trim().charAt(0).toUpperCase();
   const roleLabel = t(`common.${role}`);
   const home = homeFor(role);
+  const onAccount = location.pathname === '/account';
 
   function doLogout() {
     setMenuOpen(false);
@@ -83,41 +119,31 @@ export function AppShell() {
     navigate('/login');
   }
 
-  const sideNav = (vertical = true) =>
-    navItems.map((item) => (
-      <NavLink
-        key={item.to}
-        to={item.to}
-        end={item.end}
-        className={({ isActive }) => (isActive ? 'active' : '')}
-        style={vertical ? undefined : { justifyContent: 'flex-start' }}
-      >
-        <span className="portal-nav-ico" aria-hidden="true"><Icon name={item.icon} size={18} strokeWidth={2} /></span>
-        {t(item.key)}
-        {item.gold && vertical && (
-          <span className="m-badge" style={{ marginLeft: 'auto', background: 'var(--m-gold-soft)', color: 'var(--m-gold-deep)' }} aria-hidden="true">★</span>
-        )}
-      </NavLink>
-    ));
-
   return (
     <div className="m-root portal-shell">
       {/* ── Sidebar (desktop) ── */}
-      <aside className="portal-side" aria-label={t('landing.primaryNav')}>
-        <Link to={home} className="portal-brand" aria-label="Annadata Connect home">
-          <ArtLogo size={42} />
+      <aside className="portal-side">
+        <Link to={home} className="portal-brand" aria-label={t('app.name')}>
+          <ArtLogo size={40} />
           <span className="portal-brand-copy">
             <strong>{t('app.name')}</strong>
-            <small>{t('landing.govStrip')}</small>
+            <small>{t('landing.portalLabel')}</small>
           </span>
         </Link>
 
-        <nav className="portal-nav">
+        <nav className="portal-nav" aria-label={t('nav.dashboard')}>
           <span className="portal-nav-label">{roleLabel}</span>
-          {sideNav()}
+          {navItems.map((item) => (
+            <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => (isActive ? 'active' : '')}>
+              <span className="portal-nav-ico" aria-hidden="true"><Icon name={item.icon} size={18} strokeWidth={2} /></span>
+              <span className="portal-nav-text">{t(item.key)}</span>
+              {item.gold && <span className="portal-nav-star" aria-hidden="true"><Icon name="star" size={13} strokeWidth={2.4} /></span>}
+            </NavLink>
+          ))}
         </nav>
 
         <div className="portal-side-foot">
+          <LangSwitch />
           <div className="portal-user">
             <span className="portal-avatar" aria-hidden="true">{initial}</span>
             <span className="portal-user-copy">
@@ -125,30 +151,29 @@ export function AppShell() {
               <small>{roleLabel}</small>
             </span>
           </div>
-          <MLangPills variant="light" />
-          <div className="m-btn-row" style={{ marginTop: 2 }}>
-            <Link to="/account" className="btn btn-outline btn-sm" style={{ flex: 1 }}><Icon name="lock" size={15} /> {t('auth.accountTitle')}</Link>
-            <button type="button" className="btn btn-danger btn-sm" style={{ flex: 1 }} onClick={doLogout}>
-              <Icon name="logout" size={15} /> {t('nav.logout')}
-            </button>
-          </div>
+          <Link to="/account" className={`portal-foot-row${onAccount ? ' active' : ''}`}>
+            <Icon name="user" size={17} />
+            <span>{t('nav.account')}</span>
+            <Icon name="arrowUpRight" size={14} className="portal-foot-caret" />
+          </Link>
+          <button type="button" className="portal-foot-row signout" onClick={doLogout}>
+            <Icon name="logout" size={17} />
+            <span>{t('nav.logout')}</span>
+          </button>
         </div>
       </aside>
 
       <div className="portal-body">
-        {/* ── Top bar (mobile) ── */}
+        {/* ── Top bar (mobile / tablet) ── */}
         <header className="portal-topbar">
-          <Link to={home} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <Link to={home} className="portal-topbar-brand" aria-label={t('app.name')}>
             <ArtLogo size={34} />
-            <span style={{ fontFamily: 'var(--m-f-display)', fontWeight: 800, fontSize: 16, color: 'var(--m-green-forest)' }}>
-              {t('app.name')}
-            </span>
+            <span>{t('app.name')}</span>
           </Link>
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }} ref={menuRef}>
+          <div className="portal-topbar-actions" ref={menuRef}>
             <button
               type="button"
-              className="portal-avatar"
-              style={{ border: 'none', width: 38, height: 38, cursor: 'pointer' }}
+              className="portal-avatar portal-avatar-btn"
               onClick={() => setMenuOpen((o) => !o)}
               aria-expanded={menuOpen}
               aria-haspopup="menu"
@@ -157,30 +182,24 @@ export function AppShell() {
               {initial}
             </button>
             {menuOpen && (
-              <div
-                role="menu"
-                aria-label={t('nav.accountMenu')}
-                style={{
-                  position: 'absolute',
-                  top: 58,
-                  right: 12,
-                  left: 12,
-                  zIndex: 70,
-                  background: 'var(--m-paper)',
-                  border: '1px solid var(--m-line)',
-                  borderRadius: 16,
-                  boxShadow: 'var(--m-shadow-pop)',
-                  padding: 12,
-                }}
-              >
-                <div style={{ padding: '4px 6px 10px', borderBottom: '1px solid var(--m-line)', marginBottom: 8 }}>
-                  <strong style={{ display: 'block', fontSize: 15 }}>{user?.name}</strong>
-                  <span className="badge neutral" style={{ marginTop: 2 }}>{roleLabel}</span>
+              <div className="portal-menu" role="menu" aria-label={t('nav.accountMenu')}>
+                <div className="portal-menu-head">
+                  <span className="portal-avatar" aria-hidden="true">{initial}</span>
+                  <span className="portal-user-copy">
+                    <strong>{user?.name}</strong>
+                    <small>{roleLabel}</small>
+                  </span>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <Link to="/account" className="btn btn-outline btn-sm"><Icon name="lock" size={15} /> {t('auth.accountTitle')}</Link>
-                  <button type="button" className="btn btn-danger btn-sm" onClick={doLogout}><Icon name="logout" size={15} /> {t('nav.logout')}</button>
-                </div>
+                <LangSwitch compact />
+                <Link to="/account" role="menuitem" className="portal-foot-row">
+                  <Icon name="user" size={17} />
+                  <span>{t('nav.account')}</span>
+                  <Icon name="arrowUpRight" size={14} className="portal-foot-caret" />
+                </Link>
+                <button type="button" role="menuitem" className="portal-foot-row signout" onClick={doLogout}>
+                  <Icon name="logout" size={17} />
+                  <span>{t('nav.logout')}</span>
+                </button>
               </div>
             )}
           </div>
@@ -192,8 +211,8 @@ export function AppShell() {
       </div>
 
       {/* ── Bottom tabs (mobile) ── */}
-      <nav className="portal-bottom" aria-label={t('landing.primaryNav')}>
-        <div className="m-tabbar" style={{ maxWidth: 520, margin: '0 auto' }}>
+      <nav className="portal-bottom" aria-label={t('nav.dashboard')}>
+        <div className="m-tabbar">
           {tabs.map((item) =>
             item.gold ? (
               <NavLink
@@ -206,12 +225,7 @@ export function AppShell() {
                 <Icon name={item.icon} size={26} strokeWidth={2.6} />
               </NavLink>
             ) : (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) => `m-tab${isActive ? ' active' : ''}`}
-              >
+              <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => `m-tab${isActive ? ' active' : ''}`}>
                 <Icon name={item.icon} size={22} strokeWidth={2.1} />
                 <span>{t(item.key)}</span>
               </NavLink>
@@ -233,12 +247,7 @@ export function AppShell() {
             <div className="more-sheet-handle" aria-hidden="true" />
             <h2>{t('nav.more')}</h2>
             {overflow.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) => `more-sheet-row${isActive ? ' active' : ''}`}
-              >
+              <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => `more-sheet-row${isActive ? ' active' : ''}`}>
                 <span className="more-sheet-icon"><Icon name={item.icon} size={19} /></span>
                 {t(item.key)}
                 <Icon name="arrowUpRight" size={16} className="more-sheet-caret" />

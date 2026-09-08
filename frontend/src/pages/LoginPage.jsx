@@ -114,7 +114,7 @@ export default function LoginPage({ registration = false }) {
     <div className="signin-page">
       <header className="signin-header">
         <Link to="/" className="signin-brand"><span className="signin-brand-mark"><Icon name="wheat" size={25} /></span><span><strong>{t('app.name')}</strong><small>अन्नदाता कनेक्ट</small></span></Link>
-        <div className="signin-header-actions"><Link to="/" className="signin-home">{t('auth.backHome')} <Icon name="arrowUpRight" size={14} /></Link><LanguageToggle /></div>
+        <div className="signin-header-actions"><Link to="/" className="signin-home">{t('auth.backHome')} <Icon name="arrowUpRight" size={14} /></Link><LanguageToggle className="lang-toggle on-light" /></div>
       </header>
       <main className="signin-shell">
         <aside className="signin-story">

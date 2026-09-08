@@ -80,6 +80,14 @@
 .signin-page .phone-prefix { font-size: .85rem; background: #f3f5ed; border-color: #d9dfce; border-width: 1px; }
 .signin-page .hint, .account-verification .hint { font-size: .71rem; line-height: 1.6; margin-top: 7px; color: #7c8672; }
 .signin-page .btn-primary, .account-verification .btn-primary { min-height: 46px; border-radius: 8px; font-size: .85rem; gap: 9px; }
+.signin-page .auth-alt-link { font-size: .8rem; font-weight: 600; color: #5f6d63; margin-top: .65rem; }
+.signin-page .auth-alt-link:hover:not(:disabled) { color: #175739; }
+.signin-page .pw-field .btn-outline { min-height: 46px; width: 46px; padding: 0; border-radius: 8px; color: #314435; border-color: #d9dfce; background: #fffefa; }
+.signin-page .pw-field .btn-outline:hover:not(:disabled) { border-color: #669273; color: #175739; background: #f1f5e9; }
+.signin-page .auth-verified-contact { font-size: .85rem; }
+.signin-demo-grid .btn { border-radius: 10px; }
+.signin-demo-grid .btn:hover:not(:disabled) { border-color: #669273; background: #f1f5e9; }
+.signin-brand strong { white-space: nowrap; }
 .signin-page .form-banner, .account-signin-page .form-banner { font-size: .79rem; line-height: 1.6; }
 .auth-provider-note { display: flex; align-items: flex-start; gap: 7px; font-size: .72rem; line-height: 1.6; color: #8a6d35; background: #fbf6e7; border: 1px solid #eee5c8; border-radius: 8px; padding: 10px 12px; margin: 10px 0 0; }
 .auth-provider-note > .icon { margin-top: 2px; flex-shrink: 0; }
@@ -140,10 +148,14 @@
   .signin-panel { padding: 30px 28px 24px; }
   .signin-footer { max-width: 490px; justify-content: center; flex-wrap: wrap; text-align: center; font-size: .62rem; }
 }
+@media (max-width: 420px) {
+  .signin-brand strong { font-size: .94rem; }
+  .signin-brand small { display: none; }
+  .lang-toggle button { min-width: 38px; padding: .15rem .5rem; }
+}
 @media (max-width: 390px) {
   .signin-page { padding: 0 12px; }
   .signin-panel { padding: 26px 18px 22px; }
-  .signin-brand strong { font-size: .94rem; }
   .signin-brand-mark { width: 38px; height: 38px; }
   .signin-header-actions { gap: 8px; }
   .signin-panel .google-btn { font-size: .76rem; }

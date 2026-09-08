@@ -24,12 +24,14 @@ export default function AuthorityCentreDetail() {
     <>
       <div className="page-head">
         <div>
-          <h1 style={{ marginBottom: 0 }}>{pick(centre, 'name')}</h1>
-          <p style={{ margin: 0, color: 'var(--c-text-soft)' }}>
-            <Icon name="pin" size={15} /> {centre.address} · <Icon name="clock" size={15} /> {centre.operatingHours} · <StatusBadge status={centre.status} />
+          <h1>{pick(centre, 'name')}</h1>
+          <p className="page-sub page-sub-meta">
+            <span><Icon name="pin" size={15} /> {centre.address}</span>
+            <span><Icon name="clock" size={15} /> {centre.operatingHours}</span>
+            <StatusBadge status={centre.status} />
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="page-head-actions">
           <button className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}><Icon name="refresh" size={14} /> {t('common.refresh')}</button>
           <Link className="btn btn-outline btn-sm" to="/authority">← {t('authority.overview')}</Link>
         </div>
@@ -69,7 +71,7 @@ export default function AuthorityCentreDetail() {
       {recentRequests.length === 0 ? (
         <div className="card state">{t('officer.noPending')}</div>
       ) : (
-        <div className="table-wrap">
+        <div className="table-wrap queue-table">
           <table className="data">
             <thead>
               <tr>
@@ -80,20 +82,20 @@ export default function AuthorityCentreDetail() {
                 <th>{t('farmer.procurementCol')}</th>
                 <th>{t('farmer.paymentCol')}</th>
                 <th>{t('authority.valueCol')}</th>
-                <th>{t('common.today')}</th>
+                <th>{t('common.date')}</th>
               </tr>
             </thead>
             <tbody>
               {recentRequests.map((r) => (
                 <tr key={r.id}>
-                  <td className="mono">{r.tokenNumber}</td>
-                  <td>{r.farmer?.name}</td>
-                  <td>{pick(r.crop, 'name')}</td>
-                  <td>{r.quantityQuintals} {t('common.quintalShort')}</td>
-                  <td><StatusBadge status={r.status} /></td>
-                  <td><PaymentBadge payment={r.payment} /></td>
-                  <td>{formatInr(r.payment ? r.payment.amountInr : r.estimatedValueInr)}</td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{formatDate(r.createdAt, lang)}</td>
+                  <td className="mono" data-label={t('officer.token')}>{r.tokenNumber}</td>
+                  <td data-label={t('officer.farmerCol')}>{r.farmer?.name}</td>
+                  <td data-label={t('officer.cropCol')}>{pick(r.crop, 'name')}</td>
+                  <td className="nowrap" data-label={t('officer.qtyCol')}>{r.quantityQuintals} {t('common.quintalShort')}</td>
+                  <td data-label={t('farmer.procurementCol')}><StatusBadge status={r.status} /></td>
+                  <td data-label={t('farmer.paymentCol')}><PaymentBadge payment={r.payment} /></td>
+                  <td className="nowrap" data-label={t('authority.valueCol')}>{formatInr(r.payment ? r.payment.amountInr : r.estimatedValueInr)}</td>
+                  <td className="nowrap" data-label={t('common.date')}>{formatDate(r.createdAt, lang)}</td>
                 </tr>
               ))}
             </tbody>

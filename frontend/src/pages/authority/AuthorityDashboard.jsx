@@ -29,19 +29,19 @@ export default function AuthorityDashboard() {
     <>
       <div className="page-head">
         <div>
-          <h1 style={{ marginBottom: 0 }}>{t('authority.overview')}</h1>
-          <p style={{ margin: 0, color: 'var(--c-text-soft)' }}>{t('authority.district')}: {activeDistrict}</p>
+          <h1>{t('authority.overview')}</h1>
+          <p className="page-sub">{t('authority.district')}: {activeDistrict}</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="page-head-actions">
           {districts?.length > 1 && (
-            <select className="select" style={{ width: 'auto', padding: '0.45rem 0.75rem' }} value={district} onChange={(e) => setDistrict(e.target.value)} aria-label={t('authority.district')}>
+            <select className="select select-inline" value={district} onChange={(e) => setDistrict(e.target.value)} aria-label={t('authority.district')}>
               <option value="">{homeDistrict} · {t('authority.homeDistrictTag')}</option>
               {districts.filter((d) => d !== homeDistrict).map((d) => (
                 <option key={d} value={d}>{d}</option>
               ))}
             </select>
           )}
-          <Link className="btn btn-primary" to="/authority/state"><Icon name="activity" size={15} /> {t('authority.stateMonitor')}</Link>
+          <Link className="btn btn-primary btn-sm" to="/authority/state"><Icon name="activity" size={15} /> {t('authority.stateMonitor')}</Link>
           <Link className="btn btn-outline btn-sm" to="/authority/simulator"><Icon name="activity" size={14} /> {t('simulator.title')}</Link>
           <button className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}><Icon name="refresh" size={14} /> {t('common.refresh')}</button>
         </div>
@@ -115,8 +115,8 @@ export default function AuthorityDashboard() {
         </div>
       </div>
 
-      <p style={{ color: 'var(--c-text-soft)', fontSize: '0.9rem', marginTop: '0.5rem' }}><><Icon name="info" size={15} /> {t('authority.clickCentre')}</></p>
-      <div className="table-wrap" style={{ marginTop: '0.25rem' }}>
+      <p className="page-sub-meta"><Icon name="info" size={15} /> {t('authority.clickCentre')}</p>
+      <div className="table-wrap queue-table">
         <table className="data">
           <thead>
             <tr>
@@ -135,16 +135,16 @@ export default function AuthorityDashboard() {
           <tbody>
             {centres.map((c) => (
               <tr key={c.id}>
-                <td><Link to={`/authority/centres/${c.id}`}>{pick(c, 'name')} →</Link></td>
-                <td><StatusBadge status={c.status} /></td>
-                <td className="mono">{c.stats.farmersToday}</td>
-                <td className="mono">{c.stats.waiting}</td>
-                <td className="mono">{c.stats.called + c.stats.processing}</td>
-                <td className="mono">{c.stats.completed}</td>
-                <td className="mono">{c.procuredQuintals}</td>
-                <td className="mono">{formatInr(c.procuredValueInr)}</td>
-                <td className="mono">{formatInr(c.paidValueInr)}</td>
-                <td className="mono">{c.capacityPct}%</td>
+                <td data-label={t('authority.centreCol')}><Link className="cell-link" to={`/authority/centres/${c.id}`}>{pick(c, 'name')} →</Link></td>
+                <td data-label={t('officer.centreStatus')}><StatusBadge status={c.status} /></td>
+                <td className="mono" data-label={t('officer.farmersToday')}>{c.stats.farmersToday}</td>
+                <td className="mono" data-label={t('officer.waiting')}>{c.stats.waiting}</td>
+                <td className="mono" data-label={t('officer.processing')}>{c.stats.called + c.stats.processing}</td>
+                <td className="mono" data-label={t('officer.completed')}>{c.stats.completed}</td>
+                <td className="mono" data-label={t('authority.volumeCol')}>{c.procuredQuintals}</td>
+                <td className="mono" data-label={t('authority.valueCol')}>{formatInr(c.procuredValueInr)}</td>
+                <td className="mono" data-label={t('authority.paidCol')}>{formatInr(c.paidValueInr)}</td>
+                <td className="mono" data-label={t('officer.capacity')}>{c.capacityPct}%</td>
               </tr>
             ))}
           </tbody>

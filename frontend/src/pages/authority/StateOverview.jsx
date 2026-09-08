@@ -63,14 +63,13 @@ export default function StateOverview() {
       {/* ── header ── */}
       <div className="page-head">
         <div>
-          <h1 style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 2 }}>
-            <Icon name="activity" size={22} /> {t('authority.stateMonitor')}
-          </h1>
-          <p style={{ margin: 0, color: 'var(--m-ink-soft)', fontSize: 13.5 }}>
-            {t('authority.stateSub')} · <Icon name="clock" size={13} /> {t('authority.asOf')} {asOfStr}
+          <h1><Icon name="activity" size={22} /> {t('authority.stateMonitor')}</h1>
+          <p className="page-sub page-sub-meta">
+            <span>{t('authority.stateSub')}</span>
+            <span><Icon name="clock" size={13} /> {t('authority.asOf')} {asOfStr}</span>
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <div className="page-head-actions">
           {districtName && (
             <button className="btn btn-outline btn-sm" onClick={closeDistrict}>← {t('authority.stateView')}</button>
           )}
@@ -80,7 +79,7 @@ export default function StateOverview() {
       </div>
 
       {/* ── state KPIs ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10, marginBottom: 16 }}>
+      <div className="kpi-grid">
         <div className="m-stat gold"><div className="m-stat-num">{totals.farmersToday}</div><div className="m-stat-lbl">{t('authority.totalFarmersToday')}</div></div>
         <div className="m-stat"><div className="m-stat-num">{totals.waiting}</div><div className="m-stat-lbl">{t('authority.waitingNow')}</div></div>
         <div className="m-stat"><div className="m-stat-num">{totals.procuredQuintals.toLocaleString('en-IN')}</div><div className="m-stat-lbl">{t('authority.totalProcured')} ({t('common.quintalShort')})</div></div>
@@ -102,7 +101,7 @@ export default function StateOverview() {
           {districtError && <div className="form-banner error">{districtError.message}</div>}
           {districtData && (
             <>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 8, margin: '10px 0' }}>
+              <div className="kpi-grid compact">
                 <div className="m-stat"><div className="m-stat-num">{districtData.totals.farmersToday}</div><div className="m-stat-lbl">{t('authority.totalFarmersToday')}</div></div>
                 <div className="m-stat"><div className="m-stat-num">{districtData.totals.waiting}</div><div className="m-stat-lbl">{t('authority.totalWaiting')}</div></div>
                 <div className="m-stat"><div className="m-stat-num">{districtData.totals.procuredQuintals}</div><div className="m-stat-lbl">{t('authority.totalProcured')} ({t('common.quintalShort')})</div></div>
@@ -139,7 +138,7 @@ export default function StateOverview() {
       )}
 
       {/* ── trend + pipeline ── */}
-      <div className="grid two" style={{ alignItems: 'start' }}>
+      <div className="grid two">
         <MCard plain>
           <SectionH title={t('authority.trendTitle')} hint={t('authority.trendHint')} art={<Icon name="chart" size={22} />} />
           <TrendChart points={trend} ariaLabel={t('authority.trendHint')} />
@@ -171,18 +170,13 @@ export default function StateOverview() {
             colorFor={(d) => (d.name === homeDistrict ? '#c79a2e' : '#166534')}
             ariaLabel={t('authority.districtsTitle')}
           />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10, marginTop: 14 }}>
+          <div className="district-grid">
             {districts.map((d) => (
               <button
                 type="button"
                 key={d.name}
                 onClick={() => openDistrict(d.name)}
-                style={{
-                  textAlign: 'left', cursor: 'pointer', background: 'var(--m-cream)',
-                  border: `1.5px solid ${d.name === homeDistrict ? 'rgba(199, 154, 46, 0.55)' : 'var(--m-line)'}`,
-                  borderRadius: 14, padding: '12px 14px',
-                  display: 'flex', flexDirection: 'column', gap: 6,
-                }}
+                className={`district-card${d.name === homeDistrict ? ' is-home' : ''}`}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'space-between' }}>
                   <strong style={{ fontSize: 14.5, color: 'var(--m-green-forest)' }}>{d.name}</strong>

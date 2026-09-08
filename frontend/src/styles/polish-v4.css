@@ -34,7 +34,6 @@ body {
    Latin text inside them stays crisp too. */
 html[data-lang='or'] body { font-family: 'Noto Sans Oriya', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
 html[data-lang='hi'] body { font-family: 'Noto Sans Devanagari', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-html[data-lang='or'] .app-header, html[data-lang='hi'] .app-header { font-family: inherit; }
 
 /* ---------- Assistant panel: dvh fallback for older WebViews ---------- */
 .assistant-panel {
@@ -43,32 +42,6 @@ html[data-lang='or'] .app-header, html[data-lang='hi'] .app-header { font-family
 }
 @media (max-width: 860px) {
   .assistant-panel { max-height: 100vh; max-height: 100dvh; }
-}
-
-/* ---------- Mobile bottom tab bar: flexbox, never overflows ---------- */
-.bottom-tabs {
-  display: none;
-  grid-template-columns: none;
-}
-.bottom-tabs .tab {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.bottom-tabs .tab > span {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  max-width: 100%;
-  word-break: break-word;
-}
-@media (max-width: 860px) {
-  .bottom-tabs { display: flex; flex-direction: row; }
-  .bottom-tabs .tab { flex: 1 1 0; }
-  /* Cap labels at two short lines so Hindi/Odia never push the bar taller
-     than ~64 px on small screens. */
-  .bottom-tabs .tab { min-height: 58px; padding-top: 0.42rem; }
 }
 
 /* ---------- Inputs never below 16 px on phones (prevents iOS focus zoom,

@@ -26,9 +26,9 @@ export default function HistoryPage() {
     <>
       <div className="page-head">
         <h1>{t('farmer.recordsTitle')}</h1>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}><Icon name="refresh" size={14} /> {t('common.refresh')}</button>
-          <Link className="btn btn-primary btn-sm" to="/requests/new">＋ {t('nav.newRequest')}</Link>
+        <div className="page-head-actions">
+          <button type="button" className="btn btn-outline btn-sm" onClick={reload} disabled={refreshing}><Icon name="refresh" size={14} /> {t('common.refresh')}</button>
+          <Link className="btn btn-primary btn-sm" to="/requests/new"><Icon name="plus" size={15} strokeWidth={2.4} /> {t('nav.newRequest')}</Link>
         </div>
       </div>
 
@@ -46,7 +46,7 @@ export default function HistoryPage() {
           action={<Link className="btn btn-primary" to="/requests/new">＋ {t('farmer.createRequest')}</Link>}
         />
       ) : (
-        <div className="table-wrap">
+        <div className="table-wrap queue-table">
           <table className="data">
             <thead>
               <tr>
@@ -57,23 +57,25 @@ export default function HistoryPage() {
                 <th>{t('farmer.procurementCol')}</th>
                 <th>{t('farmer.paymentCol')}</th>
                 <th>{t('farmer.estimatedValue')}</th>
-                <th>{t('common.today')}</th>
-                <th></th>
+                <th>{t('common.date')}</th>
+                <th><span className="sr-only">{t('common.view')}</span></th>
               </tr>
             </thead>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id}>
-                  <td className="mono">{r.tokenNumber}</td>
-                  <td>{pick(r.crop, 'name')}</td>
-                  <td>{r.quantityQuintals} {t('common.quintalShort')}</td>
-                  <td>{pick(r.centre, 'name')}</td>
-                  <td><StatusBadge status={r.status} /></td>
-                  <td><PaymentBadge payment={r.payment} /></td>
-                  <td>{formatInr(r.payment ? r.payment.amountInr : r.estimatedValueInr)}</td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{formatDate(r.createdAt, lang)}</td>
-                  <td>
-                    <Link className="btn btn-outline btn-sm" to={`/requests/${r.id}`}>{t('common.view')}</Link>
+                  <td className="mono" data-label={t('officer.token')}>{r.tokenNumber}</td>
+                  <td data-label={t('farmer.crop')}>{pick(r.crop, 'name')}</td>
+                  <td className="nowrap" data-label={t('officer.qtyCol')}>{r.quantityQuintals} {t('common.quintalShort')}</td>
+                  <td data-label={t('farmer.centre')}>{pick(r.centre, 'name')}</td>
+                  <td data-label={t('farmer.procurementCol')}><StatusBadge status={r.status} /></td>
+                  <td data-label={t('farmer.paymentCol')}><PaymentBadge payment={r.payment} /></td>
+                  <td className="nowrap" data-label={t('farmer.estimatedValue')}>{formatInr(r.payment ? r.payment.amountInr : r.estimatedValueInr)}</td>
+                  <td className="nowrap" data-label={t('common.date')}>{formatDate(r.createdAt, lang)}</td>
+                  <td className="cell-actions">
+                    <div className="row-actions">
+                      <Link className="btn btn-outline btn-sm" to={`/requests/${r.id}`}>{t('common.view')}</Link>
+                    </div>
                   </td>
                 </tr>
               ))}
