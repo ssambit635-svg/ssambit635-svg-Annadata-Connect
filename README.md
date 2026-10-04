@@ -1,230 +1,241 @@
-# अन्नदाता कनेक्ट Annadata Connect — Full-Stack MVP
+<div align="center">
+  <img src="frontend/public/favicon.svg" alt="Annadata Connect logo" width="88" height="88" />
+  <h1>Annadata Connect</h1>
+  <p><strong>Make crop procurement clearer — from the first booking to the final payment.</strong></p>
+  <p>अन्नदाता कनेक्ट · ଅନ୍ନଦାତା କନେକ୍ଟ<br />A farmer-first procurement platform for an Odisha pilot scenario</p>
+  <p>
+    <img alt="Hackathon MVP" src="https://img.shields.io/badge/Stage-Hackathon%20MVP-1f6a3b?style=flat-square" />
+    <img alt="Node.js 22 or newer" src="https://img.shields.io/badge/Node.js-22%2B-339933?logo=nodedotjs&logoColor=white&style=flat-square" />
+    <img alt="React 18" src="https://img.shields.io/badge/React-18-149eca?logo=react&logoColor=white&style=flat-square" />
+    <img alt="Express 4" src="https://img.shields.io/badge/Express-4-333333?logo=express&logoColor=white&style=flat-square" />
+    <img alt="English, Hindi, Odia" src="https://img.shields.io/badge/Languages-English%20%7C%20Hindi%20%7C%20Odia-7356a8?style=flat-square" />
+  </p>
+  <p>
+    <a href="#product-features">Explore features</a> ·
+    <a href="#quick-start">Run locally</a> ·
+    <a href="#try-the-demo">Try the demo</a> ·
+    <a href="DELIVERABLES.md">Implementation details</a>
+  </p>
+</div>
 
-A real, locally-runnable crop-procurement platform connecting **Farmers**, **Procurement Officers / Centres**, and **District Authority** — with token generation, live queue tracking, rule-based smart centre recommendation, **Smart Selling Options that compare buyers before you sell** (government MSP centres vs above-MSP market buyers), **historical mandi price intelligence built on real Agmarknet records (2021–2025)**, a trilingual
-(English · हिन्दी · ଓଡ଼ିଆ) UI, an installable PWA + sideloadable **Android APK** built for free on GitHub Actions, and a controlled rule-based farmer assistant.
+> **Hackathon prototype — not a live government service.** Sign-in is mocked, OTP codes are displayed in the app, and operational records, centre capacity, buyer offers and MSP examples are seeded demo values. Do not use this build for real identities, payments or procurement decisions. Historical mandi-price records are sourced separately and their coverage and caveats are documented below.
 
-> **Deploy for $0** — Render free backend, GitHub Actions APK, cron-job.org keep-awake: see **[FREE_STACK.md](FREE_STACK.md)**.
->
-> **Get the app free** — the landing page has a *Get the App* section: the Android APK
-> button downloads `annadata-connect-latest.apk` from the rolling GitHub Release
-> (`…/releases/latest/download/annadata-connect-latest.apk`, rebuilt automatically on
-> every `main` push by the Android APK workflow), and the laptop/other-phone option
-> opens the same app in any browser — no install. Trilingual UI; mobile-first shell.
+## The idea
 
+Farmers should be able to understand their options before travelling to a procurement centre. Annadata Connect brings the core journey into one mobile-first experience: compare eligible centres, book a token, follow queue progress, and see procurement and payment status. Centre staff work from the same shared system, while administrators get a view of demand and capacity across districts.
+
+The project is designed as a **complete, explorable hackathon MVP**: a React web app, a role-aware Express API, a seeded local dataset, an installable PWA, and a Capacitor-based Android app experience.
+
+## Product preview
+
+These captures show the interface and seeded demo state. The portal's headline statistics and all operational figures shown in screenshots are illustrative, not live service metrics.
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <a href="screenshots/polish-farmer.png"><img src="screenshots/polish-farmer.png" alt="Farmer dashboard showing an active token, queue position and notifications" width="100%" /></a><br />
+      <strong>Farmer dashboard</strong>
+    </td>
+    <td width="50%" align="center">
+      <a href="screenshots/polish-reco.png"><img src="screenshots/polish-reco.png" alt="Procurement request with transparent centre recommendations" width="100%" /></a><br />
+      <strong>Explainable centre recommendation</strong>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <a href="screenshots/polish-officer.png"><img src="screenshots/polish-officer.png" alt="Procurement officer dashboard with queue, capacity and assisted entry" width="100%" /></a><br />
+      <strong>Centre operations</strong>
+    </td>
+    <td width="50%" align="center">
+      <a href="screenshots/authority-centre-detail.png"><img src="screenshots/authority-centre-detail.png" alt="Authority centre detail view with capacity, alerts, requests and payments" width="100%" /></a><br />
+      <strong>Authority drill-down</strong>
+    </td>
+  </tr>
+</table>
+
+## Product features
+
+| Experience | What it enables |
+| --- | --- |
+| **Farmer** | Register with the demo flow; request procurement; compare nearby eligible centres; receive a token; follow queue and status updates; review records, payment status and a QR-enabled farmer ID card. |
+| **Smart Sell** | Compare government MSP-centre options with seeded market-buyer offers before booking. Options show price, estimated value and transport assumptions; offers are illustrative, not live quotes. |
+| **Mandi intelligence** | Explore historical prices by mandi, district or state, compare markets, inspect monthly trends and seasonality, and download source rows as CSV. |
+| **Procurement officer** | Manage a centre's intake, queue and request lifecycle; call, start, complete or reject requests; record payment status; and assist walk-in farmers. |
+| **District & state authority** | Monitor demand, queue congestion, centre capacity and procurement trends; inspect centre details; run a what-if simulator that does not modify stored operations. |
+| **Accessible field experience** | Responsive, mobile-first UI in English, हिन्दी and ଓଡ଼ିଆ; installable PWA; Android experience built from the shared frontend with Capacitor. |
+| **Farmer assistant** | Rule-based help for a small set of approved topics. It is intentionally not an LLM and falls back for unsupported questions. |
+
+Centre recommendations use a documented rule-based score: **45% estimated wait, 30% straight-line distance, and 25% storage utilization**. Only open centres with enough remaining capacity are eligible. The UI exposes the inputs so a farmer can see why a centre was suggested.
+
+## How the pieces fit
+
+```mermaid
+flowchart LR
+  subgraph Clients
+    F[Farmer]
+    O[Procurement officer]
+    A[District / state authority]
+  end
+  UI["React + Vite<br/>Web · PWA · Android"]
+  API["Express REST API<br/>JWT sessions + role checks"]
+  SVC["Domain services<br/>Queue · recommendations · selling · simulator"]
+  DB[(JSON demo store)]
+  DATA[Agmarknet CSV extracts]
+
+  F --> UI
+  O --> UI
+  A --> UI
+  UI -->|/api| API
+  API --> SVC
+  SVC <--> DB
+  SVC --> DATA
 ```
-kis an sathi/
-├── backend/      Node.js + Express API (JWT auth, role-based access, JSON data store)
-├── frontend/     React + Vite SPA (farmer / officer / authority interfaces)
-├── scripts/      Data pipeline (historical Agmarknet extract builder)
-├── API_INTEGRATION_MAP.md
-├── HISTORICAL_DATA.md (real Agmarknet mandi price source + pipeline)
-└── DELIVERABLES.md (features implemented + known limitations)
-```
 
-This repository ships **both** halves. The backend implements the API contract documented in
-`API_INTEGRATION_MAP.md`, and the frontend is built strictly against that contract — no invented
-endpoints and no disconnected demo screens. Sign-in is deliberately **mocked** (see below).
-Farmer and officer UIs share
-the same backend state (officer actions update the farmer's view in real time via polling).
+For a single-process deployment, Express serves both the API and the built frontend from one port. During development, Vite serves the UI and proxies `/api` to the backend.
 
----
+### Technology
 
-## 1. Prerequisites
+| Layer | Implementation |
+| --- | --- |
+| Web | React 18.3, Vite 5, React Router 6, custom responsive design system and translation dictionaries |
+| API | Node.js 22+, Express 4, JWT sessions, bcrypt password hashing and role guards |
+| Demo persistence | File-backed JSON store in `backend/data/db.json`; no external database required locally |
+| Mobile | Installable web app plus Capacitor-based Android project |
+| Tests | Node test runner + Supertest, Playwright browser tests, and an i18n parity check |
 
-- **Node.js ≥ 22** (22 LTS or newer) and npm
-- That's it. No database server is required for the local pilot — the backend persists to a JSON file
-  (`backend/data/db.json`), auto-created and seeded on first boot.
-- Sign-in needs **no configuration at all**: Google, SMS and email are mocked end to end.
-  See [AUTH_SETUP.md](AUTH_SETUP.md).
+## Quick start
 
-## 2. Quick start (recommended: single-port deployment)
+### Requirements
+
+- **Node.js 22 or newer** and npm
+- No separate database is needed for the local demo. On first boot, the backend creates and seeds `backend/data/db.json`.
+
+### Run the web app with hot reload
 
 ```bash
-# 1. Backend
-cd backend
-cp .env.example .env
-npm install
+git clone https://github.com/ssambit635-svg/ssambit635-svg-Annadata-Connect.git
+cd ssambit635-svg-Annadata-Connect
+npm run setup
+cp backend/.env.example backend/.env   # optional for local defaults; ignored by Git
+```
 
-# 2. Frontend (build once)
-cd ../frontend
-cp .env.example .env       # optional; defaults work for local dev
-npm install
+Start the API and frontend in separate terminals:
+
+```bash
+# Terminal 1 — Express API at http://localhost:5000
+npm run dev:backend
+```
+
+```bash
+# Terminal 2 — Vite app at http://localhost:5173 (proxies /api to :5000)
+npm run dev:frontend
+```
+
+Open **<http://localhost:5173>**. The Vite proxy target can be changed with `API_PROXY_TARGET` in `frontend/.env`; browser code still uses same-origin `/api` calls.
+
+### Run as a single process
+
+To build the frontend and have Express serve the UI and API together:
+
+```bash
 npm run build
-
-# 3. Run everything on one port
-cd ../backend
 npm start
-# → http://localhost:5000  (UI + API)
 ```
 
-The backend automatically serves `frontend/dist` when it exists, so **one process** hosts the
-whole app at `http://localhost:5000`. This is also the recommended production layout.
+Then open **<http://localhost:5000>**. Check the API with `curl http://localhost:5000/api/health`.
 
-## 2b. Historical mandi prices (real data, no mock)
+### Configuration
 
-The *Mandi Prices* page and the Smart Sell price check are driven by a real multilevel Agmarknet
-panel — 7,208 monthly records across three levels (493 mandi + 3,567 district + 3,148 state
-observations; paddy, wheat, maize, mustard, cotton; 2021–2025), extracted from
-[pointbreak71/dpi410-final-project-v2](https://github.com/pointbreak71/dpi410-final-project-v2)
-(scraped from `api.agmarknet.gov.in`, 2010–2025 nationally). The state level covers 19 states,
-including Odisha.
+The defaults are suitable for local development. Set production values in the backend environment, and never put server secrets in frontend `VITE_*` variables.
 
-```
-Historical CSVs -> Backend loader -> Filter/aggregate -> /api/market-prices -> Frontend
-```
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `PORT` | `5000` | Express listen port |
+| `JWT_SECRET` | Development fallback | Set a unique secret of at least 32 characters in production |
+| `SEED_ON_BOOT` | `true` | Create the demo dataset if the JSON store is missing |
+| `CORS_ORIGIN` | Empty | Restrict allowed origins when the frontend is hosted separately |
+| `VITE_API_BASE_URL` | Empty / same-origin | Optional public API origin for a separately hosted frontend |
+| `API_PROXY_TARGET` | `http://127.0.0.1:5000` | Vite's server-side `/api` proxy target; never used directly by a remote browser |
+| `SMS_PROVIDER` | `sim` | Procurement notification mode; does not deliver authentication codes |
 
-The extracts are committed under `backend/src/data/agmarknet/`, so the app works
-offline with no extra setup. To regenerate or widen them:
+See [`backend/.env.example`](backend/.env.example), [`frontend/.env.example`](frontend/.env.example), [AUTH_SETUP.md](AUTH_SETUP.md) and [DEPLOYMENT.md](DEPLOYMENT.md) for the full configuration and hardening guidance.
+
+## Try the demo
+
+The default local seed covers six Odisha districts and 14 sample procurement centres. These are demonstration records, not connected to government systems. Sign in with the **Password** option or use the on-screen demo-account picker.
+
+| Role | Phone | Password | Demo scope |
+| --- | --- | --- | --- |
+| Farmer | `9999999001` | `Farmer@123` | Create and track a procurement request |
+| Procurement officer | `9999999101` | `Officer@123` | Manage the Bhubaneswar Central centre queue |
+| District authority | `9999999201` | `Authority@123` | View district-level operations |
+| State authority | `9999999202` | `Authority@123` | Open the Odisha state monitor |
+
+A simple end-to-end walkthrough:
+
+1. Sign in as the farmer and create a request for a crop and quantity.
+2. Review the recommended centre and its distance, queue, storage and estimated wait; confirm to receive a token.
+3. Sign in as the officer and advance the request through the queue. The farmer's status and notifications update from the shared backend state.
+4. Sign in as an authority to review centre capacity and district/state activity.
+
+Mock SMS and email codes are generated locally and displayed on screen. No authentication message is sent to a phone or email address. More on mock accounts and limits: [AUTH_SETUP.md](AUTH_SETUP.md).
+
+## Data, assumptions & trust
+
+### Historical market prices
+
+Mandi-price screens use **7,208 monthly observations** for paddy, wheat, maize, mustard and cotton (2021–2025), at mandi, district and state levels. The extracts are curated from Agmarknet 2.0 data via [the upstream research repository](https://github.com/pointbreak71/dpi410-final-project-v2); they are committed under `backend/src/data/agmarknet/` and load locally without a network request.
+
+A data caveat matters: the upstream repository publishes mandi-level min/max price bands but not its modal-price panel, so this project's mandi `modal_price_avg` is the midpoint of those published min/max averages. District/state means are upstream aggregates. Coverage is a selected extract, not a complete national market feed, and the charts are descriptive — **not forecasts**. See [HISTORICAL_DATA.md](HISTORICAL_DATA.md) for provenance, fields, selection rules and validation notes.
+
+### Demo boundaries
+
+- Authentication is fully mocked: no Google OAuth, real SMS verification, or email delivery is configured. Mock OTPs are visible in the UI.
+- The JSON store is single-process demo storage. Use a transactional database and shared verification/rate-limit storage before scaling.
+- Seeded MSP figures, centre conditions, market-buyer rates and operational history are illustrative. Smart Sell comparisons are not offers or guarantees of procurement.
+- Wait times are estimates; distances are straight-line, not road routes. Simulator outputs are planning scenarios, not predictions.
+- API authorization and role checks are implemented, but **this build is not ready for real users or real personal/financial data**. Production hardening guidance is in [DEPLOYMENT.md](DEPLOYMENT.md).
+
+## Tests & quality checks
 
 ```bash
-npm run data:agmarknet:all  # clones the upstream repo into .data-src/ and rebuilds all extracts
+npm test                                  # backend unit/contract tests
+npm run build                             # production frontend build
+npm --prefix frontend run test:i18n       # translation key parity
 ```
 
-Full details — provenance, columns, selection rule, the `modal_price_avg` caveat and every endpoint —
-are in **[HISTORICAL_DATA.md](HISTORICAL_DATA.md)**.
-
-## 3. Development mode (two terminals, hot reload)
+Browser tests use Playwright. Install Chromium once, then run:
 
 ```bash
-# Terminal 1 — API on :5000
-cd backend && npm run dev
-
-# Terminal 2 — Vite dev server on :5173, /api proxied to :5000
-cd frontend && npm run dev
-# → open http://localhost:5173
+cd frontend
+npx playwright install chromium
+npm run test:e2e
 ```
 
-## 4. Environment variables
+## Deployment & mobile
 
-### Backend (`backend/.env`, see `.env.example`)
+- **Single service:** build the frontend, then run the Express backend; it serves both UI and API.
+- **Render:** a starter blueprint is provided in `render.yaml`. Free-tier sleep and ephemeral storage make it suitable for a demo, not a durable production service.
+- **Static frontend:** `netlify.toml` configures Netlify; set `VITE_API_BASE_URL` to the public HTTPS API origin when hosting the UI separately.
+- **PWA / Android:** install the web app as a PWA or build the Capacitor Android app. The APK workflow is in [`.github/workflows/android-apk.yml`](.github/workflows/android-apk.yml).
 
-| Variable          | Default                                | Purpose                                             |
-| ----------------- | -------------------------------------- | --------------------------------------------------- |
-| `PORT`            | `5000`                                 | API port                                            |
-| `JWT_SECRET`      | dev default — **change in production** | Signs auth tokens                                   |
-| `JWT_EXPIRES_IN`  | `12h`                                  | Token validity                                      |
-| `CORS_ORIGIN`     | empty = allow any (dev convenience)    | Comma-separated allowed origins in production       |
-| `SEED_ON_BOOT`    | `true`                                 | Creates demo data if `data/db.json` is missing      |
-| `ALLOW_DEMO_LOGIN` | `true` | Set `false` to disable password sign-in for the sample accounts and hide the demo panel |
-| `TRUST_PROXY` | `0` | Exact trusted reverse-proxy hop count for IP rate limits |
-| `NODE_ENV`        | `development`                          | Log format etc.                                     |
+See [FREE_STACK.md](FREE_STACK.md) for the demo deployment and APK flow, [SAATHI_APP.md](SAATHI_APP.md) for the Android frontend, and [DEPLOYMENT.md](DEPLOYMENT.md) for deployment and hardening details.
 
-### Frontend (`frontend/.env`, see `.env.example`)
+## Project map
 
-| Variable               | Default                 | Purpose                                                                                |
-| ---------------------- | ----------------------- | -------------------------------------------------------------------------------------- |
-| `VITE_API_BASE_URL` | empty = same origin | Optional public HTTPS API origin for a separately hosted production frontend. Dev browsers always use same-origin `/api`. |
-| `API_PROXY_TARGET` | `http://127.0.0.1:5000` | Server-side Vite proxy target, never called directly by a remote browser. |
-
-## 5. Mocked sign-in & sample credentials
-
-The bilingual login page offers **fake Google, SMS OTP, email OTP, and password** for all
-three roles. Nothing is real: no Google script or OAuth client, no Twilio Verify, no SMTP.
-
-- **Fake Google:** a **Fake Google sign-in** switch (per-browser, on by default) enables a
-  Google-styled button that opens a local picker of sample accounts for the selected role.
-  Picking one posts `{role, email}` and returns a session. Accounts live in
-  `backend/src/services/auth-mock.service.js` and are served by `/api/auth/options`.
-- **SMS OTP / Email OTP:** the API generates a six-digit code and returns it as `mockCode`;
-  the screen shows it in a "Mock SMS · your code" card with a **Fill** button. Expiry
-  (5 min), five attempts, the 60-second resend cooldown and hourly/IP limits still apply.
-- **Password:** real bcrypt check against the sample accounts below, for every role.
-
-New farmers verify a contact first, then complete their name and village; setting a
-password is optional. Any account can open **Account menu → Sign-in & contact details** to
-link an email or mobile without creating a duplicate profile. Email-only accounts still
-receive in-app notifications; SMS notifications need a linked phone.
-
-Roles stay enforced server-side: choosing a role in the UI never grants privileges, and
-officer/authority contacts must exist in the data. Full mock-account list, limits,
-provisioning and pre-deployment warnings: **[AUTH_SETUP.md](AUTH_SETUP.md)**.
-
-### Sample accounts
-
-Sample accounts are the mock data, so `ALLOW_DEMO_LOGIN` defaults to `true`. Set it to
-`false` in `backend/.env` to hide the **Explore demo accounts** panel and disable their
-password logins (the fake Google picker and mock OTP codes keep working).
-
-| Role      | Phone        | Email                             | Password        | Scope                                  |
-| --------- | ------------ | --------------------------------- | --------------- | -------------------------------------- |
-| Farmer    | `9999999001` | `bijay.pradhan.anc@gmail.com`     | `Farmer@123`    | Own requests, tokens, queue, history    |
-| Farmer 2  | `9999999002` | `kuni.sahoo.anc@gmail.com`        | `Farmer@123`    | Seeded queue history at BBSR Central    |
-| Officer   | `9999999101` | `rashmi.das.anc@gmail.com`        | `Officer@123`   | Bhubaneswar Central Procurement Centre |
-| Officer   | `9999999102` | `manoj.behera.anc@gmail.com`      | `Officer@123`   | Jatni Mandi Procurement Centre          |
-| Authority | `9999999201` | `district.admin.anc@gmail.com`    | `Authority@123` | District-wide overview                  |
-| Authority | `9999999202` | `state.admin.anc@gmail.com`       | `Authority@123` | State-wide command centre               |
-
-The seed now spans **6 Odisha districts (Khordha, Cuttack, Puri, Ganjam, Sambalpur,
-Balasore), 14 centres, 30 farmers and 6 officers**, with a deterministic week of
-procurement history so the state monitor always has trend data. The **Explore demo
-accounts** panel lists a dozen named sample farmers (not just the original two), and the
-fake-Google picker lists all 30.
-
-Walk-in farmers created by officers claim their account with a mock SMS code; there is no
-shared default password. Old bypass-era sessions are invalidated, and legacy self-created
-staff accounts require explicit re-provisioning.
-
-Reset sample data: `cd backend && npm run seed` (**destructive; never use on real user data**).
-
-## 6. End-to-end demo script
-
-Pick the matching role and any method: the **fake Google picker**, a **mock OTP** (the code
-is printed on screen), or the **Password** shortcut below.
-
-```
-FARMER                                    OFFICER (same backend state)
-─────                                     ─────────────────────────────
-Login 9999999001 / Farmer@123
-Dashboard → New Request
-Pick crop + quantity → Find Best Centre
-Read transparent recommendation           Login 9999999101 / Officer@123
-(distance/queue/capacity/wait)            Officer Dashboard → stats + alerts
-Confirm centre → Token ANC-xxx            Queue → Call → Start → Complete
-                                        Live queue + journey auto-refresh  ◄────── Farmer gets notified at each step
-                                        Assisted Entry → token for walk-in farmer
-
-SMART SELL (compare buyers before selling):
-Login 9999999001 / Farmer@123 → Sell Now → pick paddy + 20 q → compare ranked buyers
-(Govt MSP centres vs market buyers paying above MSP) → choose → booked as token (MSP)
-or a market booking reference (SSB-…) with on-the-spot settlement; market bookings are
-listed & cancellable on the Smart Sell page. If the farmer already holds an active
-request or booking, the page shows a clear "Sell Now is paused" panel with one-tap
-"Cancel request/booking & sell" actions instead of a silently disabled button.
-
-AUTHORITY: Login 9999999201 / Authority@123 → District Overview (congestion / capacity / volume / alerts)
-        → State Monitor (/authority/state): whole-state command centre — KPI grid,
-        7-day procurement trend, district comparison bars, crop-mix donut, live
-        pipeline flowchart, and one-tap drill-down into every district's centres.
+```text
+backend/                 Express API, services, JSON store, seeded data and tests
+frontend/                React + Vite web app, PWA assets and Capacitor Android project
+scripts/                 Agmarknet extract builders and translation checks
+screenshots/             Product captures used in this README
+API_INTEGRATION_MAP.md   API endpoints, roles and payload contract
+AUTH_SETUP.md            Mock authentication, demo accounts and constraints
+HISTORICAL_DATA.md       Market-data provenance, caveats and pipeline
+DELIVERABLES.md          Feature coverage and known limitations
+TECH_STACK.md            Detailed technology inventory
+DEPLOYMENT.md             Deployment and production hardening
+FREE_STACK.md             Free/demo hosting and APK instructions
+SAATHI_APP.md             Android app design and build guide
 ```
 
-## 7. Troubleshooting
-
-| Symptom                                   | Fix                                                                                          |
-| ----------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `Cannot reach the server` in the UI       | Backend not running: `cd backend && npm start`. Check port 5000 is free (`lsof -i :5000`).   |
-| Login page loads, API calls 404           | In dev, run the Vite dev server (proxy handles `/api`); in prod, use the single-port layout. |
-| Demo data looks stale / weird             | `cd backend && npm run seed` resets the JSON database.                                       |
-| 401 right after login                     | System clock skew, or `JWT_SECRET` changed between restarts — log in again.                  |
-| Port already in use                       | Set a different `PORT` in `backend/.env` and mirror it in `frontend/.env` (dev proxy).        |
-
-## 8. Production build & deployment notes
-
-- `cd frontend && npm run build` → static bundle in `frontend/dist`.
-- **Single-node deploy (recommended):** copy `frontend/dist` next to the backend, run the API
-  with `NODE_ENV=production node src/index.js`. Express serves the SPA with correct fallbacks.
-- Set a strong `JWT_SECRET`, restrict `CORS_ORIGIN` to your real domain, and put the API behind
-  HTTPS (e.g. nginx/Caddy reverse proxy).
-- The JSON store is demo-grade. For production, swap `backend/src/db/store.js` for PostgreSQL
-  (routes/services are isolated; no route code needs to change).
-- No hard-coded hosts, ports, or secrets are baked into either side — everything is env-driven.
-
-## 9. Security notes
-
-- Passwords are bcrypt-hashed; JWTs verified on every protected route; role checks enforced
-  server-side (`farmer` / `officer` / `authority`). Frontend route guards are UX-only.
-- Farmers can only see/touch their own requests and notifications; officers only their own centre.
-- Request validation lives in the backend; the UI validates only for convenience.
-- Auth endpoints enforce IP limits; mock OTPs also have contact-level limits, expiry and single-use checks.
-- **Authentication is mocked** — anyone can sign in as a sample account and codes are shown on
-  screen. Never expose this build to real users; see [AUTH_SETUP.md](AUTH_SETUP.md).
-- Use persistent transactional storage and a shared verification/rate-limit store before scaling beyond one process.
+For API details, see [API_INTEGRATION_MAP.md](API_INTEGRATION_MAP.md). For the full feature inventory and known limitations, see [DELIVERABLES.md](DELIVERABLES.md).
