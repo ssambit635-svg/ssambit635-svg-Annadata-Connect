@@ -7,6 +7,7 @@ import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { formatDate, formatInr } from '../../utils/format.js';
 import { useState } from 'react';
 import Icon from '../../components/Icon.jsx';
+import { toast } from '../../components/Toast.jsx';
 
 export default function OfficerDashboard() {
   const { t, pick, lang } = useI18n();
@@ -41,7 +42,7 @@ export default function OfficerDashboard() {
       await officerService.updateStatus(id, action);
       await reload();
     } catch (e) {
-      alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusy(false);
     }
@@ -55,7 +56,7 @@ export default function OfficerDashboard() {
       setRef('');
       await reload();
     } catch (e) {
-      alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusy(false);
     }
@@ -67,7 +68,7 @@ export default function OfficerDashboard() {
       await officerService.setCentreStatus(centre.status === 'OPEN' ? 'PAUSED' : 'OPEN');
       await reload();
     } catch (e) {
-      alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusy(false);
     }

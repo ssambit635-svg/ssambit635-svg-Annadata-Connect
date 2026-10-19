@@ -5,6 +5,7 @@ import { Loading, ErrorState, EmptyState } from '../../components/States.jsx';
 import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { useState } from 'react';
 import Icon from '../../components/Icon.jsx';
+import { toast } from '../../components/Toast.jsx';
 
 // Live queue for the officer's centre. Renders as a table on wide screens
 // and as stacked cards on phones (see `.queue-table` in web-apk.css) so
@@ -23,7 +24,7 @@ export default function OfficerQueue() {
       await officerService.updateStatus(id, action);
       await reload();
     } catch (e) {
-      alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusyId(null);
     }

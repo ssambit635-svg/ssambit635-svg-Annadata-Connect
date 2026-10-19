@@ -1,30 +1,56 @@
 // Live token view — big ticket, live queue, payment state, centre pulse.
+import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
 import { requestService } from '../../services/api/farmerService.js';
 import { formatDate, formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
+import { toast } from '../../components/Toast.jsx';
 import { ArtQueue, ArtScales } from '../art.jsx';
 import { MCard, MStat, MLoader, MError, TicketCard, MPayBadge, MBtn, SectionH } from '../ui.jsx';
+import { loadSnapshot, saveSnapshot } from '../../utils/offlineCache.js';
 
 export default function Token() {
   const { id } = useParams();
   const { t, pick, lang } = useI18n();
-  const { data, error, loading, reload, refreshing } = usePoll(() => requestService.get(id), { intervalMs: 8000, deps: [id] });
+  const { data, error, loading, reload, refreshing, stale } = usePoll(() => requestService.get(id), { intervalMs: 8000, deps: [id] });
 
-  if (loading) return <MLoader />;
-  if (error) return <MError error={error} onRetry={reload} />;
+  useEffect(() => { if (data) saveSnapshot(`token-${id}`, data); }, [data, id]);
+  const snapshot = !data && error ? loadSnapshot(`token-${id}`) : null;
+  const view = data || snapshot?.data;
+  if (loading && !view) return <MLoader />;
+  if (error && !view) return <MError error={error} onRetry={reload} />;
 
-  const { request, queue } = data;
+  const { request, queue } = view;
+
+  async function onShareToken() {
+    const text = `${t('app.name')} · ${request.tokenNumber} · ${t(`status.${request.status}`)} · ${pick(request.centre, 'name')}`;
+    try {
+      if (navigator.share) { await navigator.share({ title: t('app.name'), text }); return; }
+      await navigator.clipboard.writeText(text);
+      toast(t('common.copied'), 'success');
+    } catch { /* share sheet dismissed */ }
+  }
 
   return (
     <div className="m-stagger">
+      {(snapshot || stale) && (
+        <div className="m-banner warning" role="status">
+          <Icon name="wifiOff" size={17} />
+          {t('saathi.offlineSaved')}
+        </div>
+      )}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span className="m-live">{t('saathi.liveToken')}</span>
-        <button type="button" className="m-chip" onClick={reload} disabled={refreshing}>
-          <Icon name="refresh" size={14} /> {t('common.refresh')}
-        </button>
+        <span style={{ display: 'inline-flex', gap: 8 }}>
+          <button type="button" className="m-chip" onClick={onShareToken}>
+            <Icon name="send" size={14} /> {t('common.share')}
+          </button>
+          <button type="button" className="m-chip" onClick={reload} disabled={refreshing}>
+            <Icon name="refresh" size={14} /> {t('common.refresh')}
+          </button>
+        </span>
       </div>
 
       <TicketCard request={request} queue={queue} />

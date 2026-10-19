@@ -28,6 +28,7 @@ export default function MarketPricesPage() {
 
   const [meta, setMeta] = useState(null);
   const [metaError, setMetaError] = useState(null);
+  const [metaNonce, setMetaNonce] = useState(0);
   const [filters, setFilters] = useState({ level: 'market', commodity: '', state: '', district: '', market: '', fromYear: '', toYear: '' });
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -52,7 +53,7 @@ export default function MarketPricesPage() {
         }));
       })
       .catch(setMetaError);
-  }, []);
+  }, [metaNonce]);
 
   const commodityInfo = useMemo(
     () => meta?.commodities.find((c) => c.commodity === filters.commodity) || null,
@@ -172,7 +173,7 @@ export default function MarketPricesPage() {
     URL.revokeObjectURL(url);
   }
 
-  if (metaError) return <ErrorState error={metaError} onRetry={() => window.location.reload()} />;
+  if (metaError) return <ErrorState error={metaError} onRetry={() => { setMetaError(null); setMetaNonce((n) => n + 1); }} />;
   if (!meta) return <Loading />;
 
   const src = meta.source?.source;

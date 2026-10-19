@@ -18,6 +18,7 @@ export default function SmartSell() {
   const [mode, setMode] = useState('form'); // form | compare | result
   const [crops, setCrops] = useState([]);
   const [cropsError, setCropsError] = useState(null);
+  const [cropsNonce, setCropsNonce] = useState(0);
   const [form, setForm] = useState({ cropId: '', quantity: '' });
   const [fieldError, setFieldError] = useState('');
   const [apiError, setApiError] = useState(null);
@@ -73,6 +74,10 @@ export default function SmartSell() {
 
   useEffect(() => {
     referenceService.crops().then((d) => setCrops(d.crops)).catch((e) => setCropsError(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cropsNonce]);
+
+  useEffect(() => {
     loadBookings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -214,7 +219,7 @@ export default function SmartSell() {
       {mode === 'form' && (
         <form onSubmit={onCompare}>
           {cropsError ? (
-            <MError error={cropsError} onRetry={() => window.location.reload()} />
+            <MError error={cropsError} onRetry={() => { setCropsError(null); setCropsNonce((n) => n + 1); }} />
           ) : (
             <MCard plain>
               <div className="m-card-h"><Icon name="wheat" size={19} /> {t('smartSell.stepCrop')}</div>

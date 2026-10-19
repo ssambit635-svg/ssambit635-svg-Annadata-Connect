@@ -6,7 +6,7 @@ import { marketPriceService } from '../../services/api/marketPriceService.js';
 import { formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
 import { ArtMandi, ArtRupeeSprout } from '../art.jsx';
-import { MCard, MStat, MLoader, MError, MEmpty, MBadge, SectionH } from '../ui.jsx';
+import { MCard, MStat, MLoader, MSkeleton, MError, MEmpty, MBadge, SectionH } from '../ui.jsx';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -14,6 +14,7 @@ export default function Prices() {
   const { t, pick, lang } = useI18n();
   const [meta, setMeta] = useState(null);
   const [metaError, setMetaError] = useState(null);
+  const [metaNonce, setMetaNonce] = useState(0);
   const [commodity, setCommodity] = useState('');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ export default function Prices() {
       })
       .catch((e) => !cancelled && setMetaError(e));
     return () => { cancelled = true; };
-  }, []);
+  }, [metaNonce]);
 
   useEffect(() => {
     if (!commodity) return undefined;
@@ -64,8 +65,8 @@ export default function Prices() {
     return { points, path, area, min, max, x, y, W, H, last: points[points.length - 1], first: points[0] };
   }, [data]);
 
-  if (metaError) return <MError error={metaError} onRetry={() => window.location.reload()} />;
-  if (!meta) return <MLoader />;
+  if (metaError) return <MError error={metaError} onRetry={() => { setMetaError(null); setMetaNonce((n) => n + 1); }} />;
+  if (!meta) return <MSkeleton rows={2} />;
 
   const summary = data?.series?.summary;
   const commodities = meta.commodities;

@@ -3,8 +3,14 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useAuth, homeFor } from '../auth/AuthContext.jsx';
 import { useI18n } from '../i18n/I18nContext.jsx';
 import { AssistantWidget } from './AssistantWidget.jsx';
-import { ArtLogo } from '../mobile/art.jsx';
+import { BrandLogo } from './BrandLogo.jsx';
 import Icon from './Icon.jsx';
+import '../styles/portal-theme.css';
+import '../styles/polish-v3.css';
+import '../styles/polish-v4.css';
+import '../styles/mobile.css';
+import '../styles/mobile-gov.css';
+import '../styles/web-apk.css';
 
 // Portal chrome shared by every signed-in page.
 //   • ≥1024px  — a fixed sidebar: brand, role nav, and an account block with
@@ -124,7 +130,7 @@ export function AppShell() {
       {/* ── Sidebar (desktop) ── */}
       <aside className="portal-side">
         <Link to={home} className="portal-brand" aria-label={t('app.name')}>
-          <ArtLogo size={40} />
+          <BrandLogo size={42} />
           <span className="portal-brand-copy">
             <strong>{t('app.name')}</strong>
             <small>{t('landing.portalLabel')}</small>
@@ -167,7 +173,7 @@ export function AppShell() {
         {/* ── Top bar (mobile / tablet) ── */}
         <header className="portal-topbar">
           <Link to={home} className="portal-topbar-brand" aria-label={t('app.name')}>
-            <ArtLogo size={34} />
+            <BrandLogo size={36} />
             <span>{t('app.name')}</span>
           </Link>
           <div className="portal-topbar-actions" ref={menuRef}>

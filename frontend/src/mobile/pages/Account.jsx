@@ -103,7 +103,7 @@ export default function Account() {
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <BrandLogo size={44} />
           <div style={{ flex: 1 }}>
-            <div className="m-display" style={{ fontWeight: 800, fontSize: 16, color: 'var(--m-green-forest)' }}>{t('saathi.name')}</div>
+            <div className="m-display" style={{ fontWeight: 800, fontSize: 16, color: 'var(--m-green-forest)' }}>{t('app.name')}</div>
             <div style={{ fontSize: 12.5, color: 'var(--m-ink-soft)' }}>{t('saathi.madeWith')}</div>
           </div>
           {isNative && (
@@ -117,7 +117,7 @@ export default function Account() {
 
       <div style={{ textAlign: 'center', margin: '6px 0 10px' }}>
         <p style={{ fontSize: 11.5, color: 'var(--m-ink-faint)', marginTop: 6 }}>
-          {t('app.name')} · {t('app.tagline')} · v1.0
+          {t('app.name')} · {t('app.tagline')} · v1.2
         </p>
       </div>
 

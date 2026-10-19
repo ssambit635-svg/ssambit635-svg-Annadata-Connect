@@ -5,6 +5,7 @@ import { usePoll } from '../../hooks/usePoll.js';
 import { officerService } from '../../services/api/farmerService.js';
 import { formatDate, formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
+import { toast } from '../../components/Toast.jsx';
 import { MCard, MLoader, MError, MEmpty, MBadge, MPayBadge, MBtn, MBar, Sheet, MField, MInput } from '../ui.jsx';
 
 const FILTERS = ['', 'WAITING', 'CALLED', 'PROCESSING', 'COMPLETED', 'REJECTED', 'CANCELLED'];
@@ -30,7 +31,7 @@ export default function OfficerRequests() {
       setNote('');
       await reload();
     } catch (e) {
-      window.alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusyId(null);
     }
@@ -44,7 +45,7 @@ export default function OfficerRequests() {
       setRef('');
       await reload();
     } catch (e) {
-      window.alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusyId(null);
     }

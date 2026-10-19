@@ -1,13 +1,14 @@
 // Farmer home — greeting hero, live token ticket, quick actions,
 // notifications and a rotating "Connect says" tip.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
 import { farmerService, notificationService, requestService } from '../../services/api/farmerService.js';
 import Icon from '../../components/Icon.jsx';
-import { ArtSun, ArtFarmer, ArtField, ArtWheat, ArtLeafPair, ArtRupeeSprout } from '../art.jsx';
-import { MCard, MBtn, MLoader, MError, MEmpty, TicketCard, SectionH, MConfirm, greetingKey } from '../ui.jsx';
+import { ArtField, ArtWheat, ArtLeafPair, ArtRupeeSprout } from '../art.jsx';
+import { loadSnapshot, saveSnapshot } from '../../utils/offlineCache.js';
+import { MCard, MBtn, MSkeleton, MError, MEmpty, TicketCard, SectionH, MConfirm, greetingKey } from '../ui.jsx';
 
 const ACTIONS = [
   { to: '/requests/new', icon: 'plus', key: 'farmer.createRequest', tone: '' },
@@ -33,10 +34,16 @@ export default function Home() {
   const [cancelBusy, setCancelBusy] = useState(false);
   const [cancelError, setCancelError] = useState(null);
 
-  if (loading) return <MLoader />;
-  if (error) return <MError error={error} onRetry={reload} />;
+  // Offline gate-view: persist last good home so the token still shows
+  // without network (labelled offline; queue inside is last-known).
+  useEffect(() => { if (data) saveSnapshot('farmer-home', data); }, [data]);
+  const snapshot = !data && error ? loadSnapshot('farmer-home') : null;
+  const view = data || snapshot?.data;
 
-  const { profile, activeRequest, activeQueue, notifications, unread } = data;
+  if (loading && !view) return <MSkeleton rows={3} />;
+  if (error && !view) return <MError error={error} onRetry={reload} />;
+
+  const { profile, activeRequest, activeQueue, notifications, unread } = view;
   const tip = TIPS[new Date().getDate() % TIPS.length];
   const dateStr = new Date().toLocaleDateString(lang === 'en' ? 'en-IN' : lang === 'hi' ? 'hi-IN' : 'or-IN', { weekday: 'long', day: 'numeric', month: 'long' });
 
@@ -56,9 +63,14 @@ export default function Home() {
 
   return (
     <div className="m-stagger">
+      {snapshot && (
+        <div className="m-banner warning" role="status">
+          <Icon name="wifiOff" size={17} />
+          {t('saathi.offlineSaved')}
+        </div>
+      )}
       {/* ── greeting hero ── */}
       <div className="m-hero">
-        <ArtSun size={72} className="m-hero-art" />
         <div className="m-hero-eyebrow">{t('app.name')}</div>
         <h1 className="m-hero-title">
           {t(greetingKey())}, {profile.name.split(' ')[0]}
@@ -108,7 +120,6 @@ export default function Home() {
           </>
         ) : (
           <MCard className="gold" style={{ textAlign: 'center' }}>
-            <ArtFarmer size={92} className="m-anim-pop" style={{ margin: '0 auto' }} />
             <div className="m-state-title" style={{ marginTop: 6 }}>{t('farmer.noActive')}</div>
             <p style={{ color: 'var(--m-ink-soft)', fontSize: 14.5, margin: '4px 0 14px' }}>{t('farmer.noActiveHint')}</p>
             <MBtn to="/requests/new" variant="primary" icon={<Icon name="plus" size={18} />}>{t('farmer.createRequest')}</MBtn>

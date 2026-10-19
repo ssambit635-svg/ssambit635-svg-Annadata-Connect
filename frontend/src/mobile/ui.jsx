@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import { useI18n } from '../i18n/I18nContext.jsx';
 import { statusTone, formatInr, waitText, JOURNEY, formatDate } from '../utils/format.js';
-import { ArtWheat, ArtBasket, ArtSun, ArtLogo, ArtBirds, ArtNotice } from './art.jsx';
+import { ArtWheat, ArtBasket, ArtSun, ArtBirds, ArtNotice } from './art.jsx';
+import { BrandLogo } from '../components/BrandLogo.jsx';
 
 /* ── Card ────────────────────────────────────────────────────────── */
 export function MCard({ className = '', plain, tight, children, ...rest }) {
@@ -105,10 +106,11 @@ export function MSelect({ className = '', children, ...rest }) {
 
 /* number stepper with big +/- buttons */
 export function MStepper({ value, min = 1, max = 500, onChange, id }) {
+  const { t } = useI18n();
   const set = (n) => onChange(Math.min(max, Math.max(min, n)));
   return (
     <div className="m-stepper">
-      <button type="button" className="m-step-btn" aria-label="−" onClick={() => set(Number(value || min) - 1)}>−</button>
+      <button type="button" className="m-step-btn" aria-label={t('common.decrease')} onClick={() => set(Number(value || min) - 1)}>−</button>
       <input
         id={id}
         className="m-input"
@@ -119,9 +121,9 @@ export function MStepper({ value, min = 1, max = 500, onChange, id }) {
         value={value}
         onChange={(e) => onChange(e.target.value === '' ? '' : Number(e.target.value))}
         onBlur={(e) => { if (e.target.value === '') onChange(min); }}
-        aria-label="quantity"
+        aria-label={t('farmer.quantity')}
       />
-      <button type="button" className="m-step-btn" aria-label="+" onClick={() => set(Number(value || min) + 1)}>+</button>
+      <button type="button" className="m-step-btn" aria-label={t('common.increase')} onClick={() => set(Number(value || min) + 1)}>+</button>
     </div>
   );
 }
@@ -135,7 +137,20 @@ export function MOption({ selected, onSelect, disabled, title, sub, chips, child
       aria-checked={selected}
       tabIndex={0}
       onClick={() => !disabled && onSelect?.()}
-      onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && !disabled) { e.preventDefault(); onSelect?.(); } }}
+      onKeyDown={(e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && !disabled) { e.preventDefault(); onSelect?.(); return; }
+        // Radiogroup arrow-key pattern: move focus + selection to a sibling.
+        if (['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(e.key)) {
+          e.preventDefault();
+          const group = Array.from(e.currentTarget.parentElement?.querySelectorAll('[role="radio"]:not(.disabled)') || []);
+          const idx = group.indexOf(e.currentTarget);
+          if (idx === -1) return;
+          const dir = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1;
+          const nextEl = group[(idx + dir + group.length) % group.length];
+          nextEl?.focus();
+          nextEl?.click();
+        }
+      }}
     >
       <span className="m-check" aria-hidden="true"><Icon name="check" size={15} strokeWidth={3.4} /></span>
       <div className="m-opt-title">
@@ -174,10 +189,25 @@ export function MLoader({ label }) {
   const { t } = useI18n();
   return (
     <div className="m-loader-brand" role="status" aria-live="polite">
-      <ArtLogo size={56} />
-      <div className="m-loader-word">{t('saathi.name')}</div>
+      <BrandLogo size={60} />
+      <div className="m-loader-word">{t('app.name')}</div>
       <div className="m-spinner" aria-hidden="true" />
       <p style={{ color: 'var(--m-ink-faint)', fontSize: 13.5 }}>{label || t('common.loading')}</p>
+    </div>
+  );
+}
+
+/* Skeleton placeholders for initial loads (calmer than the brand loader). */
+export function MSkeleton({ rows = 3 }) {
+  return (
+    <div className="m-skeleton" role="status" aria-busy="true">
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className="m-skeleton-card" aria-hidden="true">
+          <span className="m-skel w60" />
+          <span className="m-skel w90" />
+          <span className="m-skel w40" />
+        </div>
+      ))}
     </div>
   );
 }
@@ -218,21 +248,31 @@ export function MEmpty({ art, title, hint, action }) {
 
 /* ── Bottom sheet & confirm ──────────────────────────────────────── */
 export function Sheet({ open, onClose, title, sub, children }) {
+  const sheetRef = useRef(null);
   useEffect(() => {
     if (!open) return undefined;
+    const previouslyFocused = document.activeElement;
     const onKey = (e) => { if (e.key === 'Escape') onClose?.(); };
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
+    // Move screen-reader/keyboard focus into the sheet, restore on close.
+    const timer = setTimeout(() => {
+      const root = sheetRef.current;
+      const target = root?.querySelector('input, select, textarea, button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])');
+      (target || root)?.focus?.();
+    }, 40);
     return () => {
+      clearTimeout(timer);
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
+      previouslyFocused?.focus?.();
     };
   }, [open, onClose]);
   if (!open) return null;
   return (
     <>
-      <div className="m-sheet-backdrop" onClick={onClose} />
-      <div className="m-sheet" role="dialog" aria-modal="true" aria-label={title}>
+      <div className="m-sheet-backdrop" onClick={onClose} aria-hidden="true" />
+      <div className="m-sheet" role="dialog" aria-modal="true" aria-label={title} ref={sheetRef} tabIndex={-1}>
         <div className="m-sheet-grab" aria-hidden="true" />
         {title && <h3>{title}</h3>}
         {sub && <p className="m-sheet-sub">{sub}</p>}
@@ -400,4 +440,4 @@ export function greetingKey() {
   return 'saathi.greetDay';
 }
 
-export { ArtWheat, ArtBasket, ArtLogo, ArtBirds, ArtSun, ArtNotice };
+export { ArtWheat, ArtBasket, ArtBirds, ArtSun, ArtNotice };

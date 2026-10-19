@@ -6,6 +6,7 @@ import { Loading, ErrorState, EmptyState } from '../../components/States.jsx';
 import { StatusBadge, PaymentBadge } from '../../components/StatusBadge.jsx';
 import { formatDate, formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
+import { toast } from '../../components/Toast.jsx';
 
 const FILTERS = ['', 'WAITING', 'CALLED', 'PROCESSING', 'COMPLETED', 'REJECTED', 'CANCELLED'];
 
@@ -33,7 +34,7 @@ export default function OfficerRequests() {
       setRef('');
       await reload();
     } catch (e) {
-      alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusyId(null);
     }
@@ -47,7 +48,7 @@ export default function OfficerRequests() {
       setNote('');
       await reload();
     } catch (e) {
-      alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusyId(null);
     }

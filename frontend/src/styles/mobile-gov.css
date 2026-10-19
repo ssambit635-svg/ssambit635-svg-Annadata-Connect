@@ -917,3 +917,50 @@
 .m-root .m-account-row .m-avatar.m-avatar-5 { background: linear-gradient(160deg, #0f8f8a, #0b6b67); }
 .m-root .m-stat-grid-2 .m-stat-wide { grid-column: 1 / -1; flex-direction: row-reverse; justify-content: space-between; align-items: center; }
 .m-root .m-centre-mark.m-centre-mark-icon { display: grid; place-items: center; color: var(--m-gold-bright); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); }
+
+/* ── Critical-fix: compact formal Welcome, FAB clearance, demo banner ── */
+/* Login must be reachable without scrolling past a giant hero. */
+.m-root .m-welcome-hero { padding: calc(12px + env(safe-area-inset-top, 0px)) 20px 16px; margin-bottom: 14px; border-radius: 0 0 24px 24px; }
+.m-root .m-welcome-hero .m-welcome-title { font-size: 27px; margin-top: 8px; }
+.m-root .m-welcome-hero .m-welcome-tag { margin-top: 4px; }
+.m-root .m-welcome-badge { width: 72px; height: 72px; margin: 12px auto 0; }
+.m-root .m-demo-banner {
+  display: flex; gap: 8px; align-items: flex-start;
+  margin: 0 0 12px; padding: 10px 12px;
+  background: #fdf1d7; color: #6b4e08;
+  border: 1.5px solid #ecd9a8; border-radius: var(--m-r-md);
+  font-size: 12.5px; font-weight: 700; line-height: 1.45;
+}
+.m-root .m-demo-banner svg { flex: none; margin-top: 1px; }
+/* Extra scroll room so the last card/button can always clear tab bar + FAB. */
+.m-root .m-shell { padding-bottom: calc(var(--m-tab-h) + 92px + env(safe-area-inset-bottom, 0px)); }
+
+/* Real app logo on the ID-card header (cream disc so the ring reads on green) */
+.m-root .m-id-logo { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #fbfaf5; flex: none; }
+
+/* ── Final round: sunlight contrast · 48dp targets · tablet · skeletons ── */
+.m-root { --m-ink-soft: #41544a; --m-ink-faint: #516357; }
+.m-root .m-ticket .m-cell .m-k,
+.m-root .m-factors .m-k { font-size: 12px; }
+.m-root .m-btn.sm { min-height: 48px; }
+.m-root .m-chip { min-height: 44px; }
+.m-root .m-step-btn { min-width: 48px; min-height: 48px; }
+
+.m-root .m-skeleton { display: grid; gap: 12px; }
+.m-root .m-skeleton-card { padding: 18px; border-radius: var(--m-r-lg, 18px); background: var(--m-paper, #fff); border: 1px solid var(--m-line, #dde6da); }
+.m-root .m-skel { display: block; height: 14px; border-radius: 7px; margin-top: 10px; background: linear-gradient(90deg, #e6eee1, #f2f6ee, #e6eee1); background-size: 200% 100%; animation: m-skel-slide 1.2s linear infinite; }
+.m-root .m-skel:first-child { margin-top: 0; }
+.m-root .m-skel.w60 { width: 60%; } .m-root .m-skel.w90 { width: 90%; } .m-root .m-skel.w40 { width: 40%; }
+@keyframes m-skel-slide { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .m-root .m-skel { animation: none; } }
+
+/* Tablets / foldables / landscape: use the width instead of a phone column.
+   Officers use centre tablets — grids already auto-fit, they just need room. */
+@media (min-width: 720px) {
+  .m-root .m-page { max-width: 920px; }
+  .m-root .m-tabbar { max-width: 920px; }
+  .m-root .m-appbar { max-width: 920px; margin-left: auto; margin-right: auto; width: 100%; box-sizing: border-box; }
+  .m-root .m-sheet { max-width: 640px; }
+  .m-root .m-welcome { max-width: 640px; }
+  .m-root .m-ticket .m-ticket-grid { grid-template-columns: repeat(4, 1fr); }
+}

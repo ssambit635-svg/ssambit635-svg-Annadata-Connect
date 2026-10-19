@@ -7,6 +7,7 @@ import { usePoll } from '../../hooks/usePoll.js';
 import { officerService } from '../../services/api/farmerService.js';
 import { formatInr, formatDate } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
+import { toast } from '../../components/Toast.jsx';
 import { ArtQueue, ArtScales, ArtMandi } from '../art.jsx';
 import { MCard, MStat, MBar, MLoader, MError, MEmpty, MBadge, MBtn, MConfirm, Sheet, MField, MInput, SectionH } from '../ui.jsx';
 
@@ -44,7 +45,7 @@ export default function OfficerHome() {
       await officerService.updateStatus(id, action);
       await reload();
     } catch (e) {
-      window.alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusy(false);
     }
@@ -58,7 +59,7 @@ export default function OfficerHome() {
       setRef('');
       await reload();
     } catch (e) {
-      window.alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusy(false);
     }
@@ -71,7 +72,7 @@ export default function OfficerHome() {
       setToggleOpen(false);
       await reload();
     } catch (e) {
-      window.alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusy(false);
     }

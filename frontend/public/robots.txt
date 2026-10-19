@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Public pages only (app routes require sign-in).
+# Update the host if the production domain differs from the Render default.
+Sitemap: https://annadata-connect.onrender.com/sitemap.xml

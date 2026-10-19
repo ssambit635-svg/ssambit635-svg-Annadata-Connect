@@ -1,30 +1,42 @@
 // Farmer ID card — a keepsake passbook-style card with QR, shareable by print.
+import { useEffect } from 'react';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
 import { farmerService } from '../../services/api/farmerService.js';
 import { formatDate } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
+import { BrandLogo } from '../../components/BrandLogo.jsx';
 import { ArtIdBadge } from '../art.jsx';
 import { MCard, MLoader, MError, MBtn } from '../ui.jsx';
+import { loadSnapshot, saveSnapshot } from '../../utils/offlineCache.js';
 
 export default function IdCard() {
   const { t, lang, pick } = useI18n();
-  const { data: card, error, reload } = usePoll(() => farmerService.idCard());
+  const { data, error, reload } = usePoll(() => farmerService.idCard());
+  useEffect(() => { if (data) saveSnapshot('id-card', data); }, [data]);
+  const snapshot = !data && error ? loadSnapshot('id-card') : null;
+  const card = data || snapshot?.data;
 
-  if (error) return <MError error={error} onRetry={reload} />;
+  if (error && !card) return <MError error={error} onRetry={reload} />;
   if (!card) return <MLoader />;
 
   return (
     <div className="m-stagger" style={{ textAlign: 'center' }}>
+      {snapshot && (
+        <div className="m-banner warning" role="status" style={{ textAlign: 'left' }}>
+          <Icon name="wifiOff" size={17} />
+          {t('saathi.offlineSaved')}
+        </div>
+      )}
       <ArtIdBadge size={80} className="m-anim-pop" style={{ margin: '4px auto' }} />
       <h2 style={{ fontSize: 22, fontWeight: 800 }}>{t('idCard.title')}</h2>
       <p style={{ color: 'var(--m-ink-soft)', fontSize: 14, marginBottom: 14 }}>{t('idCard.hint')}</p>
 
       <div className="m-idcard" style={{ textAlign: 'left' }}>
         <div className="m-id-head">
-          <Icon name="wheat" size={26} />
+          <span className="m-id-logo"><BrandLogo size={30} /></span>
           <div style={{ flex: 1 }}>
-            <div className="m-display" style={{ fontSize: 17, fontWeight: 800, color: '#fff' }}>{t('saathi.name')} · {t('app.name')}</div>
+            <div className="m-display" style={{ fontSize: 17, fontWeight: 800, color: '#fff' }}>{t('app.name')}</div>
             <div style={{ fontSize: 11.5, color: '#cfe2cd', fontWeight: 600 }}>{t('idCard.cardLabel')}</div>
           </div>
           <span className="m-badge gold">Gov</span>
@@ -55,7 +67,7 @@ export default function IdCard() {
         </div>
 
         <div className="m-id-foot">
-          <span>{t('landing.helpline')} 155266</span>
+          <span>{t('landing.helpline')} 155261</span>
           <span>{t('idCard.issued')} {card.registeredAt ? formatDate(card.registeredAt, lang) : '—'}</span>
         </div>
       </div>

@@ -17,6 +17,7 @@ import marketPriceRoutes from './routes/marketPrices.routes.js';
 import officerRoutes from './routes/officer.routes.js';
 import authorityRoutes from './routes/authority.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
+import publicRoutes from './routes/public.routes.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -25,6 +26,13 @@ export function createApp() {
 
   const app = express();
   app.disable('x-powered-by');
+  // Baseline security headers (single-port prod serves the frontend too).
+  app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    next();
+  });
   app.set('trust proxy', config.trustProxy);
   app.use(express.json({ limit: '256kb' }));
   app.use(morgan(config.env === 'production' ? 'combined' : 'dev'));
@@ -38,6 +46,7 @@ export function createApp() {
 
   app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'annadata-connect-api', time: new Date().toISOString() }));
 
+  app.use('/api/public', publicRoutes);
   app.use('/api/auth', authRoutes);
   app.use('/api/reference', referenceRoutes);
   app.use('/api/farmers', farmerRoutes);

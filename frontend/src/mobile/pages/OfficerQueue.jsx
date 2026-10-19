@@ -4,6 +4,7 @@ import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
 import { officerService } from '../../services/api/farmerService.js';
 import Icon from '../../components/Icon.jsx';
+import { toast } from '../../components/Toast.jsx';
 import { ArtQueue } from '../art.jsx';
 import { MCard, MLoader, MError, MEmpty, MBadge, MBtn } from '../ui.jsx';
 
@@ -21,7 +22,7 @@ export default function OfficerQueue() {
       await officerService.updateStatus(id, action);
       await reload();
     } catch (e) {
-      window.alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusyId(null);
     }
