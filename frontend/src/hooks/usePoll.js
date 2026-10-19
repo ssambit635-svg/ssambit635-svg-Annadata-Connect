@@ -12,6 +12,8 @@ export function usePoll(fn, { intervalMs = 0, deps = [] } = {}) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [updatedAt, setUpdatedAt] = useState(null);
+  const [stale, setStale] = useState(false);
   const fnRef = useRef(fn);
   fnRef.current = fn;
   const dataRef = useRef(null);
@@ -27,11 +29,15 @@ export function usePoll(fn, { intervalMs = 0, deps = [] } = {}) {
       dataRef.current = result;
       setData(result);
       setError(null);
+      setUpdatedAt(new Date());
+      setStale(false);
     } catch (e) {
       if (!aliveRef.current) return;
       if (dataRef.current) {
-        // Keep the last good data on screen during a background refresh failure.
+        // Keep the last good data on screen during a background refresh failure,
+        // but mark it stale so the UI can say so instead of looking live.
         setError(null);
+        setStale(true);
       } else {
         setError(e);
       }
@@ -60,5 +66,5 @@ export function usePoll(fn, { intervalMs = 0, deps = [] } = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [load, intervalMs, ...deps]);
 
-  return { data, error, loading, refreshing, reload: () => load(false) };
+  return { data, error, loading, refreshing, updatedAt, stale, reload: () => load(false) };
 }

@@ -15,7 +15,15 @@ export default function NewRequest() {
   const [step, setStep] = useState(1);
   const [crops, setCrops] = useState([]);
   const [cropsError, setCropsError] = useState(null);
-  const [form, setForm] = useState({ cropId: '', quantity: '' });
+  const [cropsNonce, setCropsNonce] = useState(0);
+  // Wizard draft survives back-button / app-kill / accidental reload.
+  const [form, setForm] = useState(() => {
+    try {
+      const draft = JSON.parse(localStorage.getItem('anc-draft-new-request'));
+      if (draft && typeof draft === 'object') return { cropId: draft.cropId || '', quantity: draft.quantity ?? '' };
+    } catch { /* fresh start */ }
+    return { cropId: '', quantity: '' };
+  });
   const [fieldError, setFieldError] = useState('');
   const [reco, setReco] = useState(null);
   const [selected, setSelected] = useState(null);
@@ -24,8 +32,12 @@ export default function NewRequest() {
   const [apiError, setApiError] = useState(null);
 
   useEffect(() => {
+    try { localStorage.setItem('anc-draft-new-request', JSON.stringify(form)); } catch { /* storage full/blocked */ }
+  }, [form]);
+
+  useEffect(() => {
     referenceService.crops().then((d) => setCrops(d.crops)).catch((e) => setCropsError(e));
-  }, []);
+  }, [cropsNonce]);
 
   const crop = crops.find((c) => c.id === form.cropId);
 
@@ -65,6 +77,7 @@ export default function NewRequest() {
         centreId: selected,
       });
       setResult(data);
+      try { localStorage.removeItem('anc-draft-new-request'); } catch { /* noop */ }
       setStep(3);
     } catch (err) {
       setApiError(err);
@@ -73,7 +86,7 @@ export default function NewRequest() {
     }
   }
 
-  if (cropsError && step === 1) return <MError error={cropsError} onRetry={() => window.location.reload()} />;
+  if (cropsError && step === 1) return <MError error={cropsError} onRetry={() => { setCropsError(null); setCropsNonce((n) => n + 1); }} />;
 
   return (
     <div>

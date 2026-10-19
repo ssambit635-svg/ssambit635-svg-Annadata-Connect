@@ -7,6 +7,7 @@ import { Loading, ErrorState } from '../../components/States.jsx';
 import { TokenCard } from '../../components/TokenCard.jsx';
 import { formatDate, formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
+import { toast, confirmDialog } from '../../components/Toast.jsx';
 import { MCard, MBtn, MStat, SectionH, greetingKey } from '../../mobile/ui.jsx';
 import { ArtSun, ArtRupeeSprout, ArtWheat, ArtFarmer, ArtLeafPair } from '../../mobile/art.jsx';
 
@@ -37,13 +38,13 @@ export default function FarmerDashboard() {
   const dateStr = new Date().toLocaleDateString(lang === 'en' ? 'en-IN' : lang === 'hi' ? 'hi-IN' : 'or-IN', { weekday: 'long', day: 'numeric', month: 'long' });
 
   async function onCancel() {
-    if (!window.confirm(t('farmer.cancelConfirm'))) return;
+    if (!(await confirmDialog({ message: t('farmer.cancelConfirm'), confirmLabel: t('common.yes'), cancelLabel: t('common.cancel'), danger: true }))) return;
     setCancelBusy(true);
     try {
       await requestService.cancel(activeRequest.id);
       reload();
     } catch (e) {
-      alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setCancelBusy(false);
     }

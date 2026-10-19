@@ -394,7 +394,7 @@ table.data tbody tr:hover { background: #f4f8f5; }
   background: var(--c-primary-dark); color: #fff; padding: 0.85rem 1.1rem;
   display: flex; align-items: center; gap: 0.75rem;
 }
-.idc-mark { width: 42px; height: 42px; border-radius: 50%; background: #fbbf24; color: #3a2d02; display: grid; place-items: center; flex-shrink: 0; }
+.idc-mark { width: 44px; height: 44px; border-radius: 50%; background: #fbfaf5; display: grid; place-items: center; flex-shrink: 0; }
 .idc-title strong { display: block; font-size: 1.15rem; letter-spacing: 0.01em; }
 .idc-title span { display: block; color: #cfe4d3; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; }
 .idc-gov { margin-left: auto; font-size: 0.72rem; color: #cfe4d3; text-align: right; max-width: 200px; line-height: 1.35; }
@@ -510,8 +510,8 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .home-header-inner { min-height: 78px; display: flex; align-items: center; gap: 1.5rem; }
 .home-brand { display: inline-flex; align-items: center; gap: 0.7rem; text-decoration: none; min-width: max-content; }
 .home-brand-mark {
-  width: 45px; height: 45px; display: grid; place-items: center; border-radius: 14px;
-  color: #fff; background: var(--home-forest); box-shadow: 0 6px 15px rgba(14,91,59,0.2);
+  width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%;
+  background: transparent;
 }
 .home-brand-copy strong { display: block; color: var(--home-forest-dark); font-size: 1.08rem; line-height: 1.1; letter-spacing: -0.02em; }
 .home-brand-copy small { display: block; color: #668074; font-size: 0.7rem; margin-top: 0.28rem; letter-spacing: 0.015em; }
@@ -715,7 +715,8 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .home-footer-contact { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.75rem 1.1rem; border: 1px solid rgba(255,255,255,0.45); border-radius: 999px; color: #fff !important; font-size: 0.82rem; font-weight: 850; text-decoration: none; transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease; }
 .home-footer-contact:hover { border-color: var(--home-gold); background: var(--home-gold); color: #34280b !important; transform: translateY(-2px); }
 .home-footer-grid { display: grid; grid-template-columns: 1.65fr repeat(3, 1fr); gap: 2rem; padding-top: 3rem; padding-bottom: 3.2rem; }
-.home-brand-footer .home-brand-mark { color: var(--home-forest-dark); background: var(--home-gold); box-shadow: none; }
+.home-brand-footer .home-brand-mark { width: 52px; height: 52px; background: #fbfaf5; box-shadow: 0 0 0 1px rgba(255,255,255,0.25); }
+.home-brand-footer .home-brand-mark .brand-logo { width: 44px; height: 44px; }
 .home-brand-footer .home-brand-copy strong { color: #fff; }
 .home-brand-footer .home-brand-copy small { color: #9fc0aa; }
 .home-footer-brand-col > p { max-width: 280px; margin: 1rem 0 0.75rem; color: #9fc0aa; font-size: 0.82rem; line-height: 1.55; }
@@ -1055,3 +1056,22 @@ a, button { -webkit-tap-highlight-color: transparent; }
    new request, assisted entry) sit inside the shell's main.page — the outer
    page owns the gutters, so the inner wrapper drops its own padding. */
 .page > .page { padding: 0; margin: 0; }
+
+/* ── Toasts + confirm dialog (both frontends; replaces window.alert/confirm) ── */
+.anc-toasts { position: fixed; left: 50%; transform: translateX(-50%); bottom: 24px; z-index: 400; display: grid; gap: 8px; width: min(92vw, 440px); pointer-events: none; }
+.anc-toast { pointer-events: auto; display: flex; align-items: center; gap: 9px; padding: 12px 14px; border-radius: 14px; background: #123e2d; color: #f3f7ef; font-size: 14px; font-weight: 600; box-shadow: 0 14px 34px rgba(10, 40, 25, 0.35); animation: anc-toast-in 0.22s ease both; }
+.anc-toast.tone-error { background: #7c2620; }
+.anc-toast.tone-success { background: #14532d; }
+.anc-toast span { flex: 1; line-height: 1.35; }
+.anc-toast-x { display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 8px; background: rgba(255,255,255,0.12); color: inherit; cursor: pointer; flex: none; }
+@keyframes anc-toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.anc-confirm-backdrop { position: fixed; inset: 0; z-index: 410; background: rgba(9, 32, 20, 0.52); display: grid; place-items: center; padding: 20px; }
+.anc-confirm { width: min(92vw, 400px); background: #fffefa; border-radius: 20px; padding: 22px; box-shadow: 0 24px 60px rgba(10, 40, 25, 0.4); animation: anc-toast-in 0.2s ease both; }
+.anc-confirm-title { display: block; font-size: 17px; color: #123e2d; margin-bottom: 6px; }
+.anc-confirm-msg { margin: 0 0 18px; font-size: 15px; line-height: 1.55; color: #33473b; }
+.anc-confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.anc-confirm-btn { min-height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #cfdccf; background: #fff; color: #123e2d; font-size: 15px; font-weight: 700; cursor: pointer; }
+.anc-confirm-btn.is-primary { background: #14532d; border-color: #14532d; color: #fff; }
+.anc-confirm-btn.is-danger { background: #b3382c; border-color: #b3382c; color: #fff; }
+@media (max-width: 720px) { .anc-toasts { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); } }
+@media (prefers-reduced-motion: reduce) { .anc-toast, .anc-confirm { animation: none; } }

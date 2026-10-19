@@ -21,3 +21,7 @@ frontend/android/local.properties
 frontend/android/app/src/main/assets/public/
 frontend/android/app/src/main/assets/capacitor.config.json
 frontend/android/app/src/main/assets/capacitor.plugins.json
+# Android signing secrets
+*.jks
+*.keystore
+frontend/android/keystore.properties

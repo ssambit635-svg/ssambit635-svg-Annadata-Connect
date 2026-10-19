@@ -16,7 +16,7 @@ import { useI18n } from '../i18n/I18nContext.jsx';
 import { BrandLogo, BrandWordmark } from './BrandLogo.jsx';
 
 const SESSION_KEY = 'anc-splash-shown';
-const DURATION = 1900;
+const DURATION = 900; // shortened: farmers reopen the app at the gate; branding must not block the token
 const FADE = 520;
 
 function alreadyShown() {
@@ -43,7 +43,7 @@ export function SplashScreen({ force = false }) {
   if (phase === 'done') return null;
 
   return (
-    <div className={`anc-splash${phase === 'out' ? ' is-leaving' : ''}`} role="status" aria-label={t('saathi.name')}>
+    <div className={`anc-splash${phase === 'out' ? ' is-leaving' : ''}`} role="status" aria-label={t('app.name')}>
       <div className="anc-splash-glow" aria-hidden="true" />
       <div className="anc-splash-mark">
         <BrandLogo size={148} animate />

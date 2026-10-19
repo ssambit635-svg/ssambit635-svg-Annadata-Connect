@@ -1,24 +1,61 @@
 {
-  "name": "Annadata Connect · ଅନ୍ନଦାତା କନେକ୍ଟ",
+  "name": "Annadata Connect \u00b7 \u0b05\u0b28\u0b4d\u0b28\u0b26\u0b3e\u0b24\u0b3e \u0b15\u0b28\u0b47\u0b15\u0b4d\u0b1f",
   "short_name": "Annadata",
-  "description": "Book a crop procurement token, follow the live queue and track payment. Odisha pilot — English · हिंदी · ଓଡ଼ିଆ.",
+  "description": "Book a crop procurement token, follow the live queue and track payment. Odisha pilot \u2014 English \u00b7 \u0939\u093f\u0902\u0926\u0940 \u00b7 \u0b13\u0b21\u0b3c\u0b3f\u0b06.",
   "id": "/",
-  "start_url": "/?source=pwa",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#fbfaf5",
   "theme_color": "#07382a",
   "lang": "en-IN",
   "dir": "ltr",
-  "categories": ["government", "productivity", "utilities"],
+  "categories": [
+    "government",
+    "productivity",
+    "utilities"
+  ],
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
-    { "name": "New request", "url": "/requests/new", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Mandi prices", "url": "/prices", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+    {
+      "name": "New request",
+      "url": "/requests/new",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Mandi prices",
+      "url": "/market-prices",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }

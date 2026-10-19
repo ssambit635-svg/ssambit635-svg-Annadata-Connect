@@ -4,39 +4,44 @@
 // soft layered cards, the brand emblem kit, Plus Jakarta Sans / Inter type.
 // It reuses the same auth, i18n, polling hooks and API services, so the
 // app and website stay feature-identical by construction.
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth, homeFor } from '../auth/AuthContext.jsx';
 import { I18nProvider, useI18n } from '../i18n/I18nContext.jsx';
 import { ErrorBoundary } from '../components/ErrorBoundary.jsx';
 import Icon from '../components/Icon.jsx';
 import { answer } from '../assistant/brain.js';
-import { ArtSun } from './art.jsx';
 import { BrandLogo } from '../components/BrandLogo.jsx';
 import { SplashScreen } from '../components/SplashScreen.jsx';
+import '../styles/polish-v3.css';
+import '../styles/polish-v4.css';
+import '../styles/mobile.css';
+import '../styles/mobile-gov.css';
 import { notificationService } from '../services/api/farmerService.js';
 import { usePoll } from '../hooks/usePoll.js';
 import { MLoader, Sheet, useOffline } from './ui.jsx';
 
-import Welcome from './pages/Welcome.jsx';
-import Home from './pages/Home.jsx';
-import NewRequest from './pages/NewRequest.jsx';
-import SmartSell from './pages/SmartSell.jsx';
-import Token from './pages/Token.jsx';
-import Status from './pages/Status.jsx';
-import History from './pages/History.jsx';
-import IdCard from './pages/IdCard.jsx';
-import Centres from './pages/Centres.jsx';
-import Prices from './pages/Prices.jsx';
-import Account from './pages/Account.jsx';
-import OfficerHome from './pages/OfficerHome.jsx';
-import OfficerQueue from './pages/OfficerQueue.jsx';
-import OfficerRequests from './pages/OfficerRequests.jsx';
-import OfficerAssisted from './pages/OfficerAssisted.jsx';
-import AuthorityHome from './pages/AuthorityHome.jsx';
-import AuthorityCentre from './pages/AuthorityCentre.jsx';
-import AuthoritySimulator from './pages/AuthoritySimulator.jsx';
-import NotFound from './pages/NotFound.jsx';
+// Pages are code-split per route so first paint (Welcome/Home) stays light
+// on low-end phones; officer/authority screens load only for those roles.
+const Welcome = lazy(() => import('./pages/Welcome.jsx'));
+const Home = lazy(() => import('./pages/Home.jsx'));
+const NewRequest = lazy(() => import('./pages/NewRequest.jsx'));
+const SmartSell = lazy(() => import('./pages/SmartSell.jsx'));
+const Token = lazy(() => import('./pages/Token.jsx'));
+const Status = lazy(() => import('./pages/Status.jsx'));
+const History = lazy(() => import('./pages/History.jsx'));
+const IdCard = lazy(() => import('./pages/IdCard.jsx'));
+const Centres = lazy(() => import('./pages/Centres.jsx'));
+const Prices = lazy(() => import('./pages/Prices.jsx'));
+const Account = lazy(() => import('./pages/Account.jsx'));
+const OfficerHome = lazy(() => import('./pages/OfficerHome.jsx'));
+const OfficerQueue = lazy(() => import('./pages/OfficerQueue.jsx'));
+const OfficerRequests = lazy(() => import('./pages/OfficerRequests.jsx'));
+const OfficerAssisted = lazy(() => import('./pages/OfficerAssisted.jsx'));
+const AuthorityHome = lazy(() => import('./pages/AuthorityHome.jsx'));
+const AuthorityCentre = lazy(() => import('./pages/AuthorityCentre.jsx'));
+const AuthoritySimulator = lazy(() => import('./pages/AuthoritySimulator.jsx'));
+const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 
 /* ── Route guard with the app's own loading art ─────────────────── */
 function MProtected({ roles, children }) {
@@ -53,14 +58,14 @@ const TABS = {
   farmer: [
     { to: '/farmer', key: 'nav.dashboard', icon: 'home', end: true },
     { to: '/history', key: 'nav.history', icon: 'folder' },
-    { to: '/requests/new', add: true, icon: 'plus' },
+    { to: '/requests/new', add: true, icon: 'plus', labelKey: 'farmer.createRequest' },
     { to: '/market-prices', key: 'nav.marketPrices', icon: 'chart' },
     { to: '/account', key: 'nav.more', icon: 'user' },
   ],
   officer: [
     { to: '/officer', key: 'nav.dashboard', icon: 'home', end: true },
     { to: '/officer/queue', key: 'nav.queue', icon: 'list' },
-    { to: '/officer/assisted', add: true, icon: 'plus' },
+    { to: '/officer/assisted', add: true, icon: 'plus', labelKey: 'nav.assisted' },
     { to: '/officer/requests', key: 'nav.requests', icon: 'clipboard' },
     { to: '/account', key: 'nav.more', icon: 'user' },
   ],
@@ -77,11 +82,11 @@ function TabBar() {
   const { t } = useI18n();
   const tabs = TABS[role] || TABS.farmer;
   return (
-    <nav className="m-tabbar" aria-label={t('nav.dashboard')}>
+    <nav className="m-tabbar" aria-label={t('nav.mainNav')}>
       {tabs.map((tab) => {
         if (tab.add) {
           return (
-            <NavLink key={tab.to} to={tab.to} aria-label={t('farmer.createRequest')} className={({ isActive }) => `m-tab-add${isActive ? ' active' : ''}`}>
+            <NavLink key={tab.to} to={tab.to} aria-label={t(tab.labelKey || 'farmer.createRequest')} className={({ isActive }) => `m-tab-add${isActive ? ' active' : ''}`}>
               <Icon name={tab.icon} size={26} strokeWidth={2.6} />
             </NavLink>
           );
@@ -181,6 +186,7 @@ function headerTitle(pathname, t) {
 /* ── Farmer assistant (rule-based FAQ, same brain as the website) ── */
 function AssistantFab() {
   const { role } = useAuth();
+  const location = useLocation();
   const { t, lang } = useI18n();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -205,11 +211,15 @@ function AssistantFab() {
   }
 
   if (role !== 'farmer') return null;
+  // Never float over form/task screens — the FAB used to cover the quantity
+  // stepper's + button and token actions. Help stays on browsing screens.
+  const HIDE_ON = ['/requests/new', '/sell', '/officer/assisted'];
+  if (HIDE_ON.includes(location.pathname) || /^\/requests\/[^/]+/.test(location.pathname)) return null;
 
   return (
     <>
       <button type="button" className="m-fab-assist" onClick={() => setOpen(true)} aria-label={t('assistant.title')}>
-        <ArtSun size={26} />
+        <Icon name="chat" size={20} strokeWidth={2.2} />
         {t('assistant.fab')}
       </button>
 
@@ -247,6 +257,23 @@ function AssistantFab() {
   );
 }
 
+/* Route scroll: new pages start at top; #inbox (bell) scrolls to inbox. */
+function ScrollManager() {
+  const location = useLocation();
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.slice(1);
+      const tick = window.setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ block: 'start' });
+      }, 60);
+      return () => window.clearTimeout(tick);
+    }
+    window.scrollTo(0, 0);
+    return undefined;
+  }, [location.pathname, location.hash]);
+  return null;
+}
+
 /* ── App shell (everything behind login) ────────────────────────── */
 function MobileShell() {
   const offline = useOffline();
@@ -255,6 +282,7 @@ function MobileShell() {
 
   return (
     <div className="m-shell">
+      <ScrollManager />
       {isPreview && <div className="m-preview-banner">{t('saathi.previewBanner')}</div>}
       <AppBar />
       {offline && (
@@ -288,6 +316,7 @@ export function MobileApp() {
         <AuthProvider>
           <ErrorBoundary>
             <BrowserRouter>
+              <Suspense fallback={<MLoader />}>
               <Routes>
                 {/* Public */}
                 <Route path="/" element={<Welcome />} />
@@ -319,6 +348,7 @@ export function MobileApp() {
                   <Route path="*" element={<NotFound />} />
                 </Route>
               </Routes>
+              </Suspense>
             </BrowserRouter>
           </ErrorBoundary>
         </AuthProvider>

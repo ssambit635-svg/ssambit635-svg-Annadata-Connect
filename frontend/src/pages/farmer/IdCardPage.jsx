@@ -3,6 +3,7 @@ import { usePoll } from '../../hooks/usePoll.js';
 import { farmerService } from '../../services/api/farmerService.js';
 import { Loading, ErrorState } from '../../components/States.jsx';
 import Icon from '../../components/Icon.jsx';
+import { BrandLogo } from '../../components/BrandLogo.jsx';
 import { formatDate } from '../../utils/format.js';
 
 export default function IdCardPage() {
@@ -32,7 +33,7 @@ export default function IdCardPage() {
         <div className="idcard">
           <div className="idc-strip" aria-hidden="true"><span /><span /><span /></div>
           <div className="idc-head">
-            <span className="idc-mark" aria-hidden="true"><Icon name="wheat" size={22} strokeWidth={2} /></span>
+            <span className="idc-mark" aria-hidden="true"><BrandLogo size={36} /></span>
             <div className="idc-title">
               <strong>{t('app.name')}</strong>
               <span>{t('idCard.cardLabel')}</span>
@@ -67,7 +68,7 @@ export default function IdCardPage() {
           </div>
 
           <div className="idc-foot">
-            <span>{t('landing.helpline')} 155266</span>
+            <span>{t('landing.helpline')} 155261</span>
             <span>{t('idCard.issued')} {card.registeredAt ? formatDate(card.registeredAt, lang) : '—'}</span>
           </div>
         </div>

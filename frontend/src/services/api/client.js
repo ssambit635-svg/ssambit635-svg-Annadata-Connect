@@ -54,7 +54,24 @@ export class ApiError extends Error {
 // the request settles into a friendly NETWORK_ERROR with a Retry button.
 const API_TIMEOUT_MS = 35000;
 
-export async function api(path, { method = 'GET', body, token } = {}) {
+// In-flight GET de-duplication: several components (e.g. Home + the
+// notification bell) often request the same URL in the same tick while
+// polling. Identical concurrent GETs share one network call; settled
+// requests are removed immediately, so data can never go stale from this.
+const inflightGets = new Map();
+
+export function api(path, opts = {}) {
+  const method = (opts.method || 'GET').toUpperCase();
+  if (method !== 'GET') return apiRequest(path, opts);
+  const key = `${path}|${opts.token || getStoredAuth()?.token || ''}`;
+  const existing = inflightGets.get(key);
+  if (existing) return existing;
+  const pending = apiRequest(path, opts).finally(() => inflightGets.delete(key));
+  inflightGets.set(key, pending);
+  return pending;
+}
+
+async function apiRequest(path, { method = 'GET', body, token } = {}) {
   const auth = getStoredAuth();
   const headers = { Accept: 'application/json' };
   if (body !== undefined) headers['Content-Type'] = 'application/json';

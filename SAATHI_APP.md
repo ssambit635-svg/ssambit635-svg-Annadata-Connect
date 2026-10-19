@@ -1,5 +1,10 @@
 # Annadata Connect — the Android app frontend
 
+> **Prototype / demo build.** Sample data + mock sign-in; not an official government service.
+> Brand is unified as **Annadata Connect** on web + Android (older screenshots showing
+> "Annadata Saathi / Harvest Companion" and the browser preview banner are stale — recapture before judging).
+> Some officer actions still use `window.alert` (see UI_AUDIT_LANDING_AND_APK.md majors).
+
 **Annadata Connect** (`अन्नदाता कनेक्ट` · `ଅନ୍ନଦାତା କନେକ୍ଟ`) is the bespoke UI that ships
 inside the Android APK. It is a *different frontend* from the website on purpose:
 same product, same backend, same green-gold-cream theme — but its own design
@@ -13,7 +18,7 @@ The website is untouched. One codebase, two frontends:
 | Boots in | Browsers (default) | Capacitor APK (always), or any browser with `?app=1` |
 | Navigation | Top header + nav bar + mobile tab bar | Bottom tab bar with a raised gold **+** button |
 | Name / wordmark | Annadata Connect | **Annadata Connect** · emblem + gold "Connect" wordmark, animated splash on boot |
-| Typography | System UI stack | **Baloo 2** display + **Mukta** body (Devanagari + Latin, bundled offline) |
+| Typography | Plus Jakarta / Inter family | **Inter Tight** display + **Inter** body + IBM Plex Mono numerals (bundled offline) |
 | Cards | Flat bordered cards | Rounded "passbook" cards, perforated token tickets, toran scallop strips |
 | Illustration | Line icons only | Hand-drawn folk-art SVG kit (`src/mobile/art.jsx`) — sun, farmer, cow, tractor, mandi, scales |
 | Empty/error states | Text + icon | Illustrated (basket, sleepy sun, cow) |
@@ -27,7 +32,7 @@ The website is untouched. One codebase, two frontends:
   nothing to download): a smiling sun, a waving farmer with a gold turban knot,
   a cow with a bell, a little tractor, mandi awnings, weighing scales. Bold ink
   outlines, flat fills, dotted details — Indian government-poster inspired.
-- **The token ticket** — the signature card: green header strip, huge Baloo 2
+- **The token ticket** — the signature card: green header strip, huge display-type
   token number, a dashed perforation with punched side notches, then a 2×2 info
   grid. Readable at arm's length.
 - **Touch-first** — 52px pill buttons, 56px steppers, 40px+ chips, safe-area

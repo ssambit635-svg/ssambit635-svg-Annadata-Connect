@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../components/Icon.jsx';
+import { toast, confirmDialog } from '../../components/Toast.jsx';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { referenceService, sellingService, farmerService, requestService } from '../../services/api/farmerService.js';
 import { formatInr, formatDate } from '../../utils/format.js';
@@ -55,7 +56,7 @@ export default function SmartSellPage() {
   }
 
   async function cancelActiveRequest() {
-    if (!activeRequest || !window.confirm(t('farmer.cancelConfirm'))) return;
+    if (!activeRequest || !(await confirmDialog({ message: t('farmer.cancelConfirm'), confirmLabel: t('common.yes'), cancelLabel: t('common.cancel'), danger: true }))) return;
     setRequestCancelBusy(true);
     setApiError(null);
     try {
@@ -69,7 +70,7 @@ export default function SmartSellPage() {
   }
 
   async function cancelActiveBooking() {
-    if (!activeBooking || !window.confirm(t('smartSell.cancelBookingConfirm'))) return;
+    if (!activeBooking || !(await confirmDialog({ message: t('smartSell.cancelBookingConfirm'), confirmLabel: t('common.yes'), cancelLabel: t('common.cancel'), danger: true }))) return;
     setBookingCancelBusy(true);
     setApiError(null);
     try {
@@ -127,7 +128,7 @@ export default function SmartSellPage() {
   async function onBook() {
     const opt = compare?.options.find((o) => o.optionId === selected);
     if (!opt) return;
-    if (!window.confirm(t('smartSell.confirmText'))) return;
+    if (!(await confirmDialog({ message: t('smartSell.confirmText'), confirmLabel: t('common.confirm'), cancelLabel: t('common.cancel') }))) return;
     setBusy(true);
     setApiError(null);
     try {
@@ -477,13 +478,13 @@ function BookingsPanel({ bookings, loading, error, reload, onChanged }) {
   const [busyId, setBusyId] = useState(null);
 
   async function onCancel(id) {
-    if (!window.confirm(t('smartSell.cancelBookingConfirm'))) return;
+    if (!(await confirmDialog({ message: t('smartSell.cancelBookingConfirm'), confirmLabel: t('common.yes'), cancelLabel: t('common.cancel'), danger: true }))) return;
     setBusyId(id);
     try {
       await sellingService.cancelBooking(id);
       await onChanged();
     } catch (e) {
-      alert(e.message);
+      toast(e.message, 'error');
     } finally {
       setBusyId(null);
     }

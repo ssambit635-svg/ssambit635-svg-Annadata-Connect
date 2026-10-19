@@ -6,13 +6,13 @@ import { requestService } from '../../services/api/farmerService.js';
 import { formatDate, formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
 import { ArtRupeeSprout, ArtBasket } from '../art.jsx';
-import { MStat, MLoader, MError, MEmpty, MBadge, MPayBadge, MBtn, SectionH } from '../ui.jsx';
+import { MStat, MSkeleton, MError, MEmpty, MBadge, MPayBadge, MBtn, SectionH } from '../ui.jsx';
 
 export default function History() {
   const { t, pick, lang } = useI18n();
   const { data, error, loading, reload } = usePoll(() => requestService.mine(), { intervalMs: 15000 });
 
-  if (loading) return <MLoader />;
+  if (loading) return <MSkeleton rows={4} />;
   if (error) return <MError error={error} onRetry={reload} />;
 
   const rows = data.requests;

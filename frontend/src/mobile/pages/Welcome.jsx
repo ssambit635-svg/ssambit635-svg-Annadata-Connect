@@ -10,6 +10,7 @@ import { OtpVerification } from '../../components/OtpVerification.jsx';
 import { GoogleG } from '../../components/GoogleSignIn.jsx';
 import { authErrorMessage, normalizeMobileInput } from '../../utils/auth.js';
 import { referenceService } from '../../services/api/farmerService.js';
+import { API_BASE, setApiBaseOverride } from '../../services/api/client.js';
 import Icon from '../../components/Icon.jsx';
 import { BrandLogo } from '../../components/BrandLogo.jsx';
 import { MBtn, MCard, MField, MInput, MSelect, Sheet, MLangPills, MLoader } from '../ui.jsx';
@@ -57,6 +58,8 @@ export default function Welcome({ registration = false }) {
   const [googleOpen, setGoogleOpen] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
   const [villageAttempt, setVillageAttempt] = useState(0);
+  const [serverOpen, setServerOpen] = useState(false);
+  const [serverUrl, setServerUrl] = useState(API_BASE);
 
   useEffect(() => {
     if (!profileTicket) return undefined;
@@ -140,8 +143,13 @@ export default function Welcome({ registration = false }) {
         </h1>
         <p className="m-welcome-tag">{t('saathi.tagline')}</p>
         <div className="m-welcome-badge">
-          <BrandLogo size={92} title={t('saathi.name')} />
+          <BrandLogo size={56} title={t('app.name')} />
         </div>
+      </div>
+
+      <div className="m-demo-banner" role="note">
+        <Icon name="info" size={17} />
+        <span>{t('saathi.demoBanner')}</span>
       </div>
 
       {/* ── profile completion after first OTP/Google sign-in ── */}
@@ -324,9 +332,31 @@ export default function Welcome({ registration = false }) {
           <div className="m-welcome-foot">
             <BrandLogo size={34} />
             <p>{t('saathi.madeWith')} · {t('auth.footerNote')}</p>
+            <button type="button" className="text-button" onClick={() => setServerOpen(true)}>
+              ⚙ {t('auth.serverSettings')}{API_BASE ? ` · ${API_BASE.replace(/^https?:\/\//, '')}` : ''}
+            </button>
           </div>
         </>
       )}
+
+      {/* ── server address sheet (sideloaded APK: needed BEFORE login) ── */}
+      <Sheet open={serverOpen} onClose={() => setServerOpen(false)} title={t('auth.serverSettings')} sub={t('auth.serverHint')}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setApiBaseOverride(serverUrl);
+            window.location.reload();
+          }}
+        >
+          <MField label={t('auth.serverUrl')} htmlFor="welcome-server">
+            <MInput id="welcome-server" type="url" placeholder="https://annadata-connect.onrender.com" value={serverUrl} onChange={(e) => setServerUrl(e.target.value)} />
+          </MField>
+          <div className="m-btn-row">
+            <MBtn variant="primary" type="submit">{t('common.save')}</MBtn>
+            <MBtn variant="soft" onClick={() => { setApiBaseOverride(''); window.location.reload(); }}>{t('auth.serverReset')}</MBtn>
+          </div>
+        </form>
+      </Sheet>
 
       {/* ── Google account picker sheet ── */}
       <Sheet open={googleOpen} onClose={() => setGoogleOpen(false)} title={t('auth.chooseAccount')} sub={t('auth.chooseAccountHint')}>

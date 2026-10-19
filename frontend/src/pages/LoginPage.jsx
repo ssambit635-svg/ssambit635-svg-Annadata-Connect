@@ -10,6 +10,10 @@ import { referenceService } from '../services/api/farmerService.js';
 import { useAuthOptions } from '../hooks/useAuthOptions.js';
 import { authErrorMessage } from '../utils/auth.js';
 import Icon from '../components/Icon.jsx';
+import '../styles/auth.css';
+import '../styles/polish-v3.css';
+import '../styles/polish-v4.css';
+import { BrandLogo } from '../components/BrandLogo.jsx';
 
 const ROLES = [
   { id: 'farmer', icon: 'wheat' },
@@ -113,7 +117,7 @@ export default function LoginPage({ registration = false }) {
   return (
     <div className="signin-page">
       <header className="signin-header">
-        <Link to="/" className="signin-brand"><span className="signin-brand-mark"><Icon name="wheat" size={25} /></span><span><strong>{t('app.name')}</strong><small>अन्नदाता कनेक्ट</small></span></Link>
+        <Link to="/" className="signin-brand"><span className="signin-brand-mark"><BrandLogo size={44} /></span><span><strong>{t('app.name')}</strong><small>अन्नदाता कनेक्ट</small></span></Link>
         <div className="signin-header-actions"><Link to="/" className="signin-home">{t('auth.backHome')} <Icon name="arrowUpRight" size={14} /></Link><LanguageToggle className="lang-toggle on-light" /></div>
       </header>
       <main className="signin-shell">
@@ -126,7 +130,7 @@ export default function LoginPage({ registration = false }) {
             <div><span><Icon name="mail" size={20} /></span><p><strong>{t('auth.benefitEmail')}</strong><small>{t('auth.benefitEmailHint')}</small></p></div>
             <div><span><Icon name="lock" size={20} /></span><p><strong>{t('auth.benefitSecure')}</strong><small>{t('auth.benefitSecureHint')}</small></p></div>
           </div>
-          <div className="signin-story-footer"><Icon name="wheat" size={26} /><p>{t('auth.storyFooter')}<span>{t('auth.storyFooterHint')}</span></p></div>
+          <div className="signin-story-footer"><span className="signin-story-logo"><BrandLogo size={28} /></span><p>{t('auth.storyFooter')}<span>{t('auth.storyFooterHint')}</span></p></div>
         </aside>
         <section className="signin-panel" aria-labelledby="signin-title">
           <div className="signin-panel-heading"><span className="signin-kicker">{t(profileTicket ? 'auth.profileStep' : 'auth.welcomeEyebrow')}</span><h2 id="signin-title">{t(profileTicket ? 'auth.newFarmerTitle' : registration ? 'auth.registerTitle' : 'auth.welcomeTitle')}</h2><p>{t(profileTicket ? 'auth.newFarmerHint' : registration ? 'auth.registerIntro' : 'auth.chooseMethod')}</p></div>

@@ -75,7 +75,7 @@ jobs:
         run: |
           REPO="${{ github.repository }}"
           gh release delete latest-apk --repo "$REPO" --yes --cleanup-tag || true
-          gh release create latest-apk out/annadata-connect-latest.apk --repo "$REPO" --target "${{ github.sha }}" --title "Annadata Connect free Android APK (latest)" --notes 'Free side-loadable APK, rebuilt automatically on every push to main. No app store, zero cost. After install, set the backend server address on the login screen (Server address link).'
+          gh release create latest-apk out/annadata-connect-latest.apk --repo "$REPO" --target "${{ github.sha }}" --title "Annadata Connect free Android APK (latest)" --notes 'Free side-loadable PROTOTYPE APK (v1.1, demo data & mock sign-in — not an official government service), rebuilt on every push to main. Install: open the APK file, allow Install from this source if asked, tap Install. Server address can be changed on the sign-in screen (Server address at the bottom) if the backend URL changes.'
 
       - name: Attach APK to GitHub Release (version tags only)
         if: startsWith(github.ref, 'refs/tags/v')
