@@ -21,7 +21,16 @@ frontend/android/local.properties
 frontend/android/app/src/main/assets/public/
 frontend/android/app/src/main/assets/capacitor.config.json
 frontend/android/app/src/main/assets/capacitor.plugins.json
-# Android signing secrets
+# Credentials, private keys, and local package-manager auth
 *.jks
 *.keystore
+*.pem
+*.key
+*.p12
+*.pfx
+*.mobileprovision
+.npmrc
+credentials*.json
+service-account*.json
+*-service-account*.json
 frontend/android/keystore.properties

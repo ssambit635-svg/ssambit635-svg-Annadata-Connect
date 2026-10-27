@@ -23,35 +23,35 @@ export const MOCK_GOOGLE_ACCOUNTS = [
   ...farmerAccounts,
   {
     sub: 'mock-google-officer-rashmi', role: 'officer', name: 'Rashmi Das',
-    email: 'rashmi.das.anc@gmail.com', detail: 'Bhubaneswar Central centre',
+    email: 'rashmi.das.anc@example.com', detail: 'Bhubaneswar Central centre',
   },
   {
     sub: 'mock-google-officer-manoj', role: 'officer', name: 'Manoj Behera',
-    email: 'manoj.behera.anc@gmail.com', detail: 'Jatni centre',
+    email: 'manoj.behera.anc@example.com', detail: 'Jatni centre',
   },
   {
     sub: 'mock-google-officer-sasmita', role: 'officer', name: 'Sasmita Mohapatra',
-    email: 'sasmita.mohapatra.anc@gmail.com', detail: 'Khordha centre',
+    email: 'sasmita.mohapatra.anc@example.com', detail: 'Khordha centre',
   },
   {
     sub: 'mock-google-officer-pratap', role: 'officer', name: 'Pratap Keshari Das',
-    email: 'pratap.das.anc@gmail.com', detail: 'Choudwar centre · Cuttack',
+    email: 'pratap.das.anc@example.com', detail: 'Choudwar centre · Cuttack',
   },
   {
     sub: 'mock-google-officer-lopamudra', role: 'officer', name: 'Lopamudra Mohanty',
-    email: 'lopamudra.mohanty.anc@gmail.com', detail: 'Brahmagiri centre · Puri',
+    email: 'lopamudra.mohanty.anc@example.com', detail: 'Brahmagiri centre · Puri',
   },
   {
     sub: 'mock-google-officer-bijay', role: 'officer', name: 'Bijay Kumar Padhi',
-    email: 'bijay.padhi.anc@gmail.com', detail: 'Chhatrapur centre · Ganjam',
+    email: 'bijay.padhi.anc@example.com', detail: 'Chhatrapur centre · Ganjam',
   },
   {
     sub: 'mock-google-authority-suresh', role: 'authority', name: 'Suresh Patnaik',
-    email: 'district.admin.anc@gmail.com', detail: 'District Administration · Khordha',
+    email: 'district.admin.anc@example.com', detail: 'District Administration · Khordha',
   },
   {
     sub: 'mock-google-authority-anita', role: 'authority', name: 'Anita Meher',
-    email: 'state.admin.anc@gmail.com', detail: 'State Monitor · Odisha',
+    email: 'state.admin.anc@example.com', detail: 'State Monitor · Odisha',
   },
 ];
 

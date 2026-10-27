@@ -8,7 +8,7 @@ import { useI18n } from '../../i18n/I18nContext.jsx';
 import { useAuthOptions } from '../../hooks/useAuthOptions.js';
 import { OtpVerification } from '../../components/OtpVerification.jsx';
 import { GoogleG } from '../../components/GoogleSignIn.jsx';
-import { authErrorMessage, normalizeMobileInput } from '../../utils/auth.js';
+import { authErrorMessage } from '../../utils/auth.js';
 import { referenceService } from '../../services/api/farmerService.js';
 import { API_BASE, setApiBaseOverride } from '../../services/api/client.js';
 import Icon from '../../components/Icon.jsx';

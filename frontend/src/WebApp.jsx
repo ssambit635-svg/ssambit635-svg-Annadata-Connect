@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { AuthProvider, useAuth, homeFor } from './auth/AuthContext.jsx';
+import { AuthProvider, useAuth } from './auth/AuthContext.jsx';
 import { I18nProvider } from './i18n/I18nContext.jsx';
 // AppShell is lazy so the portal stylesheets it imports stay out of the
 // public landing/login CSS path.

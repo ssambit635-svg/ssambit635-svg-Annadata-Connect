@@ -89,7 +89,6 @@ export default function SmartSellPage() {
       .then((d) => setCrops(d.crops))
       .catch((e) => setCropsError(e));
     loadBookings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const crop = crops.find((c) => c.id === form.cropId);

@@ -1,7 +1,6 @@
 // Smart Sell — compare government MSP centres and above-MSP market buyers
 // before committing. Mobile version of the website flow, same API.
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { referenceService, sellingService, farmerService, requestService } from '../../services/api/farmerService.js';
 import { marketPriceService } from '../../services/api/marketPriceService.js';
@@ -74,12 +73,10 @@ export default function SmartSell() {
 
   useEffect(() => {
     referenceService.crops().then((d) => setCrops(d.crops)).catch((e) => setCropsError(e));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cropsNonce]);
 
   useEffect(() => {
     loadBookings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const crop = crops.find((c) => c.id === form.cropId);

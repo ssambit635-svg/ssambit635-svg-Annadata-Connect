@@ -39,7 +39,7 @@ const DEMO = [
 ];
 
 export default function LoginPage({ registration = false }) {
-  const { t, pick } = useI18n();
+  const { t, pick, lang } = useI18n();
   const { login, loginWithGoogle, register } = useAuth();
   const navigate = useNavigate();
   const { options, error: optionsError, retry } = useAuthOptions();

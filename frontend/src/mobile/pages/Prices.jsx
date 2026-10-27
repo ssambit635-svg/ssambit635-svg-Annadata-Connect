@@ -6,12 +6,12 @@ import { marketPriceService } from '../../services/api/marketPriceService.js';
 import { formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
 import { ArtMandi, ArtRupeeSprout } from '../art.jsx';
-import { MCard, MStat, MLoader, MSkeleton, MError, MEmpty, MBadge, SectionH } from '../ui.jsx';
+import { MCard, MStat, MLoader, MSkeleton, MError, MEmpty, SectionH } from '../ui.jsx';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default function Prices() {
-  const { t, pick, lang } = useI18n();
+  const { t, pick } = useI18n();
   const [meta, setMeta] = useState(null);
   const [metaError, setMetaError] = useState(null);
   const [metaNonce, setMetaNonce] = useState(0);
