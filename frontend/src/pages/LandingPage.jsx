@@ -7,7 +7,6 @@ import { useI18n } from '../i18n/I18nContext.jsx';
 import { LanguageToggle } from '../components/LanguageToggle.jsx';
 import { api } from '../services/api/client.js';
 import { formatDate, formatInr } from '../utils/format.js';
-import useHomeAnimations from '../hooks/useHomeAnimations.js';
 import '../styles/home-polish.css';
 import '../styles/polish-v3.css';
 import '../styles/polish-v4.css';
@@ -66,9 +65,7 @@ export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const home = user ? homeFor(user.role) : '/login';
   const closeMenu = () => setMenuOpen(false);
-  const pageRef = useRef(null);
   const menuBtnRef = useRef(null);
-  useHomeAnimations(pageRef);
 
   // Close the mobile menu on Escape and return focus to its button.
   useEffect(() => {
@@ -96,20 +93,8 @@ export default function LandingPage() {
     ? liveCrops.map((c) => ({ en: c.nameEn, hi: c.nameHi, or: c.nameOr, msp: c.mspPerQuintal }))
     : MSP_ROWS;
 
-  // Announcement rotation (all 4 messages; pauses on hover/focus and for
-  // reduced-motion users). One message at a time — the old two-message row
-  // truncated mid-sentence on phones.
-  const tickerKeys = ['landing.ticker1', 'landing.ticker2', 'landing.ticker3', 'landing.ticker4'];
-  const [tickerIdx, setTickerIdx] = useState(0);
-  const [tickerPaused, setTickerPaused] = useState(false);
-  useEffect(() => {
-    if (tickerPaused) return undefined;
-    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return undefined;
-    const id = setInterval(() => setTickerIdx((i) => (i + 1) % tickerKeys.length), 6000);
-    return () => clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tickerPaused]);
-
+  // Keep the service announcement stable instead of cycling copy while the
+  // visitor is trying to read or interact with the page.
   // Public token tracking (no account): token number + registered mobile.
   const [trackForm, setTrackForm] = useState({ tokenNumber: '', phone: '' });
   const [trackState, setTrackState] = useState({ phase: 'idle', data: null });
@@ -132,14 +117,10 @@ export default function LandingPage() {
   // (302 to storage without CORS), leaving the button stuck on "pending".
 
   return (
-    <div className="landing landing-v2" ref={pageRef}>
+    <div className="landing landing-v2">
       <a className="home-skip-link" href="#home-main">{t('landing.skipToContent')}</a>
 
       <div className="home-tricolour" aria-hidden="true"><span /><span /><span /></div>
-
-      <div className="home-scroll-progress" aria-hidden="true">
-        <span className="home-scroll-progress-bar" />
-      </div>
 
       <div className="home-utility-bar">
         <div className="home-container home-utility-inner">
@@ -208,17 +189,10 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <div
-        className="home-announcement"
-        aria-label={t('landing.tickerLabel')}
-        onMouseEnter={() => setTickerPaused(true)}
-        onMouseLeave={() => setTickerPaused(false)}
-        onFocus={() => setTickerPaused(true)}
-        onBlur={() => setTickerPaused(false)}
-      >
+      <div className="home-announcement" aria-label={t('landing.tickerLabel')}>
         <div className="home-container home-announcement-inner">
           <span className="home-announcement-label"><Icon name="megaphone" size={15} /> {t('landing.tickerLabel')}</span>
-          <span key={tickerIdx} className="home-announcement-message" role="status">{t(tickerKeys[tickerIdx])}</span>
+          <span className="home-announcement-message">{t('landing.ticker1')}</span>
           <a href="tel:155261" className="home-announcement-phone"><Icon name="phone" size={14} /> 155261</a>
         </div>
       </div>
@@ -227,7 +201,6 @@ export default function LandingPage() {
         <section className="home-hero" id="top">
           <div className="home-hero-glow home-hero-glow-one" aria-hidden="true" />
           <div className="home-hero-glow home-hero-glow-two" aria-hidden="true" />
-          <div className="home-hero-spotlight" aria-hidden="true" />
           <div className="home-container home-hero-grid">
             <div className="home-hero-copy">
               <div className="home-eyebrow"><span className="home-eyebrow-line" /> {t('landing.heroKicker')}</div>
