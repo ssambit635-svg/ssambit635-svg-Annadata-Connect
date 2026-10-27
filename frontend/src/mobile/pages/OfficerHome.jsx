@@ -9,7 +9,7 @@ import { formatInr, formatDate } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
 import { toast } from '../../components/Toast.jsx';
 import { ArtQueue, ArtScales, ArtMandi } from '../art.jsx';
-import { MCard, MStat, MBar, MLoader, MError, MEmpty, MBadge, MBtn, MConfirm, Sheet, MField, MInput, SectionH } from '../ui.jsx';
+import { MCard, MStat, MBar, MLoader, MError, MBadge, MBtn, MConfirm, Sheet, MField, MInput, SectionH } from '../ui.jsx';
 
 export default function OfficerHome() {
   const { t, pick, lang } = useI18n();

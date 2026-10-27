@@ -3,10 +3,10 @@ import { test, expect } from '@playwright/test';
 // Browser contract tests for the mocked sign-in: the fake Google picker and the
 // on-screen OTP codes. Nothing here talks to Google, Twilio or an SMTP server.
 const ACCOUNTS = [
-  { sub: 'mock-google-farmer-bijay', role: 'farmer', name: 'Bijay Pradhan', email: 'bijay.pradhan.anc@gmail.com', detail: 'ANC-F-0001 · Baranga' },
-  { sub: 'mock-google-farmer-kuni', role: 'farmer', name: 'Kuni Sahoo', email: 'kuni.sahoo.anc@gmail.com', detail: 'ANC-F-0002 · Harirajpur' },
-  { sub: 'mock-google-officer-rashmi', role: 'officer', name: 'Rashmi Das', email: 'rashmi.das.anc@gmail.com', detail: 'Bhubaneswar Central centre' },
-  { sub: 'mock-google-authority-suresh', role: 'authority', name: 'Suresh Patnaik', email: 'district.admin.anc@gmail.com', detail: 'District Administration · Khordha' },
+  { sub: 'mock-google-farmer-bijay', role: 'farmer', name: 'Bijay Pradhan', email: 'bijay.pradhan.anc@example.com', detail: 'ANC-F-0001 · Baranga' },
+  { sub: 'mock-google-farmer-kuni', role: 'farmer', name: 'Kuni Sahoo', email: 'kuni.sahoo.anc@example.com', detail: 'ANC-F-0002 · Harirajpur' },
+  { sub: 'mock-google-officer-rashmi', role: 'officer', name: 'Rashmi Das', email: 'rashmi.das.anc@example.com', detail: 'Bhubaneswar Central centre' },
+  { sub: 'mock-google-authority-suresh', role: 'authority', name: 'Suresh Patnaik', email: 'district.admin.anc@example.com', detail: 'District Administration · Khordha' },
 ];
 const MOCK_CODE = '001234';
 
@@ -103,16 +103,16 @@ test('the fake Google picker lists only the sample accounts for the chosen role'
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole('heading', { name: 'Choose an account' })).toBeVisible();
-  await expect(dialog.getByText('district.admin.anc@gmail.com')).toBeVisible();
-  await expect(dialog.getByText('bijay.pradhan.anc@gmail.com')).toHaveCount(0);
+  await expect(dialog.getByText('district.admin.anc@example.com')).toBeVisible();
+  await expect(dialog.getByText('bijay.pradhan.anc@example.com')).toHaveCount(0);
   await expect(dialog.getByText('MOCK DATA')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await page.getByRole('button', { name: 'Farmer', exact: true }).click(); // role-scoped list
   await page.getByRole('button', { name: /Sign in with Google/ }).click();
-  await expect(page.getByRole('dialog').getByText('bijay.pradhan.anc@gmail.com')).toBeVisible();
-  await expect(page.getByRole('dialog').getByText('kuni.sahoo.anc@gmail.com')).toBeVisible();
-  await expect(page.getByRole('dialog').getByText('district.admin.anc@gmail.com')).toHaveCount(0);
+  await expect(page.getByRole('dialog').getByText('bijay.pradhan.anc@example.com')).toBeVisible();
+  await expect(page.getByRole('dialog').getByText('kuni.sahoo.anc@example.com')).toBeVisible();
+  await expect(page.getByRole('dialog').getByText('district.admin.anc@example.com')).toHaveCount(0);
 });
 
 test('picking a mock Google account signs in with { role, email } and never loads Google', async ({ page }) => {
@@ -122,11 +122,11 @@ test('picking a mock Google account signs in with { role, email } and never load
   await page.goto('/login');
   await page.getByRole('button', { name: 'Authority', exact: true }).click();
   await page.getByRole('button', { name: /Sign in with Google/ }).click();
-  await page.getByRole('dialog').getByText('district.admin.anc@gmail.com').click();
+  await page.getByRole('dialog').getByText('district.admin.anc@example.com').click();
   await expect(page).toHaveURL(/\/authority$/);
   await expect(page.getByRole('heading', { name: 'District Overview', exact: true })).toBeVisible();
   const call = calls.find((entry) => entry.path === '/api/auth/google');
-  expect(call.body).toEqual({ role: 'authority', email: 'district.admin.anc@gmail.com' });
+  expect(call.body).toEqual({ role: 'authority', email: 'district.admin.anc@example.com' });
   expect(calls.some((entry) => entry.path === '/api/auth/google/challenge')).toBe(false);
   expect(googleRequests).toEqual([]);
 });
@@ -149,10 +149,10 @@ test('the fake Google switch disables the picker and the choice survives a reloa
 });
 
 test('a rejected mock Google account surfaces an error and keeps the user on the login page', async ({ page }) => {
-  await mockApi(page, { accounts: [{ sub: 'only', role: 'farmer', name: 'Only Farmer', email: 'only.farmer.anc@gmail.com' }] });
+  await mockApi(page, { accounts: [{ sub: 'only', role: 'farmer', name: 'Only Farmer', email: 'only.farmer.anc@example.com' }] });
   await page.goto('/login');
   await page.getByRole('button', { name: /Sign in with Google/ }).click();
-  await page.getByRole('dialog').getByText('only.farmer.anc@gmail.com').click();
+  await page.getByRole('dialog').getByText('only.farmer.anc@example.com').click();
   await expect(page.getByRole('alert')).toContainText('mock Google account is not available');
   await expect(page).toHaveURL(/\/login$/);
   expect(await page.evaluate(() => localStorage.getItem('ks-auth'))).toBeNull();
@@ -246,7 +246,7 @@ test('password fallback works for staff, has visibility control, and can switch 
   await page.goto('/login');
   await page.getByRole('button', { name: 'Authority', exact: true }).click();
   await page.getByRole('button', { name: 'Password', exact: true }).click();
-  await page.getByLabel('Mobile number or email', { exact: true }).fill('district.admin.anc@gmail.com');
+  await page.getByLabel('Mobile number or email', { exact: true }).fill('district.admin.anc@example.com');
   await page.getByLabel('Password', { exact: true }).fill('wrongPassword');
   await page.getByRole('button', { name: 'Show password', exact: true }).click();
   await expect(page.getByLabel('Password', { exact: true })).toHaveAttribute('type', 'text');

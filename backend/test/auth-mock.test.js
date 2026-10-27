@@ -66,9 +66,9 @@ test('every mock Google account maps onto a seeded sample user of the same role'
 
 test('verifyGoogle accepts a picker email and rejects anything else', () => {
   const delivery = createMockDelivery();
-  const identity = delivery.verifyGoogle({ email: ' District.Admin.anc@gmail.com ' });
+  const identity = delivery.verifyGoogle({ email: ' District.Admin.anc@example.com ' });
   assert.deepEqual(identity, {
-    channel: 'google', destination: 'district.admin.anc@gmail.com',
+    channel: 'google', destination: 'district.admin.anc@example.com',
     googleSub: 'mock-google-authority-suresh', name: 'Suresh Patnaik', role: 'authority',
   });
   for (const email of ['authority@example.com', 'not-an-account@gmail.com', '', undefined, null, 42]) {

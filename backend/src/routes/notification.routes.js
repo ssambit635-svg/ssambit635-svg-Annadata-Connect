@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { randomUUID } from 'node:crypto';
 import { getDb, saveDb } from '../db/store.js';
 import { authenticate } from '../middleware/auth.js';
 import { ApiError } from '../middleware/error.js';

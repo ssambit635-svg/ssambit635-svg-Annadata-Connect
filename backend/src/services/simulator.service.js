@@ -63,7 +63,7 @@ function buildArrivalHistory(db) {
   // Per-centre totals across the recorded full days.
   const daysByCentre = {};
   let totalArrivals = 0;
-  for (const [day, rows] of Object.entries(perDay)) {
+  for (const rows of Object.values(perDay)) {
     for (const [centreId, count] of Object.entries(rows)) {
       daysByCentre[centreId] ??= { sum: 0, days: 0 };
       daysByCentre[centreId].sum += count;

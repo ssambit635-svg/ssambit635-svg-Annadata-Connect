@@ -30,7 +30,17 @@ export function createApp() {
   app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    if (config.env === 'production') {
+      res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    }
+    next();
+  });
+  // API responses can contain farmer/account information; never let shared or
+  // browser caches retain them, including public endpoints with user-specific data.
+  app.use('/api', (_req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store');
     next();
   });
   app.set('trust proxy', config.trustProxy);
@@ -61,7 +71,7 @@ export function createApp() {
   app.use('/api', notFoundHandler);
 
   // Production: serve the built frontend as a single-port deployment.
- const distDir = path.resolve(__dirname, '../../frontend/dist');
+  const distDir = path.resolve(__dirname, '../../frontend/dist');
   if (fs.existsSync(distDir)) {
     app.use(express.static(distDir));
     app.get('*', (req, res) => res.sendFile(path.join(distDir, 'index.html')));

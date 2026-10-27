@@ -3,7 +3,6 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
-import { officerService } from '../../services/api/farmerService.js';
 import { authorityService } from '../../services/api/farmerService.js';
 import { formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';

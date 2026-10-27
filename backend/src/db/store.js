@@ -308,10 +308,13 @@ export function getDb() {
       user.isDemo = true;
       mutated = true;
     }
-    // Mock sign-in maps sample accounts by email, so older data files (seeded
-    // before farmers had one) are backfilled from the seed definition.
+    // Mock sign-in maps sample accounts by email. Backfill older records and
+    // migrate the former Gmail-shaped demo addresses to reserved example.com.
     if (seedUser && user.isDemo) {
-      if (seedUser.email && !user.email) { user.email = seedUser.email; mutated = true; }
+      const migratedDemoEmail = user.email?.replace(/\.anc@gmail\.com$/i, '.anc@example.com');
+      if (seedUser.email && (!user.email || migratedDemoEmail === seedUser.email)) {
+        if (user.email !== seedUser.email) { user.email = seedUser.email; mutated = true; }
+      }
       if (seedUser.name && user.name !== seedUser.name) { user.name = seedUser.name; mutated = true; }
     }
     if (user.registeredBy?.startsWith('officer:') && user.passwordHash && bcrypt.compareSync('Kisan@123', user.passwordHash)) {

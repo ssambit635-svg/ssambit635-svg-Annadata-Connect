@@ -6,7 +6,7 @@ import { referenceService, officerService } from '../../services/api/farmerServi
 import { formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
 import { ArtFarmer, ArtSuccess } from '../art.jsx';
-import { MCard, MBtn, MField, MInput, MSelect, MOption, MStepper, MLoader } from '../ui.jsx';
+import { MCard, MBtn, MField, MInput, MOption, MStepper, MLoader } from '../ui.jsx';
 
 export default function OfficerAssisted() {
   const { t, pick } = useI18n();

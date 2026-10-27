@@ -1,17 +1,15 @@
 // New procurement request — a 3-step guided wizard:
 // crop + quantity → best centre → token in hand.
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { referenceService, requestService } from '../../services/api/farmerService.js';
 import { formatInr } from '../../utils/format.js';
 import Icon from '../../components/Icon.jsx';
 import { ArtWheat, ArtSuccess, ArtSun, ArtMandi } from '../art.jsx';
-import { MCard, MBtn, MField, MStepper, MOption, MLoader, MError, TicketCard, SectionH, MBadge } from '../ui.jsx';
+import { MCard, MBtn, MStepper, MOption, MLoader, MError, TicketCard, SectionH, MBadge } from '../ui.jsx';
 
 export default function NewRequest() {
   const { t, pick } = useI18n();
-  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [crops, setCrops] = useState([]);
   const [cropsError, setCropsError] = useState(null);

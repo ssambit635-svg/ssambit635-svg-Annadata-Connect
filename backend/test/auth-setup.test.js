@@ -22,6 +22,9 @@ test('production refuses a default/short signing key; mock mode keeps sample acc
   const invalid = run(['--input-type=module', '-e', "await import('./src/config.js')"], { JWT_SECRET: 'change-me-in-production' });
   assert.notEqual(invalid.status, 0);
   assert.match(invalid.stderr, /JWT_SECRET/);
+  const missing = run(['--input-type=module', '-e', "await import('./src/config.js')"], { JWT_SECRET: '' });
+  assert.notEqual(missing.status, 0);
+  assert.match(missing.stderr, /JWT_SECRET/);
   const valid = run(['--input-type=module', '-e', "const {default:c}=await import('./src/config.js');console.log(c.authMock, c.allowDemoLogin)"]);
   assert.equal(valid.status, 0, valid.stderr);
   assert.equal(valid.stdout.trim(), 'true true');
@@ -65,6 +68,7 @@ test('old insecure staff, seed accounts and shared walk-in passwords migrate saf
       { id: 'legacy-google', name: 'Legacy', role: 'authority', registeredBy: 'self:google' },
       { id: 'walk-in', name: 'Walk In', role: 'farmer', registeredBy: 'officer:old', passwordHash: bcrypt.hashSync('Kisan@123', 4) },
       { id: 'officer-demo', name: 'Old Seed', role: 'officer' },
+      { id: 'farmer-demo', name: 'Old Farmer Seed', role: 'farmer', email: 'bijay.pradhan.anc@gmail.com' },
     ], crops: [], villages: [], centres: [], requests: [],
   };
   fs.writeFileSync(file, JSON.stringify(legacy));
@@ -74,4 +78,5 @@ test('old insecure staff, seed accounts and shared walk-in passwords migrate saf
   assert.equal(users.find((u) => u.id === 'legacy-google').authDisabled, true);
   assert.equal(users.find((u) => u.id === 'walk-in').passwordHash, null);
   assert.equal(users.find((u) => u.id === 'officer-demo').isDemo, true);
+  assert.equal(users.find((u) => u.id === 'farmer-demo').email, 'bijay.pradhan.anc@example.com');
 }));

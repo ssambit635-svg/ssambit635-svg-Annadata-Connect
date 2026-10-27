@@ -1,5 +1,5 @@
 import { distanceKm } from '../utils/geo.js';
-import { waitingCount, estimatedWaitMinutes, centreQueue } from './queue.service.js';
+import { waitingCount, estimatedWaitMinutes } from './queue.service.js';
 
 /**
  * Transparent, rule-based centre recommendation.

@@ -22,7 +22,7 @@ const QUICK_ACTIONS = [
 
 export default function FarmerDashboard() {
   const { t, pick, lang } = useI18n();
-  const { data, error, loading, reload, refreshing } = usePoll(
+  const { data, error, loading, reload } = usePoll(
     async () => {
       const [profile, notifs] = await Promise.all([farmerService.me(), notificationService.list()]);
       return { ...profile, notifications: notifs.notifications, unread: notifs.unreadCount };

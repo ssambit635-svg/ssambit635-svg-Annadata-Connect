@@ -36,11 +36,11 @@ Defined once, server-side, in `backend/src/services/auth-mock.service.js`
 
 | Role | Name | Email |
 | --- | --- | --- |
-| Farmer | Bijay Pradhan | `bijay.pradhan.anc@gmail.com` |
-| Farmer | Kuni Sahoo | `kuni.sahoo.anc@gmail.com` |
-| Officer | Rashmi Das | `rashmi.das.anc@gmail.com` |
-| Officer | Manoj Behera | `manoj.behera.anc@gmail.com` |
-| Authority | Suresh Patnaik | `district.admin.anc@gmail.com` |
+| Farmer | Bijay Pradhan | `bijay.pradhan.anc@example.com` |
+| Farmer | Kuni Sahoo | `kuni.sahoo.anc@example.com` |
+| Officer | Rashmi Das | `rashmi.das.anc@example.com` |
+| Officer | Manoj Behera | `manoj.behera.anc@example.com` |
+| Authority | Suresh Patnaik | `district.admin.anc@example.com` |
 
 Each account's email matches a seeded user in `backend/src/data/seed-data.js`, so a pick
 lands on real mock data (requests, tokens, queue history) instead of an empty profile.
@@ -83,11 +83,11 @@ Set it to `false` in `backend/.env` to disable password sign-in for them and hid
 
 | Role | Phone | Email | Password | Scope |
 | --- | --- | --- | --- | --- |
-| Farmer | `9999999001` | `bijay.pradhan.anc@gmail.com` | `Farmer@123` | Own requests, tokens, queue, history |
-| Farmer 2 | `9999999002` | `kuni.sahoo.anc@gmail.com` | `Farmer@123` | Seeded queue history at BBSR Central |
-| Officer | `9999999101` | `rashmi.das.anc@gmail.com` | `Officer@123` | Bhubaneswar Central Procurement Centre |
-| Officer | `9999999102` | `manoj.behera.anc@gmail.com` | `Officer@123` | Jatni Mandi Procurement Centre |
-| Authority | `9999999201` | `district.admin.anc@gmail.com` | `Authority@123` | District-wide overview |
+| Farmer | `9999999001` | `bijay.pradhan.anc@example.com` | `Farmer@123` | Own requests, tokens, queue, history |
+| Farmer 2 | `9999999002` | `kuni.sahoo.anc@example.com` | `Farmer@123` | Seeded queue history at BBSR Central |
+| Officer | `9999999101` | `rashmi.das.anc@example.com` | `Officer@123` | Bhubaneswar Central Procurement Centre |
+| Officer | `9999999102` | `manoj.behera.anc@example.com` | `Officer@123` | Jatni Mandi Procurement Centre |
+| Authority | `9999999201` | `district.admin.anc@example.com` | `Authority@123` | District-wide overview |
 
 Data files seeded before farmers had emails are backfilled automatically on boot by
 `backend/src/db/store.js`. Reset everything with `cd backend && npm run seed`.

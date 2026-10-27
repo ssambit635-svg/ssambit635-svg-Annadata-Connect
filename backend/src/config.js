@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto';
 import dotenv from 'dotenv';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,10 +7,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
+const configuredJwtSecret = process.env.JWT_SECRET?.trim() || '';
 const config = {
   env: process.env.NODE_ENV || 'development',
   port: Number(process.env.PORT) || 5000,
-  jwtSecret: process.env.JWT_SECRET || 'annadata-connect-dev-secret-do-not-use-in-prod',
+  // Development gets a fresh per-process key; production must supply its own.
+  jwtSecret: configuredJwtSecret || randomBytes(32).toString('hex'),
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '12h',
   corsOrigin: process.env.CORS_ORIGIN || '',
   // Authentication is mocked end to end: no Google OAuth, Twilio Verify or SMTP
@@ -30,7 +33,11 @@ const config = {
   smsTwilioFrom: process.env.SMS_TWILIO_FROM || '',
 };
 
-if (config.env === 'production' && (config.jwtSecret.length < 32 || config.jwtSecret.includes('change-me') || config.jwtSecret.includes('dev-secret'))) {
+if (config.env === 'production' && (
+  !configuredJwtSecret
+  || configuredJwtSecret.length < 32
+  || /change[-_ ]?me|dev[-_ ]?secret/i.test(configuredJwtSecret)
+)) {
   throw new Error('Set a unique JWT_SECRET of at least 32 characters before starting in production.');
 }
 

@@ -1,6 +1,6 @@
 // Live token view — big ticket, live queue, payment state, centre pulse.
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext.jsx';
 import { usePoll } from '../../hooks/usePoll.js';
 import { requestService } from '../../services/api/farmerService.js';

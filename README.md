@@ -97,11 +97,11 @@ For a single-process deployment, Express serves both the API and the built front
 
 | Layer | Implementation |
 | --- | --- |
-| Web | React 18.3, Vite 5, React Router 6, custom responsive design system and translation dictionaries |
+| Web | React 18.3, Vite 6, React Router 7, custom responsive design system and translation dictionaries |
 | API | Node.js 22+, Express 4, JWT sessions, bcrypt password hashing and role guards |
 | Demo persistence | File-backed JSON store in `backend/data/db.json`; no external database required locally |
 | Mobile | Installable web app plus Capacitor-based Android project |
-| Tests | Node test runner + Supertest, Playwright browser tests, and an i18n parity check |
+| Quality | ESLint 10 across frontend/backend, Node test runner + Supertest, Playwright browser tests, and i18n parity check |
 
 ## Quick start
 
@@ -151,7 +151,7 @@ The defaults are suitable for local development. Set production values in the ba
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `PORT` | `5000` | Express listen port |
-| `JWT_SECRET` | Development fallback | Set a unique secret of at least 32 characters in production |
+| `JWT_SECRET` | Ephemeral per-process key in development | Required: set a unique secret of at least 32 characters in production |
 | `SEED_ON_BOOT` | `true` | Create the demo dataset if the JSON store is missing |
 | `CORS_ORIGIN` | Empty | Restrict allowed origins when the frontend is hosted separately |
 | `VITE_API_BASE_URL` | Empty / same-origin | Optional public API origin for a separately hosted frontend |
@@ -200,6 +200,7 @@ A data caveat matters: the upstream repository publishes mandi-level min/max pri
 
 ```bash
 npm test                                  # backend unit/contract tests
+npm run lint                              # lint frontend and backend JavaScript
 npm run build                             # production frontend build
 npm --prefix frontend run test:i18n       # translation key parity
 ```

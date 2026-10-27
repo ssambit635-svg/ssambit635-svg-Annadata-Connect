@@ -19,7 +19,7 @@ That's it — from then on everything is automatic:
 | Workflow | What it does | Cost |
 | --- | --- | --- |
 | `android-apk.yml` | Every push to `main` (or manual run) builds the Android APK on GitHub's free runners **and** publishes/updates a rolling release at `…/releases/latest/download/annadata-connect-latest.apk` — the URL behind the "Download APK (free)" button on the landing page. Pushing a `v*` tag creates a permanent numbered release too. | $0 |
-| `ci.yml` | Runs backend tests (43), the i18n en/hi/or parity check and the frontend production build on every push/PR. | $0 |
+| `ci.yml` | Runs backend tests, ESLint across frontend/backend, the i18n en/hi/or parity check and the frontend production build on every push/PR. | $0 |
 | `keep-awake.yml` | Pings `API_BASE_URL` (repo variable) every 10 minutes so a free Render backend never cold-starts during a demo. | $0 |
 
 After enabling, also set the repo **variable** `API_BASE_URL` =

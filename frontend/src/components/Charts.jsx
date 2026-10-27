@@ -127,34 +127,33 @@ export function Donut({ segments, size = 168, thickness = 22, formatValue, ariaL
   const total = segments.reduce((a, s) => a + s.value, 0) || 1;
   const r = (size - thickness) / 2;
   const c = 2 * Math.PI * r;
-  let offset = 0;
+  const circleSegments = segments.map((segment, index) => ({
+    segment,
+    index,
+    dash: (segment.value / total) * c,
+    offset: segments.slice(0, index).reduce((sum, previous) => sum + (previous.value / total) * c, 0),
+  }));
   return (
     <div style={{ display: 'flex', gap: 18, alignItems: 'center', flexWrap: 'wrap' }}>
       <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} role="img" aria-label={ariaLabel || 'Crop mix'}>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={LINE} strokeWidth={thickness} />
-        {segments.map((s, i) => {
-          const frac = s.value / total;
-          const dash = frac * c;
-          const el = (
-            <circle
-              key={i}
-              cx={size / 2}
-              cy={size / 2}
-              r={r}
-              fill="none"
-              stroke={s.color || PALETTE[i % PALETTE.length]}
-              strokeWidth={thickness}
-              strokeDasharray={`${Math.max(dash - 3, 0.5)} ${c - Math.max(dash - 3, 0.5)}`}
-              strokeDashoffset={-offset}
-              strokeLinecap="butt"
-              transform={`rotate(-90 ${size / 2} ${size / 2})`}
-            >
-              <title>{`${s.label}: ${formatValue ? formatValue(s.value) : s.value}`}</title>
-            </circle>
-          );
-          offset += dash;
-          return el;
-        })}
+        {circleSegments.map(({ segment: s, index: i, dash, offset }) => (
+          <circle
+            key={i}
+            cx={size / 2}
+            cy={size / 2}
+            r={r}
+            fill="none"
+            stroke={s.color || PALETTE[i % PALETTE.length]}
+            strokeWidth={thickness}
+            strokeDasharray={`${Math.max(dash - 3, 0.5)} ${c - Math.max(dash - 3, 0.5)}`}
+            strokeDashoffset={-offset}
+            strokeLinecap="butt"
+            transform={`rotate(-90 ${size / 2} ${size / 2})`}
+          >
+            <title>{`${s.label}: ${formatValue ? formatValue(s.value) : s.value}`}</title>
+          </circle>
+        ))}
         <text x="50%" y="47%" textAnchor="middle" fontSize="20" fontWeight="800" fill={GREEN_DEEP} fontFamily="var(--m-f-display)">
           {formatValue ? formatValue(total) : total}
         </text>
