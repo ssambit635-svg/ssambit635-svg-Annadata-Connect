@@ -11,16 +11,13 @@ import '@fontsource/noto-sans-devanagari/devanagari-400.css';
 import '@fontsource/noto-sans-devanagari/devanagari-600.css';
 import '@fontsource/noto-sans-oriya/oriya-400.css';
 import '@fontsource/noto-sans-oriya/oriya-600.css';
-// Annadata Connect typography — Plus Jakarta Sans (variable) for display
-// and numerals, Inter for UI text, IBM Plex Mono for tokens and IDs.
-// Latin subsets only: Devanagari/Odia glyphs come from the Noto fonts
-// above, so the Cyrillic/Greek/Vietnamese files never ship.
-// All bundled in the APK (no Google Fonts calls at runtime).
+// Product typography: Plus Jakarta Sans display, Inter UI text, and IBM
+// Plex Mono for identifiers. Only the Latin display face is loaded here;
+// Odia / Devanagari glyphs fall back to the bundled Noto faces above.
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-600.css';
-import '@fontsource-variable/inter-tight/index.css';
-import '@fontsource-variable/plus-jakarta-sans/index.css';
+import './styles/fonts.css';
 import '@fontsource/ibm-plex-mono/latin-500.css';
 import '@fontsource/ibm-plex-mono/latin-600.css';
 import './pwa/register.js';

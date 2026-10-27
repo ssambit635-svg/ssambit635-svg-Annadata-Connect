@@ -2,7 +2,7 @@
    ANNADATA SAATHI — the Android app design system.
    Same green/gold/cream theme as the website, its own design language:
    flat document surfaces with hairline rules, monoline institutional
-   emblems, Inter / IBM Plex Mono typography, thumb-friendly controls.
+   emblems, Plus Jakarta Sans / Inter / IBM Plex Mono typography, thumb-friendly controls.
    See mobile-gov.css for the refinement layer loaded on top of this.
    Everything is scoped under .m-root so the website styles never leak.
    ═══════════════════════════════════════════════════════════════════ */
@@ -31,9 +31,9 @@
   --m-blue-soft: #e4ecfc;
   --m-clay: #e0784f;
 
-  --m-f-display: 'Inter Tight Variable', 'Inter', 'IBM Plex Sans', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --m-f-body: 'Inter', 'IBM Plex Sans', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --m-f-num: 'IBM Plex Mono', 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --m-f-display: var(--font-display, 'Plus Jakarta Sans Variable', 'Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, sans-serif);
+  --m-f-body: var(--font-body, 'Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, sans-serif);
+  --m-f-num: var(--font-mono, 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace);
 
   --m-r-xl: 12px;
   --m-r-lg: 10px;
@@ -120,10 +120,10 @@
 .m-page {
   max-width: 560px;
   margin: 0 auto;
-  padding: 16px 16px 8px;
+  padding: 20px 16px 8px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .m-page-title { font-size: 25px; font-weight: 650; letter-spacing: -0.01em; }

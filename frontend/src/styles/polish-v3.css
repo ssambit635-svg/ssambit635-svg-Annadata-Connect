@@ -34,8 +34,7 @@ html[data-lang='or'] body, html[data-lang='hi'] body { line-height: 1.62; }
 html[data-lang='or'] h1, html[data-lang='or'] h2, html[data-lang='or'] h3,
 html[data-lang='hi'] h1, html[data-lang='hi'] h2, html[data-lang='hi'] h3 { line-height: 1.38; letter-spacing: 0; }
 html[data-lang='or'] .home-hero h1, html[data-lang='hi'] .home-hero h1 { letter-spacing: -0.005em; }
-[lang='or'] { font-family: 'Noto Sans Oriya', system-ui, sans-serif; }
-[lang='hi'] { font-family: 'Noto Sans Devanagari', system-ui, sans-serif; }
+[lang='or'], [lang='hi'] { font-family: var(--font-body); }
 
 /* ---------- Language pill (shared by header, user menu, landing) ---------- */
 .lang-toggle, .home-language {

@@ -5,7 +5,7 @@
    and takes the presentation to a native-app standard:
 
      · a calm, layered surface system — soft cream canvas, white cards
-       with 16–20px radii and a whisper of depth (no hard rules)
+       with a consistent 16px radius and restrained depth (no hard rules)
      · Plus Jakarta Sans display type with tight tracking, Inter body,
        tabular numerals wherever a value is being reported
      · circular icon wells, pill chips and badges, one accent (gold)
@@ -24,12 +24,12 @@
   --m-gold-bright: #f2b632;
   --m-mint: #e8f3ea;
 
-  --m-f-display: 'Plus Jakarta Sans Variable', 'Inter Tight Variable', 'Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --m-f-display: var(--font-display, 'Plus Jakarta Sans Variable', 'Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, sans-serif);
 
-  --m-r-xl: 20px;
-  --m-r-lg: 16px;
-  --m-r-md: 14px;
-  --m-r-sm: 10px;
+  --m-r-xl: 16px;
+  --m-r-lg: 14px;
+  --m-r-md: 12px;
+  --m-r-sm: 8px;
 
   --m-shadow-card: 0 1px 2px rgba(16, 40, 24, 0.04), 0 8px 24px -16px rgba(16, 40, 24, 0.18);
   --m-shadow-pop: 0 18px 40px -18px rgba(15, 61, 34, 0.35), 0 2px 6px -2px rgba(15, 61, 34, 0.08);

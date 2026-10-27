@@ -1,6 +1,20 @@
 /* Annadata Connect design system — clean, high-contrast, public-service UI. */
 
 :root {
+  /* Shared product foundation: typography and spacing follow one predictable
+     4px rhythm across the public site, auth flows and desktop portals. */
+  --font-body: 'Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Plus Jakarta Sans Variable', 'Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Cascadia Mono', 'Segoe UI Mono', monospace;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --control-height: 44px;
   --c-primary: #166534;
   --c-primary-dark: #14532d;
   --c-primary-darker: #0f3d22;
@@ -28,13 +42,14 @@
 html, body, #root { height: 100%; }
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Oriya', sans-serif;
+  font-family: var(--font-body);
   background: var(--c-bg);
   color: var(--c-text);
   font-size: 16px;
   line-height: 1.5;
 }
 
+h1, h2, h3, h4 { font-family: var(--font-display); }
 h1, h2, h3 { margin: 0 0 0.5rem; line-height: 1.25; }
 h1 { font-size: 1.5rem; }
 h2 { font-size: 1.2rem; }
@@ -47,7 +62,7 @@ input, select, textarea { font: inherit; }
 
 :focus-visible { outline: 3px solid #7fb98f; outline-offset: 2px; border-radius: 4px; }
 
-.page { max-width: 1080px; margin: 0 auto; padding: 1.25rem 1rem 5rem; }
+.page { max-width: 1080px; margin: 0 auto; padding: var(--space-6) var(--space-4) 5rem; }
 .page.narrow { max-width: 560px; }
 .page-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
 
@@ -86,7 +101,7 @@ input, select, textarea { font: inherit; }
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  min-height: 44px;
+  min-height: var(--control-height);
   padding: 0.6rem 1.1rem;
   border-radius: var(--radius);
   border: 1px solid transparent;
@@ -307,7 +322,7 @@ h2 { font-size: 1.22rem; }
 h3 { font-size: 1.04rem; }
 .page-head h1 { font-size: 1.7rem; margin: 0; }
 .page-head { margin-bottom: 1.4rem; }
-.page { padding: 1.6rem 1rem 5rem; }
+.page { padding: var(--space-6) var(--space-4) 5rem; }
 .card h2 { font-weight: 700; font-size: 1.12rem; letter-spacing: -0.008em; }
 .mono { font-family: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', Roboto Mono, monospace; letter-spacing: 0.02em; }
 
@@ -336,8 +351,8 @@ a, button { transition-duration: 0.16s; }
 .btn:focus-visible { box-shadow: var(--ring); outline: none; }
 
 /* ---------- Elevation & cards ---------- */
-.card { border-radius: 12px; padding: 1.2rem 1.35rem; box-shadow: var(--shadow-sm); border-color: #dfe6df; }
-.grid { gap: 1.05rem; }
+.card { border-radius: 14px; padding: var(--space-5) var(--space-6); box-shadow: var(--shadow-sm); border-color: #dfe6df; }
+.grid { gap: var(--space-4); }
 .stat { border-radius: 10px; box-shadow: var(--shadow-sm); padding: 0.95rem 1.05rem; }
 .stat:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .stat .num { font-size: 1.8rem; letter-spacing: -0.02em; }
@@ -469,7 +484,7 @@ table.data tbody tr:hover { background: #f4f8f5; }
   background: var(--home-cream);
   color: var(--home-ink);
   overflow: hidden;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Devanagari", "Noto Sans Oriya", sans-serif;
+  font-family: var(--font-body);
 }
 
 .landing-v2 a { color: inherit; }
@@ -517,16 +532,16 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .home-brand-copy small { display: block; color: #668074; font-size: 0.7rem; margin-top: 0.28rem; letter-spacing: 0.015em; }
 .home-nav { display: flex; align-items: center; justify-content: center; gap: 1.55rem; flex: 1; }
 .home-nav a {
-  position: relative; padding: 0.35rem 0; color: #466056; text-decoration: none; font-size: 0.87rem; font-weight: 700;
+  position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0.35rem 0; color: #466056; text-decoration: none; font-size: 0.92rem; font-weight: 650;
 }
 .home-nav a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 2px; background: var(--home-gold); transition: right 0.2s ease; }
 .home-nav a:hover { color: var(--home-forest); }
 .home-nav a:hover::after { right: 0; }
 .home-header-actions { display: flex; align-items: center; gap: 0.55rem; }
 .home-button {
-  min-height: 43px; display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
-  border: 1px solid transparent; border-radius: 9px; padding: 0.6rem 1rem; text-decoration: none;
-  font-size: 0.88rem; font-weight: 800; letter-spacing: 0.005em; cursor: pointer;
+  min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  border: 1px solid transparent; border-radius: 10px; padding: 0.65rem 1.1rem; text-decoration: none;
+  font-size: 0.92rem; font-weight: 750; letter-spacing: 0; cursor: pointer;
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 .home-button:hover { transform: translateY(-2px); }
@@ -567,7 +582,7 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .home-hero-copy { max-width: 610px; }
 .home-eyebrow, .home-overline { display: inline-flex; align-items: center; gap: 0.55rem; color: var(--home-forest); text-transform: uppercase; font-size: 0.69rem; font-weight: 900; letter-spacing: 0.14em; }
 .home-eyebrow-line { width: 29px; height: 2px; background: var(--home-gold); }
-.home-hero h1 { margin: 1.1rem 0 1.25rem; max-width: 650px; color: var(--home-forest-dark); font-size: clamp(2.8rem, 5vw, 4.65rem); line-height: 0.99; letter-spacing: -0.055em; font-weight: 850; }
+.home-hero h1 { margin: 1.1rem 0 1.25rem; max-width: 650px; color: var(--home-forest-dark); font-size: clamp(2.8rem, 5vw, 4.65rem); line-height: 1.04; letter-spacing: -0.05em; font-weight: 800; }
 .home-hero-sub { max-width: 570px; margin: 0; color: var(--home-ink-soft); font-size: 1.1rem; line-height: 1.65; }
 .home-hero-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 2rem; }
 .home-hero-trust { display: flex; flex-wrap: wrap; gap: 1.15rem; margin-top: 1.45rem; color: #60766a; font-size: 0.77rem; font-weight: 700; }
@@ -610,7 +625,7 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .home-proof-stat strong { color: #fff; font-size: 1.15rem; line-height: 1.1; letter-spacing: -0.02em; }
 .home-proof-stat small { margin-top: 0.25rem; color: #b8d2c0; font-size: 0.68rem; line-height: 1.25; }
 
-.home-section { padding: 6.2rem 0; }
+.home-section { padding: 5.25rem 0; }
 .home-features-section { background: #fff; }
 .home-section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: 2.5rem; }
 .home-section-heading h2 { margin: 0.65rem 0 0.5rem; color: var(--home-forest-dark); font-size: clamp(2rem, 3vw, 2.65rem); line-height: 1.04; letter-spacing: -0.045em; }
@@ -634,14 +649,14 @@ table.data tbody tr:hover { background: #f4f8f5; }
 .home-inline-link { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 0.35rem; width: max-content; color: #fff !important; font-size: 0.78rem; font-weight: 850; text-decoration: none; }
 .home-inline-link:hover { color: var(--home-gold) !important; }
 .home-feature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-.home-feature-card { position: relative; min-height: 190px; padding: 1.15rem 1.2rem 1rem; border: 1px solid var(--home-line); border-radius: 16px; background: var(--home-cream); transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+.home-feature-card { position: relative; min-height: 198px; padding: 1.3rem 1.35rem 1.15rem; border: 1px solid var(--home-line); border-radius: 16px; background: var(--home-cream); transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
 .home-feature-card:hover { transform: translateY(-5px); border-color: #a9c8b0; box-shadow: var(--home-shadow-soft); }
 .home-feature-card-head { display: flex; align-items: center; justify-content: space-between; }
 .home-feature-number { color: #9bad9f; font-size: 0.65rem; font-weight: 900; letter-spacing: 0.12em; }
 .home-feature-icon { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 11px; color: var(--home-forest); background: var(--home-sage); transition: color 0.2s ease, background 0.2s ease; }
 .home-feature-card:hover .home-feature-icon { color: #fff; background: var(--home-forest); }
 .home-feature-card h3 { margin: 1rem 0 0.35rem; color: var(--home-forest-dark); font-size: 0.98rem; letter-spacing: -0.015em; }
-.home-feature-card p { max-width: 280px; margin: 0; color: var(--home-ink-soft); font-size: 0.78rem; line-height: 1.5; }
+.home-feature-card p { max-width: 300px; margin: 0; color: var(--home-ink-soft); font-size: 0.85rem; line-height: 1.6; }
 .home-card-arrow { position: absolute; right: 1.2rem; bottom: 1rem; color: #9bad9f; }
 .home-feature-card:hover .home-card-arrow { color: var(--home-forest); }
 
@@ -770,7 +785,7 @@ table.data tbody tr:hover { background: #f4f8f5; }
   .home-proof-intro { padding: 1.25rem 0 1rem; border-right: 0; border-bottom: 1px solid rgba(255,255,255,0.15); }
   .home-proof-intro strong { max-width: 520px; }
   .home-proof-stat { padding: 1.15rem 0.65rem; }
-  .home-section { padding: 4.5rem 0; }
+  .home-section { padding: 4.25rem 0; }
   .home-feature-layout { grid-template-columns: 1fr; }
   .home-feature-lead { min-height: 390px; }
   .home-section-heading { align-items: flex-start; flex-direction: column; gap: 1rem; margin-bottom: 1.8rem; }
@@ -817,7 +832,7 @@ table.data tbody tr:hover { background: #f4f8f5; }
   .home-proof-icon { width: 27px; height: 27px; }
   .home-proof-stat strong { font-size: 0.95rem; }
   .home-proof-stat small { font-size: 0.6rem; }
-  .home-section { padding: 3.7rem 0; }
+  .home-section { padding: 3.25rem 0; }
   .home-section-heading h2, .home-rates-copy h2 { font-size: 2rem; }
   .home-feature-grid { grid-template-columns: 1fr; }
   .home-feature-card { min-height: 175px; }

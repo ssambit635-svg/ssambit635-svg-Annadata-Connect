@@ -28,12 +28,9 @@ body {
   overscroll-behavior-y: contain;
 }
 
-/* ---------- Script-aware typography: put the active script's font first ----
-   Fontsource registers these families; placing them first means Odia and
-   Devanagari glyphs always render from the bundled font (no tofu boxes) and
-   Latin text inside them stays crisp too. */
-html[data-lang='or'] body { font-family: 'Noto Sans Oriya', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-html[data-lang='hi'] body { font-family: 'Noto Sans Devanagari', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+/* The shared body stack keeps Latin typography consistent while the browser
+   falls back per glyph to the bundled Odia / Devanagari families. */
+html[data-lang='or'] body, html[data-lang='hi'] body { font-family: var(--font-body); }
 
 /* ---------- Assistant panel: dvh fallback for older WebViews ---------- */
 .assistant-panel {
