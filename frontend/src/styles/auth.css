@@ -29,14 +29,14 @@
 .signin-story-footer span { display: block; font-size: .66rem; color: #9eb6a6; margin-top: 4px; }
 .signin-panel { padding: 40px 48px 30px; min-width: 0; }
 .signin-kicker { font-size: .61rem; letter-spacing: 1.6px; font-weight: 700; color: #71846c; }
-.signin-panel-heading h2 { font-size: 1.85rem; margin: 7px 0 6px; letter-spacing: -.8px; line-height: 1.25; color: #193e2e; }
-.signin-panel-heading > p { font-size: .85rem; color: #72806e; margin: 0 0 22px; line-height: 1.6; }
+.signin-panel-heading h2 { font-size: clamp(1.75rem, 3vw, 2.15rem); margin: 8px 0 8px; letter-spacing: -.04em; line-height: 1.16; color: #193e2e; }
+.signin-panel-heading > p { font-size: .95rem; color: #72806e; margin: 0 0 24px; line-height: 1.65; }
 .signin-panel .role-toggle { margin-top: 0; background: #f2f2e9; border: 1px solid #e4e5d7; border-radius: 10px; }
-.signin-panel .role-toggle-btn { font-size: .8rem; min-height: 39px; border-radius: 7px; }
+.signin-panel .role-toggle-btn { font-size: .875rem; min-height: 44px; border-radius: 8px; }
 .signin-panel .role-toggle-btn.active { box-shadow: 0 1px 4px #254b2512; border-color: #d4ddc9; background: #fffef9; }
 .signin-panel .role-toggle:has(> :only-child) { grid-template-columns: 1fr; }
 .signin-panel .auth-role-hint { font-size: .73rem; line-height: 1.6; margin: 9px 0 18px; }
-.signin-panel .google-btn { max-width: none; min-height: 46px; border-radius: 9px; box-shadow: none; gap: 10px; font-size: .84rem; color: #314435; }
+.signin-panel .google-btn { max-width: none; min-height: 50px; border-radius: 10px; box-shadow: none; gap: 12px; font-size: .95rem; color: #314435; }
 .signin-panel .google-btn small { font-size: .6rem; margin-left: auto; color: #687565; border: 1px solid #dadfce; padding: 3px 6px; border-radius: 4px; }
 .signin-panel .google-btn:disabled { opacity: .75; background: #fff; }
 .google-signin-block { width: 100%; }
@@ -75,15 +75,15 @@
 .signin-methods > button.active { color: #175739; background: #f1f5e9; border: 1.5px solid #669273; box-shadow: 0 0 0 1px #8fac7d08; }
 .signin-methods > button:hover:not(:disabled) { border-color: #669273; color: #175739; }
 .signin-form-area .field { margin-bottom: 17px; }
-.signin-page .field label, .account-verification .field label { font-size: .78rem; font-weight: 600; color: #38503a; margin-bottom: 7px; }
-.signin-page .input, .signin-page .select, .account-verification .input { font-size: .85rem; min-height: 46px; border-color: #d9dfce; border-width: 1px; background: #fffefa; }
+.signin-page .field label, .account-verification .field label { font-size: .875rem; font-weight: 650; color: #38503a; margin-bottom: 8px; }
+.signin-page .input, .signin-page .select, .account-verification .input { font-size: 1rem; min-height: 50px; border-color: #d9dfce; border-width: 1px; background: #fffefa; }
 .signin-page .input::placeholder { color: #959b8a; }
-.signin-page .phone-prefix { font-size: .85rem; background: #f3f5ed; border-color: #d9dfce; border-width: 1px; }
+.signin-page .phone-prefix { font-size: 1rem; background: #f3f5ed; border-color: #d9dfce; border-width: 1px; }
 .signin-page .hint, .account-verification .hint { font-size: .71rem; line-height: 1.6; margin-top: 7px; color: #7c8672; }
-.signin-page .btn-primary, .account-verification .btn-primary { min-height: 46px; border-radius: 8px; font-size: .85rem; gap: 9px; }
+.signin-page .btn-primary, .account-verification .btn-primary { min-height: 50px; border-radius: 10px; font-size: .95rem; gap: 10px; }
 .signin-page .auth-alt-link { font-size: .8rem; font-weight: 600; color: #5f6d63; margin-top: .65rem; }
 .signin-page .auth-alt-link:hover:not(:disabled) { color: #175739; }
-.signin-page .pw-field .btn-outline { min-height: 46px; width: 46px; padding: 0; border-radius: 8px; color: #314435; border-color: #d9dfce; background: #fffefa; }
+.signin-page .pw-field .btn-outline { min-height: 50px; width: 50px; padding: 0; border-radius: 10px; color: #314435; border-color: #d9dfce; background: #fffefa; }
 .signin-page .pw-field .btn-outline:hover:not(:disabled) { border-color: #669273; color: #175739; background: #f1f5e9; }
 .signin-page .auth-verified-contact { font-size: .85rem; }
 .signin-demo-grid .btn { border-radius: 10px; }

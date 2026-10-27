@@ -1,0 +1,9 @@
+/* Latin variable font face only. Indic scripts fall back per glyph to the
+   bundled Noto Sans Devanagari / Odia faces imported by main.jsx. */
+@font-face {
+  font-family: 'Plus Jakarta Sans Variable';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2') format('woff2');
+}

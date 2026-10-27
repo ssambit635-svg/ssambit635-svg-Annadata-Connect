@@ -236,17 +236,9 @@
   to { background-position: 34px 34px; }
 }
 .landing-v2 .home-hero h1 {
-  background: linear-gradient(105deg, var(--home-forest-dark) 0%, #15935b 45%, var(--home-forest-dark) 75%);
-  background-size: 220% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--home-forest-dark);
   text-wrap: balance;
-  animation: home-title-shift 8s ease-in-out 1.8s infinite alternate;
-}
-@keyframes home-title-shift {
-  from { background-position: 0% 50%; }
-  to { background-position: 100% 50%; }
+  animation: none;
 }
 .landing-v2 .home-hero-sub { text-wrap: pretty; }
 .landing-v2 .home-eyebrow-line {
@@ -292,7 +284,7 @@
   transition: transform 1.1s var(--home-ease), filter 0.6s ease;
   filter: saturate(1.06) contrast(1.03);
 }
-.landing-v2 .home-image-frame:hover img { transform: scale(1.045); }
+.landing-v2 .home-image-frame:hover img { transform: scale(1.025); }
 .landing-v2 .home-image-caption {
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: rgba(6, 40, 29, 0.62);
@@ -427,7 +419,7 @@
   transition: transform 0.45s var(--home-ease);
 }
 .landing-v2 .home-feature-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-3px);
   border-color: rgba(14, 91, 59, 0.22);
   box-shadow: var(--home-elev-2);
 }
@@ -706,7 +698,7 @@
 /* Proof bar now carries journey steps (title + one-liner), not numerals. */
 .landing-v2 .home-proof-stat { align-items: flex-start; }
 .landing-v2 .home-proof-stat strong { font-size: 0.95rem; }
-.landing-v2 .home-proof-stat small { font-size: 0.7rem; }
+.landing-v2 .home-proof-stat small { font-size: 0.75rem; line-height: 1.4; }
 
 /* --------------------------------------------------------- ACCESSIBILITY */
 

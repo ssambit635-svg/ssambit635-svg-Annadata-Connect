@@ -10,7 +10,7 @@
   display: inline-flex;
   align-items: baseline;
   gap: 0.22em;
-  font-family: 'Plus Jakarta Sans Variable', 'Inter Tight Variable', 'Inter', system-ui, sans-serif;
+  font-family: var(--font-display, 'Plus Jakarta Sans Variable', 'Inter', system-ui, sans-serif);
   font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 1;

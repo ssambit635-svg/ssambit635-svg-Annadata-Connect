@@ -18,6 +18,9 @@
 /* ── Shell layout ─────────────────────────────────────────────────── */
 .m-root.portal-shell {
   --side-w: 264px;
+  --m-r-xl: 16px;
+  --m-r-lg: 12px;
+  --m-r-md: 10px;
   min-height: 100vh;
   min-height: 100dvh;
   background:
@@ -243,7 +246,7 @@
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 28px 30px 96px;
+  padding: var(--space-8, 2rem) var(--space-8, 2rem) 96px;
   min-width: 0;
 }
 
@@ -401,19 +404,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px 14px;
+  gap: 12px 20px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 .m-root.portal-shell .page-head > div:first-child { min-width: 0; }
 .m-root.portal-shell .page-head h1,
 .m-root.portal-shell .page h1,
 .m-root.portal-shell h1.m-page-title {
   font-family: var(--m-f-display);
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  font-size: clamp(24px, 2vw, 30px);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1.18;
   color: var(--m-green-forest);
   margin: 0;
   overflow-wrap: anywhere;
@@ -474,18 +477,19 @@
   border: 1px solid var(--m-line);
   border-radius: var(--m-r-xl);
   box-shadow: var(--m-shadow-card);
-  padding: 1.1rem 1.2rem;
-  margin-bottom: 0.9rem;
+  padding: 1.35rem 1.4rem;
+  margin-bottom: 1rem;
   min-width: 0;
 }
 .m-root.portal-shell .card:hover { box-shadow: var(--m-shadow-card); transform: none; }
 .m-root.portal-shell .card h2 {
   font-family: var(--m-f-display);
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 750;
   color: var(--m-green-forest);
-  letter-spacing: -0.015em;
-  margin: 0 0 0.7rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin: 0 0 0.85rem;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -494,7 +498,7 @@
 .m-root.portal-shell .card > p:last-child { margin-bottom: 0; }
 .m-root.portal-shell .m-card.plain { min-width: 0; }
 @media (max-width: 640px) {
-  .m-root.portal-shell .card { padding: 0.95rem 0.95rem; }
+  .m-root.portal-shell .card { padding: 1.15rem 1rem; }
 }
 
 /* ── Buttons — every variant sets its own colour ───────────────────── */
@@ -506,8 +510,8 @@
   justify-content: center;
   gap: 0.45rem;
   min-height: 44px;
-  border-radius: var(--m-r-pill);
-  padding: 0.55rem 1.15rem;
+  border-radius: var(--m-r-md);
+  padding: 0.6rem 1.15rem;
   font-family: var(--m-f-body);
   font-size: 14.5px;
   font-weight: 700;
@@ -560,7 +564,7 @@
 
 .m-root.portal-shell .btn-sm,
 .m-root.portal-shell button.btn-sm,
-.m-root.portal-shell a.btn-sm { min-height: 38px; padding: 0.38rem 0.9rem; font-size: 13.5px; gap: 0.38rem; }
+.m-root.portal-shell a.btn-sm { min-height: 44px; padding: 0.45rem 0.9rem; font-size: 14px; gap: 0.4rem; }
 .m-root.portal-shell .btn-block { width: 100%; display: flex; }
 
 /* MBtn (app buttons) used on portal pages — keep their own colours crisp */
@@ -811,14 +815,14 @@
 .m-root.portal-shell .grid.stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.7rem;
-  margin: 0.2rem 0 1rem;
+  gap: 1rem;
+  margin: 0.25rem 0 1.5rem;
 }
 .m-root.portal-shell .stat {
   background: var(--m-paper);
   border: 1px solid var(--m-line);
-  border-radius: var(--m-r-lg);
-  padding: 0.85rem 0.95rem;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
   box-shadow: none;
   min-width: 0;
 }
@@ -834,10 +838,10 @@
   overflow-wrap: anywhere;
 }
 .m-root.portal-shell .stat .lbl {
-  margin-top: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--m-ink-soft);
   line-height: 1.35;
@@ -1025,7 +1029,7 @@
 }
 .m-root.portal-shell table.data { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 640px; }
 .m-root.portal-shell table.data th,
-.m-root.portal-shell table.data td { text-align: left; padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--m-line); vertical-align: middle; }
+.m-root.portal-shell table.data td { text-align: left; padding: 0.82rem 0.95rem; border-bottom: 1px solid var(--m-line); vertical-align: middle; }
 .m-root.portal-shell table.data th {
   background: var(--m-cream);
   font-size: 11px;
