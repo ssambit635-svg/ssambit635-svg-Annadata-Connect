@@ -5,7 +5,7 @@ import { orTranslations, orAssistantAnswers } from './or.js';
 // stay untouched; everything user-facing is translated.
 export const translations = {
   en: {
-    app: { name: 'Annadata Connect', tagline: 'Crop procurement made simple' },
+    app: { name: 'Annadata Connect', tagline: 'Crop procurement made simple', portalNotice: 'DEMO · Sample procurement data · Not an official government service' },
     // The Android app frontend (same product, its own friendlier design
     // language). The key is historical; the brand is "Annadata Connect".
     // Keys here must stay in en/hi/or parity.
@@ -410,7 +410,7 @@ export const translations = {
   },
 
   hi: {
-    app: { name: 'अन्नदाता कनेक्ट', tagline: 'फसल खरीद अब आसान' },
+    app: { name: 'अन्नदाता कनेक्ट', tagline: 'फसल खरीद अब आसान', portalNotice: 'डेमो · खरीद का नमूना डेटा · यह सरकारी सेवा नहीं है' },
     saathi: {
       name: 'अन्नदाता कनेक्ट', brandFirst: 'अन्नदाता', brandSecond: 'कनेक्ट',
       tagline: 'स्मार्ट फसल खरीद पोर्टल',

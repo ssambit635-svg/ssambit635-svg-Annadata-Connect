@@ -79,7 +79,7 @@ export const orAuth = {
 };
 
 export const orTranslations = {
-  app: { name: 'ଅନ୍ନଦାତା କନେକ୍ଟ', tagline: 'ଫସଲ କ୍ରୟ ଏବେ ସହଜ' },
+  app: { name: 'ଅନ୍ନଦାତା କନେକ୍ଟ', tagline: 'ଫସଲ କ୍ରୟ ଏବେ ସହଜ', portalNotice: 'ଡେମୋ · ନମୁନା କ୍ରୟ ତଥ୍ୟ · ଏହା ସରକାରୀ ସେବା ନୁହେଁ' },
   saathi: {
     name: 'ଅନ୍ନଦାତା କନେକ୍ଟ', brandFirst: 'ଅନ୍ନଦାତା', brandSecond: 'କନେକ୍ଟ',
     tagline: 'ସ୍ମାର୍ଟ ଫସଲ କ୍ରୟ ପୋର୍ଟାଲ୍',
