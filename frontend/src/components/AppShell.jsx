@@ -127,6 +127,7 @@ export function AppShell() {
 
   return (
     <div className="m-root portal-shell">
+      <a className="portal-skip-link" href="#portal-main">{t('landing.skipToContent')}</a>
       {/* ── Sidebar (desktop) ── */}
       <aside className="portal-side">
         <Link to={home} className="portal-brand" aria-label={t('app.name')}>
@@ -211,7 +212,11 @@ export function AppShell() {
           </div>
         </header>
 
-        <main className="portal-content" id="portal-main">
+        <div className="portal-demo-note" role="note">
+          <Icon name="info" size={14} aria-hidden="true" />
+          <span>{t('app.portalNotice')}</span>
+        </div>
+        <main className="portal-content" id="portal-main" tabIndex="-1">
           <Outlet />
         </main>
       </div>
